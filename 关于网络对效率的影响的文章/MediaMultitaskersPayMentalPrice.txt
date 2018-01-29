@@ -1,0 +1,79 @@
+link:http://news.stanford.edu/2009/08/24/multitask-research-study-082409/
+汉字部分由彭一航翻译。
+August 24, 2009
+Media multitaskers pay mental price, Stanford study shows
+平行媒体工作者付出智力代价，斯坦福大学研究显示
+Think you can talk on the phone, send an instant message and read your e-mail all at once? Stanford researchers say even trying may impair your cognitive control.
+想同时接电话，发信息，读邮件吗？斯坦福大学研究者说，仅仅是尝试也能损害你的认知
+控制力。
+By Adam Gorlick
+
+Attention, multitaskers (if you can pay attention, that is): Your brain may be in trouble.
+注意，平行工作者们：你的大脑可能有麻烦。
+People who are regularly bombarded with several streams of electronic information do not pay attention, control their memory or switch from one job to another as well as those who prefer to complete one task at a time, a group of Stanford researchers has found.
+持续被多条电子信息流轰炸的人不能专心，控制记忆，和象专一工作者那样切换工作，一
+个斯坦福大学研究小组发现。
+High-tech jugglers are everywhere – keeping up several e-mail and instant message conversations at once, text messaging while watching television and jumping from one website to another while plowing through homework assignments.
+高科技戏法者到处都是，持续地同时阅读多封邮件和聊天信息，在看电视的时候读信息，
+在做家庭作业的时候从一个网站跳到另一个网站。
+But after putting about 100 students through a series of three tests, the researchers realized those heavy media multitaskers are paying a big mental price.
+对一百名学生进行三项测试后，研究者发现平行大量媒体工作者付出了大的智力代价。
+“They’re suckers for irrelevancy,” said communication Professor Clifford Nass, one of the researchers whose findings are published in the Aug. 24 edition of the Proceedings of the National Academy of Sciences. “Everything distracts them.”
+他们是不专心的受害者，通信教授克里福得 纳斯说，其中一名研究员，他的发现发表
+八月二十四日的国家科学研究前沿上。
+Social scientists have long assumed that it’s impossible to process more than one string of information at a time. The brain just can’t do it. But many researchers have guessed that people who appear to multitask must have superb control over what they think about and what they pay attention to.
+社会科学家早就怀疑同时处理多个来源的信息是不可能的。你的大脑就是做不到。
+研究者猜测面对平行工作的人必须对思维和关注点有很好的控制。
+So Nass and his colleagues, Eyal Ophir and Anthony Wagner, set out to learn what gives multitaskers their edge. What is their gift?
+所以纳斯和他的同事爱亚欧非尔和阿索尼瓦格勒，开始研究什么给了平行工作者优势,
+他们的秘决是什么。
+“We kept looking for what they’re better at, and we didn’t find it,” said Ophir, the study’s lead author and a researcher in Stanford’s Communication Between Humans and Interactive Media Lab.
+我们观察他们擅长什么，然而没有发现。这个研究的第一作者，斯坦福人与交互媒体的
+通信实验室研究者欧非勒说，
+In each of their tests, the researchers split their subjects into two groups: those who regularly do a lot of media multitasking and those who don’t.
+在每项测试中，研究者把参与者分成两组：经常做平行媒体工作的人和不这样的。
+In one experiment, the groups were shown sets of two red rectangles alone or surrounded by two, four or six blue rectangles. Each configuration was flashed twice, and the participants had to determine whether the two red rectangles in the second frame were in a different position than in the first frame.
+在一次实验里,每组分别被展示两个红色方块或者两个红色方块加周围还有两个，四个，
+或六个蓝色方块。每种设置会闪烁两下，参与者需要判断两个红色方块的位置是否移动
+了。
+They were told to ignore the blue rectangles, and the low multitaskers had no problem doing that. But the high multitaskers were constantly distracted by the irrelevant blue images. Their performance was horrible.
+他们被告知要忽略蓝色方块，平行工作数少的人做这个没有问题，平行工作数多的人一
+直被不相关的蓝色方块干扰，表现很差。
+Because the high multitaskers showed they couldn’t ignore things, the researchers figured they were better at storing and organizing information. Maybe they had better memories.
+因为平行工作数多的人表现出他们不能忽略其它事情，研究者猜测他们擅于保存，组织
+信息。也许他们有更好的记忆。
+The second test proved that theory wrong. After being shown sequences of alphabetical letters, the high multitaskers did a lousy job at remembering when a letter was making a repeat appearance.
+第二项测试证明这个观点错了。展示一序列字母后，平行工作数多的人在记忆一个字母的
+重复次数上表现很差。
+“The low multitaskers did great,” Ophir said. “The high multitaskers were doing worse and worse the further they went along because they kept seeing more letters and had difficulty keeping them sorted in their brains.”
+Still puzzled
+"平行工作数少的人做的很好“，欧非尔说，”平行工作数多的人表现越来越差因为他们总
+是看见更多的字母难以在脑中组织它们“
+
+Puzzled but not yet stumped on why the heavy multitaskers weren’t performing well, the researchers conducted a third test. If the heavy multitaskers couldn’t filter out irrelevant information or organize their memories, perhaps they excelled at switching from one thing to another faster and better than anyone else.
+对于为什么重度平行工作者的表现不好不理解，研究者组织了第三项测试。如果重度平行
+工作者不能过滤无关信息或组织记忆，也许他们更擅长在平行工作间切换。
+Wrong again, the study found.
+研究发现这也错了。
+The test subjects were shown images of letters and numbers at the same time and instructed what to focus on. When they were told to pay attention to numbers, they had to determine if the digits were even or odd. When told to concentrate on letters, they had to say whether they were vowels or consonants.
+参与者被同时展示多张字母和数字的图片,并被告知需要关注什么。当他们被告知关注数字
+，他们需要判断是奇数还是偶数。当他们被告知关注字母，他们需要判断是元音还是辅音
+。
+Again, the heavy multitaskers underperformed the light multitaskers.
+重度平行工作者再次比轻度平行工作者表现差。
+
+“They couldn’t help thinking about the task they weren’t doing,” Ophir said. “The high multitaskers are always drawing from all the information in front of them. They can’t keep things separate in their minds.”
+他们忍不住去想工作以外的事情，欧非尔说，重度平行工作者同时处理所有摆在他们面前
+的信息，他们不能有效组织信息。
+The researchers are still studying whether chronic media multitaskers are born with an inability to concentrate or are damaging their cognitive control by willingly taking in so much at once. But they’re convinced the minds of multitaskers are not working as well as they could.
+Related to this story
+研究者还研究了习惯性平行媒体工作者是否天生不能专心，或者因为希望一次性处理太多
+事情损害了认知能力。然后他们确信平行工作者的智力确实不好。
+
+“When they’re in situations where there are multiple sources of information coming from the external world or emerging out of memory, they’re not able to filter out what’s not relevant to their current goal,” said Wagner, an associate professor of psychology. “That failure to filter means they’re slowed down by that irrelevant information.”
+当心理学副教授瓦格勒说，他们面对外部世界的超过了记忆能力的多个信息来源，
+无法滤掉与目标不相关的信息，，失去过滤无关信息的能力就会被它们拖慢。
+So maybe it’s time to stop e-mailing if you’re following the game on TV, and rethink singing along with the radio if you’re reading the latest news online. By doing less, you might accomplish more.
+所以是时候在玩游戏的时候不要读邮件了，也不要在看新闻的时候跟着广播唱歌。同时
+做的少，最后做的多。
+
