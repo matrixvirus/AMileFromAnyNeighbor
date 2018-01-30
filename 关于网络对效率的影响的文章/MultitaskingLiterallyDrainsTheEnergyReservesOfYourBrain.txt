@@ -66,7 +66,7 @@ called random reinforcement and that’s enough to reinforce behavior.”
 Random behavior can be incredible difficult to combat. And Mark’s research
 has found that after being frequently interrupted, people often develop a
 short attention span and begin to self-interrupt.
-随机行为很难对付，人们被频繁打断后，会发展出更短的注意力，并会自我打断。
+随机行为很难对付，人们被频繁打断后，会发展出更短的注意力，并开始学会自我打断。
 The solution is to give up on multitasking and set aside dedicated chunks
 of time for each separate activity. So only check your email first thing
 in the morning and again at midday, or set aside 10 minutes per afternoon

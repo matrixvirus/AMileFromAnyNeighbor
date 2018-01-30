@@ -1,13 +1,15 @@
 Sat Oct 15 10:05:51 EDT 2016
+汉字是彭一航的翻译。
 Does the Internet Make You Dumber?
+网络让我们变笨了吗？
 The Roman philosopher Seneca may have put it best 2000 years ago:"To be eve
 rywhere is to be nowhere."Today, the Internet grants us easy access to
 unprecedented amounts of information. But a growing body of scientific
 evidence suggests that the Net, with its constant distractions and 
 interruptions, is also turning us into disrupted and superficial thinkers.
-罗马哲学家塞内卡2000年前就精辟的说过:"到处都是则到处都无"今天,互联网让我们
-轻松访问史无前例的大量信息. 但是不断增加的科学证据显示,网络固有的分心性和中断
-性, 把我们变成易分心的,肤浅的思想者.
+罗马哲学家塞内卡2000年前说:"到处都是则到处都无"今天,互联网让我们
+访问大量信息. 但是证据显示,分心和中断
+, 把我们变成不专心的,肤浅的思想者.
 The picture emerging from the research is deeply troubling, at least to anyone
 who values the depth, rather than just the velocity, of human thought. People
 who read text sudded with links, the studies show, comprehend less than those
@@ -17,10 +19,10 @@ sedate and focused manner. People who are continually distracted by emails,
 alerts and other messages understand less than those who are able to
 concentrate. And people who juggle many tasks are less creative and less
 productive than those who do one thing at a time.
-这个研究揭露的现象很令人担扰, 对所有估计了思考深度,而不仅仅是速度的人来说.
+这个研究揭露的现象令人担扰, 至少对关注思考深度,而不只是速度的人来说.
 研究显示,阅读带链接的文字的人,比阅读纯文字的人理解得少. 观看丰富多媒体演示的人
-比更稳定,更专一的获取信息的记住得少. 不断被邮件, 闹钟,各种信息分心的人理解得
-少. 忙于很多工作的人比只做一件事的人有更少的创造力和生产力.
+比看文字的人记住得少. 不断被邮件, 铃声,各种信息分心的人理解得
+少. 同时做一堆事的人比做一件事的人有更少的创造力和生产力.
 The common thread in these disabilities is dispersing our attention. The
 richness of our thoughts, out memories and even our personalities hinges on
 our ability to focus the mind and sustain concentraton. Only when we pay deep
@@ -28,8 +30,8 @@ attention to a new piece of information are we able to associate it
 "meaningfully and systematically with knowledge already well established in
 memory." writes the Nobel Prize winning neuroscientist Eric Kandel. Such
 associations are essential to mastering complex concepts.
-这些能力损失的共同根源正在分散我们的注意力. 我们的想法, 记忆, 个性的富裕取决于
-我们集中精神和坚持专心的能力. 只有当我们为新信息片断付出深度注意, 我们才能有意
+想法, 记忆, 个性的丰富程度取决于坚持专心的能力. 只有当为新信息付出足够的
+注意, 我们才能有意
 义的,系统的把它们和已经确立于记忆的知识联系起来,诺贝尔奖得主神经学家埃里克 
 凯得拉说. 这种联系是理解复杂概念的基础.
 When we are constantly distracted and interrupted, as we tend to be online,
@@ -37,9 +39,9 @@ our brains are unable to generalize the strong and expansive neural
 connections that give depth and distinctiveness to our contemplating. We
 become mere signal processing units, quickly shepherding disjointed bits of
 information into and then out of short term memory.
-当我们被持续分心和打断, 象我们喜欢上网那样, 我们的大脑无法形成强力,广泛的神经
-连接,这些连接给我们的沉思深度和差异性. 我们变成了简单的信息处理单元,快速地收集
-零散的信息又快速把它们排出短暂的记忆.
+当我们被持续分心和打断, 象上网那样, 大脑无法形成强力,广泛的神经
+连接,这些连接给我们的思想深度和差异性. 我们变成了简单的信息处理单元,快速地收集
+零散的信息又快速把它们排出.
 In an article published in Science last year, Patricia Greenfield, a leading
 developmental psychologist, reviewed dozens of studies on how different media
 technologies influence our cognitive abilities. Some of the studies indicated
@@ -74,7 +76,7 @@ We're becoming, in a word, shallower.
 格林非得小姐总结说, 每种媒体都发展了一些认识能力并牺牲了其它, 不断增加的屏幕媒
 体使用量加强了视觉空间知力, 可以提高做需要跟踪很多同时发生的信号的工作的能力,
 如指挥航空交通. 但是这伴随着高级认知处理的新弱点, 包括抽象词汇, 专注力, 沉思,
-启发式问题解决, 批判性思考和想象. 用一个词说, 我们正在变得肤浅.
+启发式问题解决, 批判性思考和想象.
 In another experiment, recently conducted at Stanford University's
 Communication between Humans and Interactive Media Lab, a team of researchers
 gave various cognitive tests to 49 people who do a lot of media multitasking
@@ -82,9 +84,9 @@ and 52 people who multitask much less frequently. The heavy multitaskers
 performed poorly on all the tests. They were more easily distracted, had less
 control over their attention, and were much less able to distinguish important
 information from trivial.
-另一项斯坦福大学人际关系和交互媒体实验室进行的实验中, 一个研究队给49名经常做
-媒体多工作的人和52名很少做多工作的人多种认知测试. 经常性多工作者在所有测试中
-表现都很差. 他们更容易被分心, 对注意力有更少的控制, 更难从琐事中提取关键信息.
+另一项斯坦福大学人际关系和交互媒体实验室进行的实验中, 一个研究队给49名经常用
+多媒体工作的人和52名用多媒体少很多的人多种认知测试. 经常用多媒体的在所有测试中
+表现都很差. 他们有更差的注意力, 更难从事情中提取关键信息.
 The researchers where surprised by the results. They had expected that the
 intensive multitaskers would have gained some unique mental advantages from
 all their on screen juggling. But that wasn't the case. In fact, the heavy
@@ -92,10 +94,9 @@ multitaskers weren't even good at multitasking. they were considerably less
 adept at switching between tasks that the more infrequent multitaskers.
 "Everything distracts them." observed Clifford Nass, the professor who heads
 the Stanford lab.
-研究者对结果感到惊讶. 他们以为经常性多工作者应该从忙于处理屏幕信息得到一些特
-殊能力, 但是情况不是这样. 事实上经常性多工作者不擅长多工作, 比少多工作者更不
-适应在工作间切换, 任何都可能分心他们, 领导这个实验室的克里福得 纳期教授观察到
-.
+研究者很奇怪. 他们以为平行工作者应该从忙于处理屏幕信息得到一些特
+殊能力, 但是情况不是这样. 重度平行工作者不擅长多工作, 比轻度平行工作者更不
+适应在工作间切换, 干扰他们的的东西太多了。
 It would be one thing if the ill effects went away as soon as we turned off
 our computers and cellphones. But they don't. The cellular structure of the
 human brain, scientists have discovered, adapts readily to the tools we use,
@@ -145,15 +146,14 @@ crucial to our survial. They reduced the odds that a predator would take us by
 surprise or that we'd overlook a nearby source of food.
 读很多页书帮助我们发展出罕见的训练有素的思维. 大脑天生易被分心. 我们天生喜
 欢尽可能多的关心周围的事. 我们快速的, 本能的改变注意点的体质曾经对生存很
-重要, 能减少我们被捕食者捉到,和错过食物.
+重要, 能减少我们被捕食者捉到的,或错过食物的可能.
 To read a book is to practice an unnatural process of thought. It requires us
 to place ourselves at what T.S.Eliot, in his poem "Four Quartets", called "the
 still point of the turning world". We have to forge or strengthen the neural
 links needed to counter our instinctive distractedness, thereby gainging
 greater control over our attention and our mind.
-读书是在练习不自然的思考. 它需要我们把自已放在爱略特在四重奏里说的生命的静止
-点的状态. 我们需要打造或加强挺抗我们本能的易分心性的神经连接, 对注意力和思想有
-更强的控制.
+读书是在练习不自然的思考过程. 它需要我们把自已放在爱略特在四重奏里说的生命的静止
+点的状态. 我们要锻炼专心的神经, 更好的控制注意力。
 It is this control, this mental discipline, which we are at risk of losing as
 we spend ever more time scanning and skimming online. If the slow progression
 of words across printed pages damped our craving to be inundated by mental
@@ -161,7 +161,6 @@ stimulation, the Internet indulges it. It returns us to our native state of
 distractedness, while presenting us with far more distractions than our
 ancestors ever had to contend with. Nicholas Carr is the author, most
 recently, of The Shallows: What the Internet Is Doing to Our Brains.
-这种控制精训练是我网上浏览时在失去的.
-如果看书时浏览文字的慢速进程减弱了我们对精神刺激的愿望, 网络则放纵它. 网络
-把我们带到易分心的原始状态, 给我们展示远比我们祖先需要处理的更多的分心事物.
-作者是尼古拉斯 卡尔, 肤浅:网络对我们的大脑做了什么.
+上网让我们失去思想控制能力。
+如果读书让人冷静, 网络则让人猴急. 把我们带回原始的易分心状态，
+, 给我们展示远比祖先需要处理的更多的事物.
