@@ -1,0 +1,46 @@
+2018年01月30日
+1 介绍
+	slp全称是service location protocol。 作用是让一台机器探测局域网里有哪
+	些服务可用，比如你需要ftp服务，你不知道有没有机器提供ftp,是哪些机器。你可
+	以一种语言编程逐个检查局域网网段里每个IP的某个端口是否可用，但是用slp更简
+	单，功能更全。
+
+	一台机器提供某种网络服务并不能直接被slp客户端查询到，服务器要运行slp服务
+	，并把某种服务添加到slp服务的列表里。
+2 安装
+	slp有两个包，叫openslp的是客户端，安装后提供命令slptool,叫openslp-server
+	的是服务端，安装后提供命令slpd.
+3. 服务端操作
+3.1 把一个服务注册到slp
+	在目录/etc/slp.reg.d下面，编辑一个文件以'reg'为后缀，每种服务一个，格式象
+	这样
+	
+	service:ftp://$HOSTNAME:21,en,65535
+	watch-port-tcp=21
+	description=File Transfer Protocol [ftp]
+	
+	要为其它服务写配置文件，把上面例子的'ftp','21',还有描述换掉。
+	或者编辑文件/etc/slp.reg,格式一样。
+
+	另一种方法，不使用配置文件
+	slptool register service:ftp://$HOSTNAME:21
+3.2 取消注册一个服务
+	以上面的配置为例
+	slptool deregister service:ftp://$HOSTNAME:21
+3.3 启动注册到了slp的服务
+	注册了的服务必须在slp服务之前启动，否则slp服务列表里没有那个服务，客户端
+	查不到。
+
+	启动slpd
+	systemctl start slpd
+4 客户端操作
+4.1 搜索局域网里有哪些服务。
+	某个服务器没有运行slpd服务，或者它的某个服务没有
+	注册到slp，客户端就查不到这个服务器的服务。
+	slptool findsrvtypes
+
+	搜索提供某种服务的机器
+	slptool findsrvs 服务名(ftp,utp,ssh等)
+	
+	检查某个机器某个服务属性
+	slptool findattrs service:ftp://192.168.100.174
