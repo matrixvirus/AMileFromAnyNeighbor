@@ -1,0 +1,64 @@
+1 项目介绍
+	2018年01月31日，练习设置ftp服务，用本机和一台虚拟机。
+	本机系统:openSUSE-Leap-42.3
+	虚拟机系统:CentOS-6.9
+2 起步步聚，最简单的安装，连接。
+2.1. 本机安装vsftpd
+	$ zypper install vsftpd
+2.2. 虚拟机安装ftp
+	$ yum install ftp
+2.3. 虚拟机登录本机的ftp服务
+	$ ftp -n
+		-n 这个参数作用时等下给你机会输入用户名，而不是直接用你登录虚拟机
+		的用户，假如用root登录了虚拟机，执行了ftp，就直接用root登录远程的
+		ftp服务了，不能换成别的。
+	现在在ftp交互界面里面了。
+	ftp> open 192.168.100.174
+			  本机的地址
+	ftp> user
+	  上面的user是个命令，然后开始输用户名
+	(username) opensuse
+	  和密码
+	Password: 
+      输完了有提示
+	230 Login successful	
+	  然后回到这种提示符
+	ftp>
+	  登录成功了，用ls命令查看有什么
+	ftp>ls
+	  发现是在本机的opensuse用户的家目录。
+	ftp>help
+	  看看有些什么命令可用
+3. 怎样用ftp下载一个目录
+	ftp命令不能下载目录，最多能用子命令mget下载多个普通文件。
+	用lftp或wget两种方法可以下载目录。
+4 用lftp下载目录
+4.1 安装lftp
+	$ yum install lftp
+4.2 在命令行输命令lftp
+	$ lftp
+	进到lftp交互界面后
+	连接
+	lftp > open 192.168.100.174
+    登录
+	lftp > user opensuse opensuse
+		   登录 用户名   密码
+		   我的本机系统的opensuse用户的密码也是opensuse
+	下载目录Music
+	lftp > mirror Music
+5 用wget下载目录 
+	$ wget --mirror ftp://opensuse:opensuse@192.168.100.174/
+           下载目录	      用户名   密码     地址
+6 用root用户登录，服务端要设置什么
+	刚配的vsftpd只能用普通用户登录，要允许root登录，要改一些设置。
+6.1 openSUSE上的步聚
+	vim /etc/ftpusers
+	有一行是'root',注释掉
+	重启服务
+	systemctl restart vsftpd
+6.2 CentOS上的步聚，和openSUSE上要改的文件，文件具体位置不一样。
+	要改两个文件
+		/etc/vsftpd/ftpusers
+		/etc/vsftpd/user_list
+	把是'root'的那一行都注释掉，重启服务
+		service vsftpd restart

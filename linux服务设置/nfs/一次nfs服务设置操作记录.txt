@@ -1,0 +1,22 @@
+1 项目描述 
+	2018年01月30日，练习设置nfs服务，用本机和一台虚拟机，
+	本机系统:openSUSE-Leap-42.3
+	虚拟机系统：CentOS-6.9
+2 步聚
+2.1 我的openSUSE系统本身已经有了nfs,跳过安装nfs要安装哪些包。
+	编辑/etc/exports,添加内容：
+		/ *(rw,no_root_squash)	
+	/ 把根目录拿出来共享
+	* 允许任何机器连接
+	rw 允许客户端写文件
+	no_root_squash 允许客户端用root身份写文件
+2.1.1 允许连接的机器的格式
+	单个IP
+	IP有星号 192.168.100.*
+	网段 192.168.100.0/24
+	域名，可以带星号
+2.2 启动或重启服务
+	systemctl restart nfsserver
+2.3 客户端连接
+	yum install nfs-utils
+	mount 192.168.100.174:/ /media/192.168.100.174 -t nfs

@@ -1,0 +1,28 @@
+	2018年01月29日。
+	用本机和虚拟机练习设置ntp服务，本机当服务端，虚拟机当客户端，
+	本机系统:openSUSE-Leap-42.3
+	虚拟机系统:CentOS-6.9
+步聚
+1. 		虚拟机安装ntpdate
+		$ yum install ntpdate
+		这里不讲怎么设置yum源，都假设设置好了。
+		ntp相关的包有两个，叫ntp的是服务端，叫ntpdate是客户端，作为客户端的虚
+	拟机只需要安装ntpdate。
+2. 		把虚拟机的时间改得和本机差两个小时，以好看效果。
+3. 		本机关闭防火墙，
+		$ iptables -F
+		$ iptables -t filter -I INPUT -j ACCEPT
+		我不知道为什么，openSUSE系统执行了"iptables -F"后，所有网络都不通，
+	127.0.0.1都ping不通，加上"iptables -t filter -I INPUT -j ACCEPT",
+	允许所有包进入就好了。
+		先让ntp服务跑起来，不要受防火墙干扰，再管怎么为ntp服务设置防火墙。
+4. 		
+
+...
+
+	不知道怎么搞，按书上指导改了/etc/ntp.conf,服务起来，端口在工作，防火墙也
+关了，在虚拟机执行ntpdate 总是报错
+	No suitable server for synchronization found
+	怎么搞都没用，浪费时间。
+	我改成用虚拟机做服务端，本机做客户端，成功了，估计是openSUSE的问题吧，
+不管了，因为没有资料，网上找不到有帮助的问答，好累。
