@@ -12,7 +12,7 @@
 		-n 这个参数作用时等下给你机会输入用户名，而不是直接用你登录虚拟机
 		的用户，假如用root登录了虚拟机，执行了ftp，就直接用root登录远程的
 		ftp服务了，不能换成别的。
-	现在在ftp交互界面里面了。
+	现在在ftp交互界面里面了，命令行符变成了ftp>。
 	ftp> open 192.168.100.174
 			  本机的地址
 	ftp> user
@@ -29,15 +29,15 @@
 	  发现是在本机的opensuse用户的家目录。
 	ftp>help
 	  看看有些什么命令可用
-3. 怎样用ftp下载一个目录
+3. 怎样下载ftp服务器的一个目录
 	ftp命令不能下载目录，最多能用子命令mget下载多个普通文件。
 	用lftp或wget两种方法可以下载目录。
-4 用lftp下载目录
-4.1 安装lftp
+3.1 用lftp下载目录
+3.1.1 安装lftp
 	$ yum install lftp
-4.2 在命令行输命令lftp
+3.1.2 在命令行输命令lftp
 	$ lftp
-	进到lftp交互界面后
+	进到lftp交互界面后，命令行符变成了lftp >
 	连接
 	lftp > open 192.168.100.174
     登录
@@ -46,17 +46,17 @@
 		   我的本机系统的opensuse用户的密码也是opensuse
 	下载目录Music
 	lftp > mirror Music
-5 用wget下载目录 
+3.2 用wget下载目录 
 	$ wget --mirror ftp://opensuse:opensuse@192.168.100.174/
            下载目录	      用户名   密码     地址
-6 用root用户登录，服务端要设置什么
+4 客户端用root用户登录，服务端要设置什么
 	刚配的vsftpd只能用普通用户登录，要允许root登录，要改一些设置。
-6.1 openSUSE上的步聚
+4.1 openSUSE上的步聚
 	vim /etc/ftpusers
 	有一行是'root',注释掉
 	重启服务
 	systemctl restart vsftpd
-6.2 CentOS上的步聚，和openSUSE上要改的文件，文件具体位置不一样。
+4.2 CentOS上的步聚，和openSUSE上要改的文件，文件具体位置不一样。
 	要改两个文件
 		/etc/vsftpd/ftpusers
 		/etc/vsftpd/user_list
