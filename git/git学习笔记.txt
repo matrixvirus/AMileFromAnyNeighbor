@@ -171,6 +171,9 @@
     $ git show :1:文件名 祖先版本 &3
     $ git show :2:文件名 自已版本 &4
     $ git show :3:文件名 对方版本 &5
+11.2.5 如果遇到报错，“拒绝合并无关的历史",
+	加一个参数 --allow-unreleated-histories
+	$ git pull origin master --allow-unreleated-histories
 11.3 取消合并
 11.3.1 合并还没提交
    $ git reset --hard HEAD &1
