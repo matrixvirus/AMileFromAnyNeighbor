@@ -1,0 +1,142 @@
+1 
+	写作背景
+		2018年02月01日
+	内容目标
+		1 dns配置文件语法，讲清楚自已写需要知道什么，忽略不需要修改，知道的。
+		2 dns查询工具
+	系统环境
+		本机 openSUSE-Leap-42.3
+		虚拟机 CentOS-6.9
+2 dns配置文件语法
+2.1 /etc/resolv.conf
+	关键字nameserver 指定DNS服务器地址。
+	还有domain,search关键字，我一直不知道search是干嘛的，系统手册说它是一种搜索
+	列表，我读不懂手册，没办法翻译成中文，不是不会英语，而是这手册好象根本语法不
+	通。
+		Resolver queries having fewer than ndots dots (default is 1)  in
+		them  will  be attempted using each component of the search path
+		in turn until a match is found	
+	这句什么意思？当查询不包含点号的域名，与列表中的项逐个匹配，怎么匹配？匹配
+	了然后呢？
+	我用必应搜索搜不到有用的东西，能搜出来的别人的博客，要么没讲什么，要么象是
+	生翻英语文档，意思一样不通，比如搜出来一个博客这么说
+	"""
+		它的多个参数指明域名查询顺序。当要查询没有域名的主机，主机将在由search
+		声明的域中分别查找
+	"""
+	这个“域名查询顺序”是什么？一般查DNS不是指定一个域名查IP吗，
+	跟这个什么列表的什么顺序是什么关系？什么叫没有域名的主机？查询没有域名的主
+	机的域名吗？语法不通。
+2.2 /etc/named.conf
+2.2.1 第一部分是
+	options {
+		directory "/var/lib/named";
+		listen-on port 53 { 127.0.0.1;any; };
+		listen-on-v6 port 53 {any;};
+		allow-query {127.0.0.1;192.168.100.0/24;any;};
+	}
+	解释
+	directory zone文件位置。
+	listen-on 监听什么端口和允许什么地址连接自已。可以写具体IP或网段，或'any'。
+	allow-query 允许哪些地址查询自已。和listen-on 选项的区别是，如果'listen-on'
+	选项没有允许某个地址连接，那个地址如果使用这个服务器作为自已的DNS会连不上，
+	如果选项'listen-on'设置了某个地址可以连接，选项'allow-query' 里没有允许这
+	个地址查询，会提示查不到所查的域名。
+2.2.2 
+	zone "com" IN {
+		type master;
+		file "named.ShenZhen";
+	};  
+	设置一个顶级域叫com。类型是master,该顶级域下面的域的zone文件是
+	/var/lib/named/named.ShenZhen里，前面的路径由options段的选项directory
+	指定，看上面。zone, IN都是固定格式。
+	master的意思是zone文件在本地。
+	另一种类型是slave,下面是例子
+	zone "com" IN {
+		type slave;
+		masters {192.168.100.173;};
+	}
+	意思是本DNS服务器把关于顶级域名com下面的子域的的查询转给192.168.100.173。
+2.2.3
+	1 zone "100.168.192.in-addr.arpa" IN {
+	2 	type master;                
+	3 	file "100.168.192.ShenZhen";
+	4 };
+	这是定义反向查询的，根据IP查域名。这个zone和服务对象是所有以192.168.100
+	开头的IP，反着写成100.168.192,第一行的in-addr.arpa是固定格式。
+	
+2.3 /var/lib/named/named.ShenZhen
+	这是/etc/named.conf 里那个zone定义的路径，内容如下
+	1 $TTL 1D
+	2 @   IN SOA  @ rname.invalid. (
+    3                0   ; serial
+    4                1D  ; refresh
+    5                1H  ; retry
+    6                1W  ; expire
+    7                3H )    ; minimum
+	8	NS  baidu
+	9  baidu MX 10 baidu
+	10 baidu A 192.168.100.173
+	11 www.solidot.com. IN A 10.0.0.1
+	12                  IN A 10.0.0.2 
+	13 slashdot A6 2002:c0a8:174::
+	14 bing AAAA 2002:c0a8:173::
+
+	第1行 固定格式
+	第2行
+		@ 代表'com.'，/etc/named.conf里那个zone定义的com，后面加个点写成'com.'
+			的意思是它是'com'，不是'com.com'，不要把域名'com'接到它后面。
+		IN SOA 固定格式。
+		rname.invalid. 随便写的。
+	第3到第7行 不需要管
+	第8行 由域名为baidu.com的机器处理这个zone,'baidu'，不加点，意思是'baidu.com'
+		，等效于写成'baidu.com.'。
+	第9行 域名baidu.com的邮箱由域名为baidu.com的机器处理。
+	第10行 域名'baidu.com'的ip是192.168.100.173。大A前面的IN好象可有可无。
+	第11行 域名'www.solidot.com'的IP是10.0.0.1。
+	第12行 和上面的第11行一样的www.solidot.com还有一个IP是10.0.0.2。
+	第13行 slashdot.com 有IPv6地址。
+	第14行 IPv6地址的另一种写法，四个A。
+
+	注意把这个文件权限设置成组named可以读。
+2.4 /var/lib/named/100.168.192.ShenZhen
+	2.2.3节的/etc/named.conf里定义的文件，反向查询的。
+	$TTL 1D              
+	100.168.192.in-addr.arpa.   IN SOA  baidu.com. baidu.com. (
+                    0   ; serial
+                    1D  ; refresh
+                    1H  ; retry
+                    1W  ; expire
+                    3H )    ; minimum
+		NS  baidu.com.   
+	173 IN PTR baidu.com.
+	174 IN PTR www.solidot.com.
+	
+	意思是192.168.100.173的域名是baidu.com，192.168.100.174的域名是
+	www.solidot.com。
+	注意把这个文件权限设置成组named可以读。
+3 启动服务
+	openSUSE-Leap-2.3:systemctl start named
+	CentOS-6.9:servcie named start
+4 rndc命令
+	用于管理named服务。
+
+	检查服务状态
+	$ rndc status
+	重读配置文件和zone文件
+	$ rndc reload
+	为某一个zone重读zone文件
+	$ rndc reload com // com 是我上面自已设置的一个zone
+	重读配置文件和新增的zone
+	$ rndc reconfig
+5 dig命令
+	检查某个zone的nameserver是什么，就是zone文件里这种行定义的
+		IN NS baidu.com.
+	检查为'com'的zone的nameserver
+	dig com NS
+	
+	检查某个域名的IP
+	dig baidu.com A
+
+	反向查询
+	dig -x 192.168.100.173
