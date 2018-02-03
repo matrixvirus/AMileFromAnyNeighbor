@@ -12,20 +12,22 @@
 	/etc/apache2/
 3.2 虚拟主机
 3.2.1 基于域名
-	# 不用默认的80端口
-	Listen *:81
-	<VirtualHost *>
+	# 监听81和82两个端口
+	Listen 81
+	Listen 82
+	<VirtualHost *:81>
 		# 当浏览器输的是这个域名，用这段配置对付
 		ServerName www.example.com
 		# 网页文件位置
 		DocumentRoot /srv/www/htdocs/domain
-		# 不用默认的index作主页
-		DirectoryIndex decaf.index
+		# 不用默认的index.html作主页
+		DirectoryIndex decaf.html
 	</VirtualHost>
-	<VirtualHost *>
+	<VirtualHost *:82>
 		ServerName other.example.com
 		DocumentRoot /srv/www/htdocs/otherdomain
-		<Directory '/srv/www/htdocs/'>
+		# 如果没找到index.html,列出文件
+		<Directory '/srv/www/htdocs/otherdomain'>
 			Options indexes
 		</Directory>
 	</VirtualHost>
@@ -89,3 +91,47 @@
 	我不知道为什么openSUSE文档的这里要用和4.1.2.1节不同的命令格式。
 	然后文档里没说下一步怎么做，以后再自已去证书机关网站看看，接下来先学习怎么
 	给apache配上假证书或自签名证书。
+4.2 为apache配置ssl
+	ssl和tls默认端口是443。同一个apache实例可以同时监听80和443,但是要配置不同
+	的虚拟主机。
+4.2.1 加载模块
+	mod_ssl模块默认是启用的，不需要改，如果没启用，
+	$ a2enmod ssl
+	不管要没有手动执行上面一句，都要执行下面一句
+	$ a2enflag ssl
+	增大/etc/sysconfig/apache2里APACHE_TIMEOUT,apache启动时你有时间输密码，如
+	果你给证书设了密码。
+	重启服务。必须重启，重载是不够的。
+4.2.2 配置文件
+	/etc/apache2/vhosts.d/vhost-ssl.template 是一个例子。
+	我改的虚拟主机如下
+	Listen 443 新增监听443端口
+	__________
+	<VirtualHost *:443> 改成443
+		<Directory '/srv/www/htdocs/michelangelo'>
+			Options indexes
+		</Directory>
+		ServerName michelangelo.newton
+		DocumentRoot /srv/www/htdocs/michelangelo
+		SSLEngine on 新增
+		____________
+		SSLCertificateFile /etc/apache2/ssl.crt/server.crt 新增
+		__________________________________________________
+		SSLCertificateKeyFile /etc/apache2/ssl.key/server.key 亲增
+		_____________________________________________________
+	</VirtualHost>
+
+4.2.3 验证
+	lynx https://域名
+	或者用curl
+	curl https://域名
+	
+	不知道为什么只能写https://，写 域名:443 则报错 400 Bad Request。
+4.2.4 
+	理论上无法为只有一个IP的机器的多个虚拟主机配置ssl，apache需要知道客户端
+	请求的域名，但是客户端发的包含域名信息的请求只有在ssl连接建立后服务器才
+	可读，所以在建立ssl连接时服务器发给客户端的证书不一定是客户端请求访问的
+	域名的证书。
+	openSUSE使用了一种方法叫Server Name Indication,SNI，是对ssl协议的一个扩
+	展，在ssl连接建立时把域名包含进来发给服务器。
+	浏览器需要支持SNI。
