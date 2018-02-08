@@ -1,3 +1,137 @@
 1 
 	2018年02月01日。
+	本机openSUSE-Leap-42.3作客户端,192.168.100.174,
+	虚拟机CentOS-6.9,192.168.100.173作squid机器,安装squid。
+	虚拟机CetnOS-6.9,192.168.100.220作网页机器，安装apache。
+2 squid介绍
+2.1
+	squid是一种代理缓存，保存网络内容，象网站的，ftp的，或者上一级squid代
+	理的， 多台squid机器可以有层次的组织起来加快反应时间降低带宽使用。
+	squid把客户端的内容请求转发给客户端实际希望的服务器，内容从服务器传给
+	squid机器，squid机器把内容自已保存一份，并转发给请求内容的客户端，同样的
+	内容再次被请求时squid机器保存的那份会被使用。 squid机器间可以互相交换内容。
+	squid主要用来缓存http,也能用于ftp,gopher,ssl,wais,只有这几个了。
+	squid上下级间，同级间使用Internet Cache Protocal,ICP协议协调，这个协议
+	工作在UDP协议上，用http协议传内容。
+	
+	为了确定保存了某一内容的最近的squid机器，squid机器先询句兄弟节点，用ICP协
+	议， 然后询问上级节点,最后查客户端实际请求的网站。
 
+	squid不缓存动态网页，和ssl/tls加密的内容。
+
+	除了缓存，还有它些功能 
+		控制客户端访问本squid机器
+		限制某些网页的访问
+		统计某个网页的访问习惯
+3 安装
+3.1 
+	1 安装squid
+	  $ yum install squid	
+	2 启动
+	  $ service squid start	
+	3 检查squid是否在运行
+	  $ squid -k check | echo $?
+      等于0说明正常
+	4 检查squid端口占用，squid用的是3128端口
+	  $ netstat -an | grep 3128	
+	5 缷载
+	  除了缷载，还要删除/etc/squid/squid.conf 的cache_dir指示的目录。
+3.2 squidclient命令,用于测试squid，在squid机器上执行。
+	$ squidclient http://网址
+	squidclient命令直接连接localhost:3128。它的输出象这样
+
+	HTTP/1.0 200 OK
+	Date: Tue, 06 Feb 2018 02:48:03 GMT
+	Server: Apache/2.2.15 (CentOS)
+	Last-Modified: Mon, 05 Feb 2018 03:57:37 GMT
+	ETag: "1ff6b-1f-5646f100e8dcf"
+	Accept-Ranges: bytes
+	Content-Length: 31
+	Content-Type: text/html; charset=UTF-8
+	X-Cache: MISS from localhost
+	X-Cache-Lookup: MISS from localhost:3128
+	Via: 1.0 localhost (squid/3.1.23)
+	Connection: close
+
+	<p>
+			My Father s Favorite
+	</p>
+
+	它的输出有两部分，上面是协议头，下面是网页内容。
+	上面有一行X-Cache,指示请求的内容不在叫localhost的机器上。
+	Via 那一行指示http版本，squid机器名,squid版本。
+
+	第二次执行squidclient,和第一次一样，会发现X-Cache那行变成了'HIT from 
+	localhost',第一次请求的内容被squid机器就是本机缓存了。
+4 配置
+	主配置文件叫/etc/squid/squid.conf
+4.1 编辑/etc/squid/squid.conf,把
+		http_access deny all
+	改成
+		http_access allow all
+4.2 /etc/squid/squid.conf 常用词汇
+	http_port PORT 
+		指示squid在哪个端口监听客户端连接
+	cache_peer 地址 类型 代理端口 ICP端口
+		地址 另一台squid机器的地址
+		类型 parent或sibling
+		代理端口 另一台squid机器的端口
+		ICP端口 7 默认
+			    0 当父节点的端口不知道或者与提供者没有关系，文档是这么说的，我
+				  没看懂
+	cache_mem 
+		The amount of memory Squid can use for very popular replies
+		我不知道该怎么翻译，所以把原文贴上。	  
+	cache_dir STORAGE_TYPE CACHE_DIRECTORY CACHE_SIZE LEVEL_1_DIRECTORIES \
+		LEVEL_2_DIRECTORIES
+		存放缓存的目录
+		STORAGE_TYPE 可以是
+			ufs 一种使用目录的方法
+			aufs ufs的一种变形
+			diskd ufs的一种变形
+			rock  一种使用数据库的方法
+		CACHE_DIRECTORY
+			目录
+		CACHE_SIZE
+			目录大小上限，单位是M
+		LEVEL_1_DIRECTORY 和 LEVEL_2_DIRECTORY 
+			CACHE_DIRECTORY指示的目录下面一级子目录和二级子目录的个数
+4.3 访问控制
+4.3.1
+	Access Control List,ACL
+	语法
+	acl ACL_NAME TYPE DATA
+		ACL_NAME 是任意的
+	几个例子
+	1 acl mysurfers srcdomain .example.com
+	  定义mysurfers是所以来自域名结尾是.example.com的东西
+	2 acl teachers src 192.168.1.0/255.255.255.0
+	  定义teacher是所有来自这个网段的东西
+	3 acl students src 192.168.7.0-192.168.9.0/255.255.255.0
+      定义students是所以来自这个网段范围的东西
+	4 acl lunch time MTWHF 12:00-15:00
+	  定义lunch是Monday,Tuesday,Wednesday,H不知道是不是星期四，Friday
+	  的12点到15点
+	
+4.3.2
+	http_access allow ACL_NAME
+	控制谁能访问这台代理机器，谁能看网上的什么内容。
+
+	几个例子
+	1 http_access allow localhost
+	2 http_access allow students lunch time
+	3 http_access deny all
+4.3.3
+	url_rewrite_program PATH
+5 透明代理
+	1 编辑/etc/squid/squid.conf
+	  1 http_port 3128 transparent	
+	  2 
+	2 设置防火墙，把进入squid机器80端口的流量转发到3128端口
+	  iptables -t nat -I PREROUTING -p tcp --dport 80 -j DNAT --to-destination
+		:3128
+	
+
+	...
+
+	暂不研究它。

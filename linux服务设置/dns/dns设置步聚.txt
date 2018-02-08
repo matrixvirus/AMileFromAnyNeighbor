@@ -9,24 +9,15 @@
 		虚拟机 CentOS-6.9
 2 dns配置文件语法
 2.1 /etc/resolv.conf
-	关键字nameserver 指定DNS服务器地址。
-	还有domain,search关键字，我一直不知道search是干嘛的，系统手册说它是一种搜索
-	列表，我读不懂手册，没办法翻译成中文，不是不会英语，而是这手册好象根本语法不
-	通。
-		Resolver queries having fewer than ndots dots (default is 1)  in
-		them  will  be attempted using each component of the search path
-		in turn until a match is found	
-	这句什么意思？当查询不包含点号的域名，与列表中的项逐个匹配，怎么匹配？匹配
-	了然后呢？
-	我用必应搜索搜不到有用的东西，能搜出来的别人的博客，要么没讲什么，要么象是
-	生翻英语文档，意思一样不通，比如搜出来一个博客这么说
-	"""
-		它的多个参数指明域名查询顺序。当要查询没有域名的主机，主机将在由search
-		声明的域中分别查找
-	"""
-	这个“域名查询顺序”是什么？一般查DNS不是指定一个域名查IP吗，
-	跟这个什么列表的什么顺序是什么关系？什么叫没有域名的主机？查询没有域名的主
-	机的域名吗？语法不通。
+	例子
+	nameserver 10.0.0.2
+	search com cn org
+	
+	nameserver 指定DNS服务器地址
+	search 后面跟了三个'com','cn','org',当搜一个域名如'baidu.com',搜不到,
+	把'search'指定的三个后缀加在后面依次尝试，'baidu.com.com','baidu.com.cn',
+	'baidu.com.org'。
+	
 2.2 /etc/named.conf
 2.2.1 第一部分是
 	options {

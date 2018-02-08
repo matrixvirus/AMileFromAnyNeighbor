@@ -1,0 +1,46 @@
+1
+	2018年02月06日
+	两台虚拟机，系统都是CentOS-6.9
+	
+	Precise Time Protocol,PTP。精度是微秒。
+	PTP对NTP的一个优点是被很多网络接口控制器（NIC，Network Interface 
+	Controllers),网络交换机支持。NIC用PTP计算延迟。
+	如果网路中有不支持PTP的设备，会导致不同设备对延迟的计算的不同，产生不同步，
+	所以象大范围的网络，无法保证所有设备都支技PTP,最好用NTP。
+
+2 配置
+2.1 检查硬件和驱动是否支持PTP
+	$ ethtool -T eth0
+
+	Time stamping parameters for eth1:
+	Capabilities:
+			software-receive      (SOF_TIMESTAMPING_RX_SOFTWARE)
+			software-system-clock (SOF_TIMESTAMPING_SOFTWARE)
+	PTP Hardware Clock: none
+	Hardware Transmit Timestamp Modes: none
+	Hardware Receive Filter Modes: none
+
+	我执行这个命令是在虚拟机上。
+	如果支持软时间戳，输出里应该有这些
+	  SO F_T IMEST AMPIN G _SO FT WAR E
+	  SO F_T IMEST AMPIN G _T X_SO FT WAR E
+	  SO F_T IMEST AMPIN G _R X_SO FT WAR E
+	如果支持硬时间戳，输出里应该有这些
+	  SO F_T IMEST AMPIN G _R AW_H AR D WAR E
+	  SO F_T IMEST AMPIN G _T X_H AR D WAR E
+	  SO F_T IMEST AMPIN G _R X_H AR D WAR E
+
+2.2 安装ptp
+	$ yum install linuxptp
+2.3 启动ptp4l
+	$ ptp4l -i eth0 -m
+	参数：
+		-i 指定接口
+		-m 把信息显示出来
+	
+	然后我在虚拟机上执行这个命令显示不支持。那只能在本机上做实验了，可是要练习
+	本机和虚拟机用ptp同步时间，虚拟机不支持还是不能做，这个暂时不搞了。
+		
+
+
+		

@@ -1,0 +1,57 @@
+1 环境
+	2018年02月03日，在一台虚拟机CentOS-6.9设置httpd,IP 192.168.100.220,本机
+	openSUSE-Leap-42.3,IP 192.168.100.174。
+2 安装
+	yum install httpd mod_ssl
+3 配置
+3.1 编辑 /etc/httpd/conf/httpd.conf
+	Listen 80
+	<VirtualHost *:80>
+		DocumentRoot /www/docs/pythagoras.aristotle
+		ServerName pythagoras.aristotle
+	</VirtualHost>
+3.2 编辑 /etc/httpd/conf.d/ssl.conf
+	Listen 443
+	LoadModule ssl_module modules/mod_ssl.so
+	<VirtualHost *:443>
+		DocumentRoot /www/docs/socrates.aristotle
+		ServerName socrates.aristotle
+		SSLEngine on
+		SSLCertificateFile /etc/pki/tls/certs/你建的证书名
+		SSLCertificateKeyFile /etc/pki/tls/private/你建的私钥名
+	</VirtualHost>
+	
+3.3 新建自签名证书
+	1 创造证书签名申请 Certificate Signing Request,CSR。
+	  $ openssl req -newkey rsa:2048 -nodes -keyout newkey.pem -out \
+		newreq.pem
+	  参数:
+	    openssl 是一个命令
+	    req 是openssl的子命令,意思是产生证书申请 Certificate Signing Request,
+			CSR
+	    -newkey 产生新证书申请和新私钥
+	    rsa:2048 使用2048位rsa非对称秘钥算法
+	    -nodes 不加密产生的私钥
+        -keyout 产生私钥的文件名
+	    -out 产生CSR的文件名
+	2 从上一步产生的newkey.pem文件导出私钥，
+	  $ openssl rsa -in newkey.pem -out new.cert.key
+      参数：
+	    rsa openssl命令的一个子命令，处理RSA钥，转换格式，不清楚。
+	    -in 输入文件
+	    -out 输出文件
+	  我还不清楚输入文件newkey.pem和new.cert.key有什么区别，打开两个文件发现
+	  newkey.pem自称是私钥，new.cert.key自称是RSA私钥。
+	3 从证书申请产生证书
+	  $ openssl x509 -in newreq.pem -out new.cert.crt -req -signkey \
+		  new.cert.key
+	  参数
+	    x509 openssl命令的一个子命令
+        -in 输入证书申请
+	    -out 输出证书
+		-req 指示参数-in指定的输入文件是一个证书申请而不是一个证书
+        -signkey 使用私钥签名
+	4 把证书和私钥放到正确的位置
+	  $ mv new.cert.key /etc/pki/tls/private/iloveyou.key
+	  $ mv new.cert.crt /etc/pki/tls/certs/iloveyou.crt
+

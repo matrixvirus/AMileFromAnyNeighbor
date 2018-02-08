@@ -7,28 +7,32 @@
 	$ zypper install vsftpd
 2.2. 虚拟机安装ftp
 	$ yum install ftp
-2.3. 虚拟机登录本机的ftp服务
+2.3 使用叫ftp的客户端
 	$ ftp -n
 		-n 这个参数作用时等下给你机会输入用户名，而不是直接用你登录虚拟机
 		的用户，假如用root登录了虚拟机，执行了ftp，就直接用root登录远程的
 		ftp服务了，不能换成别的。
 	现在在ftp交互界面里面了，命令行符变成了ftp>。
-	ftp> open 192.168.100.174
-			  本机的地址
-	ftp> user
-	  上面的user是个命令，然后开始输用户名
-	(username) opensuse
-	  和密码
-	Password: 
-      输完了有提示
-	230 Login successful	
-	  然后回到这种提示符
-	ftp>
-	  登录成功了，用ls命令查看有什么
-	ftp>ls
-	  发现是在本机的opensuse用户的家目录。
-	ftp>help
-	  看看有些什么命令可用
+	1 连接一个ftp服务器
+	  open 192.168.100.174
+	2 登录
+	  user
+	3 ls,cd命令和linux系统的一样。
+	4 下载一个文件
+	  get filename
+	5 上传一个文件
+	  put filename
+    6 下载多个文件
+ 	  mget file1 file2
+	7 上传多个文件
+	  mput file1 file2
+2.3.1 
+	使用主动模式
+	$ ftp -A
+2.3.2 使用二进制传输模式，如果下载了压缩包，解压时报错，是因为没用二进制转输模式
+	。
+	ftp> binary
+	
 3. 怎样下载ftp服务器的一个目录
 	ftp命令不能下载目录，最多能用子命令mget下载多个普通文件。
 	用lftp或wget两种方法可以下载目录。
@@ -39,16 +43,21 @@
 	$ lftp
 	进到lftp交互界面后，命令行符变成了lftp >
 	连接
-	lftp > open 192.168.100.174
+	  open ftp服务器地址
     登录
-	lftp > user opensuse opensuse
-		   登录 用户名   密码
-		   我的本机系统的opensuse用户的密码也是opensuse
+	  user 用户名 密码
+	下载文件
+	  get filename
+    上传文件
+	  put filename
+    下载多个文件
+	  mget file1 file2
+	上传多个文件
+	  mput file1 file2
 	下载目录Music
-	lftp > mirror Music
+	  lftp > mirror Music
 3.2 用wget下载目录 
-	$ wget --mirror ftp://opensuse:opensuse@192.168.100.174/
-           下载目录	      用户名   密码     地址
+	$ wget --mirror ftp://用户名:密码@192.168.100.174/路径/
 4 客户端用root用户登录，服务端要设置什么
 	刚配的vsftpd只能用普通用户登录，要允许root登录，要改一些设置。
 4.1 openSUSE上的步聚
@@ -62,3 +71,10 @@
 		/etc/vsftpd/user_list
 	把是'root'的那一行都注释掉，重启服务
 		service vsftpd restart
+5 用ftp作为yum源
+  格式是这样
+	ftp://用户名:密码@地址/路径/
+  假如用户在服务器上家目录是/home/opensuse，下面有个文件iso,应该这样写
+    ftp://用户名:密码@地址/iso
+  直接写iso，这样写是错的
+    ftp://用户名:密码@地址/home/opensuse/iso
