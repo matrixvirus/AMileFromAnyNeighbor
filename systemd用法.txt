@@ -1,0 +1,117 @@
+1
+	2018年02月10日
+2 什么是systemd
+	介绍是什么半天听不懂，不如直接讲用法。
+3 单元文件
+	单元文件是systemd的一个概念，它可以是
+	1 Service
+	2 Targets
+	3 Sockets
+	4 Path
+	5 Timer
+	6 Mount point
+	7 Automount point
+	8 Swap
+	9 Device
+	10 Scope/Slice
+4 管理服务
+	1 启动服务
+	  $ systemctl reload|restart|start|status|stop 服务名
+	2 查看系统有哪些服务
+	  $ systemctl list-unit-files --type=service
+	3 使/不使一个服务开机自动启动
+	  $ systemctl enable|disable 服务名
+	4 检查一个服务是否开机自动启动
+	  $ systemctl is-enabled 服务名
+5 系统启动和Target管理
+	系统的启动和关闭过程由systemd控制。
+5.1 Target和Runlevel
+	System V 启动系统用了一个概念'Runlevel'，...
+	跳过，介绍什么是Target，不如直接讲与Target相关的命令，我知道Runlevel是什么
+	也不是因为看了咬文咬字的介绍，而是通过学习命令，知道那些命令做了什么，执行
+	完了我的系统有什么变化，感受到Runlevel是什么。
+5.2 Target有6种，且与旧系统的6个等级对应
+	systemd target  	| System V runlevel
+	_________________________
+	runlevel0.target	| 0
+	halt.target			|
+	poweroff.target		|
+	____________________|____
+	runlevel1.target	| 1,S
+	rescue.target		|
+	____________________|____
+	runlevel2.target	| 2
+	multi-user.target	|
+	____________________|____
+	runlevel3.target	| 3
+	multi-user.target	|
+	____________________|____
+	runlevel4.target	| 4
+	____________________|____
+	runlevel5.target	| 5
+	graphical.target	|
+	____________________|____
+
+	runlevel0.target,和halt.target和poweroff.target是一个东西，其它的也是。
+5.3	Target相关的命令
+	1 改变当前target
+	  $ systemctl isolate MY_TARGET.target
+	2 切换到默认Target
+	  $ systemctl default
+	3 列出所有target
+	  $ systemctl list-units --type=target
+	4 永远改变默认target
+	  ln -sf /usr/lib/systemd/system/MY_TARGET.target \
+		/etc/systemd/system/default.target
+	5 修改某次启动的target
+	  在GRUB启动显示菜单时，编辑某个菜单，在后面加上
+	  systemd.unit=MY_TARGET.target
+	6 检查一个target依赖什么
+	  $ systemctl show -p "Requires" MY_TARGET.target
+	  $ systemctl show -p "Wants" MY_TARGET.target
+	  Wants比Requires的需要程度轻些，我不知道。
+6 系统启动排错
+6.1 查看所有启动了的服务
+	$ systemctl
+	查看所有启动失败了的服务
+	$ systemctl --failed
+	分析系统总的启动时间
+	$ systemd-analyze
+	列出所有服务的启动时间
+	$ systemd-analyze blame
+	用一张图片列出所有服务的启动时间
+	$ systemd-analyze plot > SomeName.svg
+6.2 可以在GRUB2启动菜单项后面加上
+	systemd.log_level=debug systemd.log_target=kmsg
+	使systemd详细记录系统启动过程
+	系统启动后用这个命令检查启动过程
+	$ dmesg -T | less
+7 systemd支持定时清理临时文件，/etc/tmpfiles.d/*.conf,/run/tmpfiles.d/*.conf,
+	/usr/lib/tmpfiles.d/*.conf 下面的文件定义了清理规则。
+	/etc/tmpfiles.d/下面的文件定义的规则会覆盖其它两个目录的。
+	这些配置文件的格式是每个路径占一行，包括动作，路径，模式，所有者UID，GID，
+	年齡，参数。比如这样
+	  r /tmp/.X[0-9]*-lock
+	
+	检查tmpfile定时器
+	$ systemctl status systemd-tmpfiles-clean.timer
+8 内核控制组集(cgroups)
+	以前的System V的init系统不是总是能清理一个服务的所有进程，有的服务比如
+	apache,调了很多第三方进程比如cgi,java，它们又会产生很多进程，使得清理干净
+	一个服务是不可能的，会留入很多子进程。
+	
+	systemd通过把一个服务放进它自已的cgroup里，cgroup是一种内核特性，把一个进程
+	和其所有子进程按树形结构组织起来。systemd用一个服务的名字给它的cgroup命名，
+	
+	列出一个服务的所有进程
+	$ systemd-cgls --no-pager
+8.1 结束一个服务
+	systemd可以向一个服务的所有进程发信号
+	给一个服务发信号SIGTERM
+	$ systemctl kill MY_SERVICE
+	给一个服务发指定信号
+	$ systemctl kill -s SIGNAL MY_SERVICE
+	不给所有子进程，只给一个进程发信号
+	$ systemctl kill -s SIGHUP --kill-who=main MY_SERVICE
+	上面的命令使服务重读配置文件
+	--kill-who 默认是all,还可以是control。

@@ -1,0 +1,112 @@
+1 写作背景
+	2018年02月09日
+2 GRUB 2有这些配置文件
+	1 /boot/grub2/grub.cfg
+	  配置GRUB2的菜单项目。
+	2 /boot/grub2/custom.cfg
+	  被/boot/grub2/grub.cfg引用。
+	3 /etc/default/grub
+	  控制用户对GRUB2的设置，比如背景，主题。
+	4 /etc/grub.d/
+	  这个目录下面放一些剧本，被grub2-mkconfig命令读。它们的指令被集合到
+	  /boot/grub/grub.cfg
+	5 /etc/sysconfig/bootloader
+	  用YaST配置boot loader时，或者安装了新内核时，要用这个文件
+		打断一下，原文就是'要用这个文件'，没说谁用
+	  这个不是GRUB2的一部分，它作用于任何系统启动器上，不一定是GRUB2。
+	6 /boot/grub2/x86_64-efi
+	  包含一些针对特定架构的选项。
+
+	修改了GRUB2的配置文件，执行grub2-mkconfig起效改变。
+2.1 /boot/grub2/grub.cfg
+	有启动菜单的启动界面由/boot/grub2/grub.cfg配置。
+	grub.cfg由grub2-mkconfig根据/etc/defaultgrub和/etc/grub.d/下面的剧本编译。
+	你不要手动改这个文件，可以修改相关的源文件或者用YaST来改。
+2.2 /etc/default/grub
+	要查看这个文件的所有可用选项，用这个命令
+	$ grep "export GRUB_DEFAULT" -A50 /usr/sbin/grub2-mkconfig | grep GRUB_
+	修改了/etc/default/grub后，要执行grub2-mkconfig以更新/boot/grub2/grub.cfg。
+	1 GRUB_DEFAULT
+	  设置默认的启动菜单项，可以是一个数字，或者是那个菜单项的名字，或者是
+	  'saved'
+	  GRUB_DEFAULT=2 从第三个菜单项启动
+	  GRUB_DEFAULT=(2>0)从第二个菜单项的第一个子菜单项启动。	
+	  GRUB_DEFAULT="Example boot menu entry"从标题是这个标题的菜单项启动。
+	  GRUB_DEFAULT='saved' 从命令grub2-reboot或grub2-set-default指定的菜单项
+		启动 ，其中grub2-reboot只设置下一次重启的默认菜单项，grub2-set-default
+		设置默认菜单项。
+	
+	2 GRUB_HIDDEN_TIMEOUT
+	  等几秒等用户按键,这期间没有菜单显示
+	3 GRUB_HIDDEN_TIMEOUT_QUIET
+	  如果是false，如果GRUB_HIDDEN_TIMEOUT有值，显示一个倒计时器。
+	4 GRUB_TIMEOUT
+	  启动菜单显示多少秒后启动默认菜单项,如果用户没有按键打断。如果这个值是-1,
+	  意思是永远等待手动选择。
+	5 GRUB_CMDLINE_LINUX
+	  这里定义的条目被加到启动菜单里普通的和恢复模式的条目后面。
+	6 GRUB_CMDLINE_LINUX_DEFAULT
+	  这里定义的条目被加到启动菜单里普通模式的条目后面。
+	7 GRUB_CMDINE_LINUX_RECOVERY
+	  这里定义的条目被加到启动菜单里恢复模式的条目后面。
+	8 GRUB_CMDLINE_LINUX_XEN_REPLACE
+	  对于所有Xen启动项，代替GRUB_CMDLINE_LINUX参数。
+	9 GRUB_CMDLINE_LINUX_XEN_REPLACE_DEFAULT
+	  对于所有Xen启动项，代替GRUB_CMDLINE_LINUX_DEFAULT参数。
+	10 GRUB_TERMINAL
+	  启用并指定一个输入输出终端设备。可以是console,serial,ofconsole,gfxterm
+	  。默认是gfxterm。
+	11 GRUB_GFXMODE
+	  gfxterm图形化终端的分辨率。
+	12 GRUB_BACKGROUND
+	  gfxterm图形化终端的背景图片。
+	13 GRUB_DISABLE_OS_PROBER
+	  如果是true，不自动搜索其它操作系统，只有/boot/下面的内核镜象和/etc/
+	  grub.d/下面的剧本定义的选项被检测到。
+	14 SUSE_BTRFS_SNAPSHOT_BOOTING
+	  如果是true,GRUB2可以直接启动进一个快照。
+2.3 /etc/grub.d/下面的剧本
+	grub2-mkconfig命令读这个目录里的剧本，它们的指令被集合到/boot/grub2/
+	grub.cfg，grub.cfg里的菜单项的顺序由这个目录的文件的执行顺序决定，文件名前
+	面有数字的先执行，小的在先，00_header在10_linux前面，然后是40_custom。
+	然后是文件名不带数字的文件。grub2-mkconfig执行时只有可执行文件产生输出到
+	grub.cfg。默认上/etc/grub.d下面所有文件都是可执行的。
+	1 00_header
+	  设置环境变量，包括系统文件的位置，显示设置，主题，以前保存的条目等。它也
+      从/etc/default/grub导入设置。
+	2 10_linux
+	  认识root设备上的linux内核,创造相关的菜单项，包括恢复模式。只有最新的内核
+	  被显示在主菜单页上，额外的内核在子菜单里。
+	3 30_os-prober
+	  这个剧本用OS-prober搜索linux和其它操作系统，把结果放在GRUB2菜单里。它里面
+	  有认识其它系统的代码，象windows,macOS。
+ 	4 40_custom
+	  往grub.cfg添加一些定做项。
+3 BIOS设备和Linux设备间的映射
+	GRUB2使用UUID或文件系统标签。
+	
+	只说了这么多，这部分可能要另找资料。
+4 在系统启动时编辑菜单项
+	1 启动菜单显示时，用方向键选择要编辑的菜单项。
+	2 按E
+	3 用方向键在行间上下移动。	
+	4 按F10启动
+
+	openSUSE这个文档只说了操作步聚，没说内容上的，可能要另找这方面资料。
+5 给GRUB设置密码
+	1 $ grub2-mkpasswd-pbkdf2
+	2 把上面命令的输出放进/etc/grub.d/40_custom，并在前面加一句
+	  set superusers="root"
+	3 $ grub2-mkconfig
+6 有用的GRUB2命令
+	根据/etc/default/grub和/etc/grub.d/下面的剧本，产生/boot/grub2/grub.cfg
+	$ grub2-mkconfig -o /boot/grub2/grub.cfg	
+
+	创建一个你的GRUB2配置的可启动急救镜象。
+	$ grub2-mkrescue -o save_path/name.iso iso
+
+	检查语法错误
+	$ grub2-script-check /boot/grub2/grub.cfg
+
+	设置下一次重启的默认菜单项
+	$ grub2-once 数字

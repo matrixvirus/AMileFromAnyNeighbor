@@ -72,6 +72,7 @@
 	12                  IN A 10.0.0.2 
 	13 slashdot A6 2002:c0a8:174::
 	14 bing AAAA 2002:c0a8:173::
+	15 microsoft IN CNAME bing
 
 	第1行 固定格式
 	第2行
@@ -87,8 +88,10 @@
 	第11行 域名'www.solidot.com'的IP是10.0.0.1。
 	第12行 和上面的第11行一样的www.solidot.com还有一个IP是10.0.0.2。
 	第13行 slashdot.com 有IPv6地址。
+		打断一下，我的参考书是openSUSE-Leap-42.3官方文档叫Reference那个，'A6'这
+		个写法是它上面教的，在302面，但是我实际发现这种写法是错的。
 	第14行 IPv6地址的另一种写法，四个A。
-
+	第15行 microsoft.com是bing.com的一个别名
 	注意把这个文件权限设置成组named可以读。
 2.4 /var/lib/named/100.168.192.ShenZhen
 	2.2.3节的/etc/named.conf里定义的文件，反向查询的。

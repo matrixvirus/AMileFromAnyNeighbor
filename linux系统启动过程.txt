@@ -1,0 +1,78 @@
+1 写作背景 
+	2018年02月09日
+	参考书是openSUSE-Leap-42.3 官方文档，叫Reference那个。
+	openSUSE-Leap-42.3的启动器是systemd。
+	我也看得不是很懂。
+2 概述
+	启动linux涉及到很多组件和任务。BIOS或UEFI使用boot loader 启动内核，然后
+	systemd上场。
+2.1
+	1 BIOS/UEFI
+	  开机后，BIOS/UEFI启动屏幕，键盘，检查内存，这个过程结束前，机器还没识别
+	  硬盘。日期时间，其它周围信息被从CMOS装入
+
+		打断一下，原文就是被字句，被从CMOS装入，装入到哪里没说。
+
+	  第一块硬盘和它的几何被认识，控制权从BIOS转到boot loader。
+	2 Boot Loader
+	  硬盘前512字节数据，叫Master Boot Record(MBR)装进内存，这512字节里有Boot 
+	  Loader。然后Boot Loader把控制权交给操作系统内核。openSUSE-Leap-42.3用的
+	  Boot Loader是Grub2.
+	3 内核和initramfs
+	  Boot Loader把内核和一种内存文件系统叫initramfs 装进内存，内核可以直接使
+	  用initramfs的内容。initramfs有一个小程序叫init，init挂载实际的root文件系
+	  统。如果有什么硬件驱动要在硬盘主要内容能被访问前准备好，这些驱动必须在
+	  initramfs里。
+	4 initramfs里的init程序
+	  init的作用是挂载root文件系统，为文件系统提供核心功能 ，为带udev功能的大
+	  号存储器提供驱动。root文件系统挂载后，initramfs退出内存，systemd启动。
+	5 systemd
+	  systemd启动各种服务，挂载文件系统。
+3 initramfs
+	initramfs是一种cpio格式压缩包，可以装进内存。提供了一种最小化linux环境，
+	使在实际的root系统挂载前可以执行一些程序。initramfs由BIOS/UEFI装进内存，
+	对硬件没有特殊要求。initramfs里有一个程序叫init，程序init启动root文件
+	系统里的systemd程序。
+	
+	挂载root文件系统前，内核需要有root文件系统所在的硬件的驱动。
+	'udev'为'initramfs'提供硬件。挂载root文件系统后，需要重新产生设备。
+	原文是'regenerate'，我不知道怎么翻译。
+	这是'systemd'的单元'udev.service'的'udevtrigger'命令完成的。 
+
+	如果有新硬件需要新驱动，需要更新initramfs文件，
+	编辑/etc/dracut.conf.d/01-dist.conf,加一行
+		force_drivers+="DRIVER1"
+	"DRIVER1"是所需驱动的模块名，有多个模块时用空格隔开。
+	然后执行命令
+	$ dracut -f
+	-f 指示覆写原来的initramfs文件。
+
+	如果编辑了/etc/sysctl.conf,改了内核参数，也要执行dracut -f。
+3.1 initramfs里的init程序
+	它有这些功能
+	1 装载内核模块。
+	  根据你的硬件配置，可能需要一些特殊的驱动，最重要的是硬盘驱动。
+	2 提供块专用文件(Block Special Files,不知道怎么翻译)
+	  对每一个装载的模块，内核产生一个硬件事件，'udev'处理这些事件并在/dev/下
+	  面一个内存文件系统产生所需的特殊块文件。没有这些特殊文件，文件系统还有
+	  其它设备不能用。
+	3 管理RAID和LVM
+	  如果你的root文件系统在RAID或LVM里面，程序init会设置LVM或RAID使root文件
+	  系统能访问。
+	4 管理网络配置
+	  如果你的系统使用NFS挂载网络上的root文件系统，程序init装载网络驱动。
+	
+	安装系统的时候，initramfs里的init程序执行这些功能
+	1 寻找安装介质
+	  启动安装过程后，一个用于安装的内核，和一个包含YaST安装器的init程序被启动
+	  ，YaST安装器在一个内存文件系统里运行，需要知道安装介质的信息。
+	2 识别硬件，装载合适的内核模块
+	  启动进程只装载能用于大多数硬件的最少数量的驱动，'init'启动一个硬件扫描
+	  进程用于决定使用哪些驱动，这些驱动被用于产生一个定做的initramfs。如果一
+	  个模块不被冷插(coldplug)需要，这个模块可以由systemd装载。
+	3 装载安装系统(这里安装是名词，系统是名词，原话是Installation System)
+	  硬件被正确认识后，合适的驱动被装载，'udev'程序创造特殊设备文件，'init'
+	  程序通过Yast 安装器开始'安装系统',(两个都是名词，安装，系统，这里的安装
+	  不是动词）
+	4 启动YaST
+	  init程序启动YsST,YaST启动包安装和系统配置。

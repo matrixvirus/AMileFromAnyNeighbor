@@ -1,0 +1,32 @@
+1
+	2018年02月07日
+2 
+	为了简单，下面的173代表192.168.100.173,174类似。
+2.1 拦截来自或发向173的流量
+	tcpdump host 173
+2.1 拦截来自173的流量,且发向174的流量
+	tcpdump src host 173 and dst host 174
+2.3 拦截来自173，且发向任意一台机器80端口的流量
+	tcpdump src host 173 and dst port 80
+2.4 拦截不是发向80端口的流量
+	tcpdump dst port not 80
+2.5 拦截发向80或80端口的流量
+	tcpdump dst port 80 or 81
+	可以加上括号
+	tcpdump dst port \(80 or 81\)
+	如果不想写成括号前面加斜杠，可以用单引号，双引号也可以
+	tcpdump 'dst port (80 or 81)'
+
+2.6 拦截来自173的发向80或81端口的，或来自205的发向82或83端口的流量
+	tcpdump \(src host 192.168.100.173 and dst port \(80 or 81\)\) or \(src host 192.168.100.205 and dst port \(82 or 83\)\)
+
+2.7 拦截来自某个网段的流量
+	tcpdump src net 192.168.100.0/24
+	
+	这个'net'好象可以代替'host'。
+
+3 怎样模拟流量以测试tcpdump
+	在一台机器A上执行了tcpdump等着有流量来被拦载到，
+	在另一台机器B上用curl向A机器上任意端口发请求
+	$ curl ip:port
+	不需要A机器上那个端口有被监听。

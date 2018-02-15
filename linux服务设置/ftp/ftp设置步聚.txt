@@ -76,5 +76,15 @@
 	ftp://用户名:密码@地址/路径/
   假如用户在服务器上家目录是/home/opensuse，下面有个文件iso,应该这样写
     ftp://用户名:密码@地址/iso
-  直接写iso，这样写是错的
+  直接写iso，下面这样写是错的
     ftp://用户名:密码@地址/home/opensuse/iso
+6 SSL/TLS
+	编辑配置文件vsftpd.conf,添加这些内容
+	ssl_enable=YES
+	下面三行是可选的
+	ssl_tlsv1=YES
+	ssl_sslv2=NO
+	ssl_sslv3=NO
+
+	我不知道为什么这里没象配apache的ssl那样要配置证书那么麻烦，redhat文档这一节
+	只讲了这么多。

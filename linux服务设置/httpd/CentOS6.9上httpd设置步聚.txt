@@ -7,15 +7,25 @@
 3.1 编辑 /etc/httpd/conf/httpd.conf
 	Listen 80
 	<VirtualHost *:80>
+		# 当输入网址http://域名/CentOS-6.9，直接访问
+		# /home/opensuse/Packages/iso/CentOS-6.9
+		# 注意，/home/opensuse/Packages/iso/CentOS-6.9是系统的绝对路径
+		Alias /CentOS-6.9 /home/opensuse/Packages/iso/CentOS-6.9
+		# 如果DocumentRoot所指目录下面没有index.html，则列出这个目录的文件
+		<Directory /www/docs/pythagoras.aristotle>
+			Options indexes
+		</Directory>
 		DocumentRoot /www/docs/pythagoras.aristotle
 		ServerName pythagoras.aristotle
 	</VirtualHost>
-3.2 编辑 /etc/httpd/conf.d/ssl.conf
+3.2 配置使用https的虚拟主机
+	编辑 /etc/httpd/conf.d/ssl.conf
 	Listen 443
 	LoadModule ssl_module modules/mod_ssl.so
 	<VirtualHost *:443>
 		DocumentRoot /www/docs/socrates.aristotle
 		ServerName socrates.aristotle
+		# 下面三行是为https加的
 		SSLEngine on
 		SSLCertificateFile /etc/pki/tls/certs/你建的证书名
 		SSLCertificateKeyFile /etc/pki/tls/private/你建的私钥名
@@ -55,3 +65,29 @@
 	  $ mv new.cert.key /etc/pki/tls/private/iloveyou.key
 	  $ mv new.cert.crt /etc/pki/tls/certs/iloveyou.crt
 
+4 用https作yum源
+4.1
+	apache服务器上，配置一个虚拟主机
+
+	<VirtualHost *:80>
+		<Directory /home/opensuse/Packages/iso/>
+			Options Indexes
+		</Directory>
+		DocumentRoot /home/opensuse/Packages/iso/
+		ServerName cavalry.horseman
+	</VirtualHost>
+	
+	不要用https,客户端会报证书不能认证，可能是自签名的问题。	
+	/home/opensuse/Packages/iso下面有两个目录CentOS-6.9-x86_64-bin-DVD1和
+	CentOS-6.9-x86_64-bin-DVD2。
+4.2 要配置yum源的系统，编辑一个文件/etc/yum.repos.d/SomeName.repo
+	[123]
+	name = 234
+	baseurl = http://cavalry.horseman/CentOS-6.9-x86_64-bin-DVD1
+		      http://cavalry.horseman/CentOS-6.9-x86_64-bin-DVD2
+	enabled = 1
+	gpgcheck = 0
+4.3 如果是openSUSE系统要配置源，先使apache服务器的/home/opensuse/Packages/iso
+	下面有目录openSUSE-Leap-42.3-DVD-x86_64，
+	在要配置源的机器上执行命令
+	$ zypper addrepo -n 'SomeName' http://cavalry.horseman/openSUSE-Leap-42.3-DVD-x86_64 'SomeName'

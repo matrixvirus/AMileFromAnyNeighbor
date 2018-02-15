@@ -1,0 +1,87 @@
+1
+	2018年02月09日
+2
+2.1 添加一个源
+	下面的例子，addrepo后面括号里面(ar),意思是可以简写ar代替addrepo。
+	$ zypper addrepo(ar)-n '源别名' 路径 '源名字'
+	其中路径可以是普通路径，可以是http，可以是ftp:
+	  /home/opensuse/Packages/iso/openSUSE-Leap-42.3-DVD-x86_64
+	  ftp://opensuse:opensuse@19.168.100.174/Packages/iso/openSUSE-Leap-42.3-DVD-x86_64
+	  http://cavalry.horseman/openSUSE-Leap-42.3-DVD-x86_64
+2.2 删除一个源
+	$ zypper removerepo(rr) 源名字|源别名|路径|源编号
+	其中编号是指某个源在源列表里排第几个，下面会说怎么看编号
+2.3 查看有哪些源的列表
+	$ zypper repos(lr)
+	查看一个源的具体信息
+	$ zypper repos(lr) 源名字
+	参数
+	-u --uri 显示每个源的路径
+	-E --show-enabled-only 只显示启用了的
+	-p 显示每个源的优先级
+2.4 查看所有源一共有哪些包
+	$ zypper packages(pa)
+	查看一个源有哪些包
+	$ zypper packages(pa) 源名字|别名|路径
+	packages子命令的参数
+	  -i --installed-only 只列出安装了的
+	  -u --uninstalled-only 只列出没安装的
+2.5 查看所有源一共有哪些软件组
+	$ zypper patterns
+	查看一个源一哪些软件组
+	$ zypper patterns 源名字|别名|路径
+	参数
+	  -i --installed-only 只列出安装了的
+	  -u --uninstalled-only 只列出没安装的
+2.6 修改源
+	$ zypper modifyrepo(mr) options 源名字|别名|编号|路径
+	其中options可以是
+	  -e --enable 启用
+	  -d --disable 禁用
+      -n --name 别名
+	  -p --priority  一个整数代表优先级
+	  -k --keep-packages 安装完一个包后把下载的rpm包缓存起来不删除
+	  -K --no-keep-packages 禁用缓存rpm包
+	  -g --gpgcheck 启用gpg检查
+	  -G --no-gpgcheck 禁用gpg检查
+	  -a --all 对所有源操作
+	  -l --local 只对本地源操作
+	  -t --remote 只对远程源操作
+	  -m --medium-type type 其中type可以是http,dvd,ftp，只对某种介质类型的源
+			操作
+	比如禁用所有源
+	$ zypper modifyrepo -da
+2.7 清理缓存	
+	$ zypper clean(cc) [源名字|别名|编号|路径]
+2.8 搜索
+	搜索名字包含openssl的包
+	$ zypper search(se) openssl
+	搜索名字包含openssl这个词的包，'-openssl-'可以，'libopenssl'不算
+	$ zypper search --match-words openssl
+	搜索叫openssl的包
+	$ zypper search --match-exact openssl
+	搜索哪个包提供了命令/usr/bin/openssl
+	$ zypper search --provides /usr/bin/openssl
+	搜索依赖openssl这个包的包
+	$ zypper search --match-exact --requires openssl
+
+	其它参数：
+	-d --search-descriptions 也在包的描述里搜索
+	-C --case-sentitive 区分大小写
+	-i --installed-only 只搜索安装了的
+	-u --uninstalled-only 只搜索没安装的
+	-r --repo 源名字|别名|编号|路径 只在一个源里搜索
+2.9 查看某个包的信息
+	$ zypper info(if) 包名
+2.10 安装包
+	$ zypper install(in) 包名	
+	删除包
+	$ zypper remove(rm) 包名
+	安装一个软件组
+	$ zypper installl -t pattern 软件组名
+	删除一个软件组
+	$ zypper remove -t pattern 软件组名
+	只下载不安装
+	-d --downlaod-only
+2.11 修改源的别名
+	$ zypper renamerepo(nr) 源名字|别名|编号|路径 新别名

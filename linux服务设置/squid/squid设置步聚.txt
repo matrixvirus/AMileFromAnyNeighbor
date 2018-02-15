@@ -130,8 +130,37 @@
 	2 设置防火墙，把进入squid机器80端口的流量转发到3128端口
 	  iptables -t nat -I PREROUTING -p tcp --dport 80 -j DNAT --to-destination
 		:3128
+5.1 测试
+	有三台虚拟机，
+		192.168.100.173 运行squid服务
+		192.168.100.220 运行httpd服务
+		192.168.100.205 上网客户端
+5.1.1
+	把173按上面的步聚配置好。
+5.1.2
+	配置220，httpd.conf长这样
+
+	<VirtualHost *:80>
+		DocumentRoot /www/docs/pythagoras.aristotle
+		ServerName pythagoras.aristotle:81
+	</VirtualHost>
+	<VirtualHost *:81>
+		DocumentRoot /www/docs/socrates.aristotle
+		ServerName socrates.aristotle:81
+	</VirtualHost>
+
+5.1.3
+	配置205。
+	配置默认路由经过173	
+	$ ip route add default via 192.168.100.173 dev eth0
+	上网
+	$ lynx http://pythagoras.aristotle
+	没问题。
+	205的流量先到173，173把它转发到自已的3128端口，squid去220上取内容。
+5.1.4 
 	
-
 	...
-
-	暂不研究它。
+	我暂时不知道怎么把一台205的默认路由设成经过173,我在173的截不到来自205的流量
+	。
+	...
+	这个暂时不搞了。

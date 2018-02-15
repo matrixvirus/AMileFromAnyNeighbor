@@ -26,9 +26,15 @@
 	<VirtualHost *:82>
 		ServerName other.example.com
 		DocumentRoot /srv/www/htdocs/otherdomain
-		# 如果没找到index.html,列出文件
+		# 如果没找到index.html,列出这个目录的文件
 		<Directory '/srv/www/htdocs/otherdomain'>
 			Options indexes
+			# 下面三行我还不清楚什么意思
+			# 如果不写，且如果DocumentRoot指的目录不在/srv/www/htdocs下面，
+			# 客户端访问这个虚拟主机时会报403错误，
+			<IfModule !mod_access_compat.c>
+				Require grant all
+			</IfModule>
 		</Directory>
 	</VirtualHost>
 	
@@ -37,8 +43,6 @@
 	浏览器输入网址www.example.com:81验证，用命令行的浏览器lynx或elinks，不要用
 	firefox或chromium，它们记录历史，改了配置不方便检查效果。
 
-	我发现DocumentRoot指的目录只能是/srv/www/htdocs 及以下，换成别的目录都
-	是403拒绝错误，我不知道这个是在哪设置，这个问题暂不管。
 3.2.2 基于IP
 	不同的书上都讲了域名或IP两种方法，不过基于IP的好象没什么区别，就是
 	VirtualHost参数后面的星号换成了一个具体IP,没什么用。
@@ -134,3 +138,32 @@
 	openSUSE使用了一种方法叫Server Name Indication,SNI，是对ssl协议的一个扩
 	展，在ssl连接建立时把域名包含进来发给服务器。
 	浏览器需要支持SNI。
+5 https作yum源
+5.1
+	apache服务器上，配置一个虚拟主机
+
+	<VirtualHost *:80>
+		<Directory /home/opensuse/Packages/iso/>
+			Options Indexes
+			<IfModule !mod_access_compat.c>
+				Require all granted
+			</IfModule>
+		</Directory>
+		DocumentRoot /home/opensuse/Packages/iso/
+		ServerName cavalry.horseman
+	</VirtualHost>
+	
+	不要用https，客户端会报错证书不能认证，可能是自签名的问题。
+	/home/opensuse/Packages/iso下面有两个目录CentOS-6.9-x86_64-bin-DVD1和
+	CentOS-6.9-x86_64-bin-DVD2。
+5.2 要配置yum源的系统，编辑一个文件/etc/yum.repos.d/SomeName.repo
+	[123]
+	name = 234
+	baseurl = http://cavalry.horseman/CentOS-6.9-x86_64-bin-DVD1
+		      http://cavalry.horseman/CentOS-6.9-x86_64-bin-DVD2
+	enabled = 1
+	gpgcheck = 0
+5.3 如果是openSUSE系统要配置源，先使apache服务器的/home/opensuse/Packages/iso
+	下面有目录openSUSE-Leap-42.3-DVD-x86_64，
+	在要配置源的机器上执行命令
+	$ zypper addrepo -n 'SomeName' http://cavalry.horseman/openSUSE-Leap-42.3-DVD-x86_64 'SomeName'

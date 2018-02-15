@@ -1,0 +1,65 @@
+1
+	2018年02月12日。
+	参考书是openSUSE-Leap-42.3官方文档之Reference。
+
+	客户端向255.255.255.255广播寻找dhcp服务器。
+
+	192.168.1.0/24 这个子网最多有254个主机，因为192.168.1.0不能用于
+	一个主机，192.168.1.255是广播地址。
+2
+2.1
+	编辑/etc/dhcp/dhcpd.conf
+
+	default-lease-time 600;          
+	#	单位秒，一个IP租给一个客户端后默认多少秒要更新。
+	max-lease-time 7200;             
+	#	单位秒，一个IP租给一个客户端后最长多少秒不用更新。
+	option domain-name "example.com";
+	#	你的网络的默认域。我不知道这个有什么用。
+	option domain-name-servers 192.168.1.116;
+	#	指定最多三个DNS服务器用于解析IP地址。我不知道这个有什么用，怎么用。
+	option broadcast-address 192.168.2.255;
+	#	指定一个客户端应该用的广播地址。我不知道这个有什么用，怎么用。
+	option routers 192.168.2.1;      
+	#	指定如果本dhcp服务器不能把一个包发给局域网里一个机器，则发向哪里。
+	option subnet-mask 255.255.255.0;
+	#	指定分配给客户端的子网掩码,给host模块用的。我暂时没有找到资料讲怎么给
+	#	一个固定主机单独指定掩码。
+
+	#定义一个网络段IP分配，网段是192.168.100.0/24,分配范围
+	#192.168.1.1到192.168.1.254。
+	subnet 192.168.100.0 netmask 255.255.255.0
+	{                                
+		range 192.168.100.1 192.168.100.254; 
+	}                                
+	#对某个指定网卡提供固定的IP。'host'关键字右边的1是个名字，随
+	#便起的。，前面定义的'option subnetmask'会作为它的掩码，书上没说这里怎么单独
+	#为一个'host'指定掩码。
+	host 1 {                         
+		hardware ethernet 52:54:00:75:9a:f1; 
+		fixed-address 192.168.100.21;
+	}                                
+2.2
+	启动服务
+	$ service dhcpd start
+3 ipv6	
+3.1
+	编辑/etc/dhcp/dhcpd6.conf
+	这里关于ipv6的内容不能写在dhcpd.conf里，会报错。
+	subnet6 3ffe:501:ffff:100::/64 {
+		range6 3ffe:501:ffff:100:10 3ffe:501:ffff:100::11;
+	}
+	host 2 {
+		hardware ethernet 52:54:00:75:9a:f1;
+		fixed-address6 3ffe:501:ffff:100::4321;
+	}
+	
+3.2 
+	启动服务
+	$ service dhcpd6 start
+	启动失败。
+	执行 dhcpd -6 能看见报错,其中一行
+	subnet_number():inet.c:52: Addr/mask length mismatch.
+	我在redhat 6文档之Deployment Guide讲dhcp的ipv6那页，把例子复制到dhcpd6.conf
+	,还是报这个错，不知道。
+

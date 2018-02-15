@@ -1,0 +1,63 @@
+1
+	2018年02月12日。
+	参考书是redhat6文档之部署指南。
+2 上手，怎样在两台虚拟机间直接互发邮件
+2.1
+	有两台虚拟机，系统都是CentOS6.9,它们的IP和域名分别是
+		192.168.100.173 chivalry.horseman
+		192,168.100.220 pikeman.horseman
+	你的DNS服务器的zone文件里要有这两句
+		chivalry.horseman. MX 1 chivalry.horseman.
+		pikeman.horseman. MX 1 pikeman.horseman.
+	如果你看不懂什么是zone文件，这两句话到底要写到哪里，请专门学习怎么设置dns,
+	这里不讲dns。
+2.2 在173上编辑/etc/postfix/main.cf
+	改几个值
+	
+	myhostname = chivalry.horseman
+	# dns怎么设的myhostname就改成什么
+	mydomain = chivalry.horseman
+	myorigin $myhostname
+	inet_interfaces = all
+	inet_protocols = all
+	mydestination = $myhostname
+
+	重启postfix
+	$ service restart postfix
+
+	在220上进行同样的改变。
+2.3 测试
+	在173上，安装mailx
+	$ yum install mailx
+	给220的root用户发一封邮件
+	$ mailx root@pikeman.horseman
+	先输主题，再输几行话，最后一行一个点号标示结束。
+
+	在220上，假设登录的是root用户，执行
+	$ mail
+	会看到root用户的邮件,有你刚刚在173上发的那封。
+3 dovecot
+3.1
+	使用POP协议时，客户端下载所有邮件，下载后可以或不删除服务器端的邮件。POP
+	协议适合在一个地方读邮件的人，适合没有长时间连网条件的人，不适合网速慢的人
+	。
+	使用IMAP协议时，邮件在服务器上，客户端可以读，删除，还允许客户端在服务器端
+	创造，命名，删除文件夹以更好的组织邮件。IMTP适合在多台机器上访问邮件的人，
+	因为在打开前每封邮件只有头信息被下载，适合慢网速。用户可以不用查看，下载
+	而删除邮件。
+3.2 安装dovecot
+	$ yum install dovecot
+3.3 配置dovecot使用POP
+	编辑/etc/dovecot/dovecot.conf，编辑一行
+	  protocols = imap pop3 lmtp
+
+	IMAP和POP3协议要求客户端输用户名和密码，默认密码传输没有加密，
+	编辑/etc/dovecot/conf.d/10-ssl.conf,编辑一行,它原来是被注释的，取消注释
+	  ssl_cipher_list = ALL:!LOW:!SSLv2:!EXP:!aNULL
+	这一行使dovecot不使用不安全的SSLv2，SSLv3，
+
+	重启dovecot
+	  service dovecot restart
+	
+	文档里这部分内容只说到这了，然后怎么测试dovecot没说。
+	朱怡辰师范家外法密码mymm?4b4s!dryl!

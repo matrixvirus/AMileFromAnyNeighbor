@@ -1,0 +1,44 @@
+1
+	2018年02月11日。
+	参考书是Linux Networking Cookbook,OREILLY出版的,openSUSE-Leap-42.3官方文档
+	之security。	
+2 iptables介绍
+2.1 iptables的政策和规则
+	政策是指一个包不匹配任何规则时采取的默认动作。iptabls有三张内置表，filter,
+	nat, mangle，filter表用得最多，nat表少些，mangle几乎用不到,因为它是为高级操
+	作设计的。每张表有一些内置链。你可以自已创造链。一个链是一系列规则，一个规
+	则指示对一个包采取什么动作。
+	一个例子，接受所有来自lo接口的包
+	$ iptables -A INPUT -i lo -j ACCEPT
+	没有指定表，默认是filter表，
+	-A INPUT filter表的INPUT链
+	-i lo 对来自lo接口的
+	-j ACCEPT 接受
+	
+	iptables对包全面检查，它知道一个是在发动一个新连接还是属于一个已有的连接，
+	根据上下文分析包能做很多事。
+2.2 表介绍
+	一个包先经过mangle表，再经过nat表，再经过filter表。
+2.2.1
+	filter表有3个链
+	  INPUT 处理目的地是本机的包
+	  FORWARD 处理路过的包
+	  OUTPUT 处理本地产生的出去的包
+2.2.2
+	nat表只用于改变一个包的源地址或目地址。
+	有3个链
+	  PREROUTING 在路由前改变一个进来的包
+	  OUTPUT 在路由前改变一个本地产生的包
+	  POSTROUTING 在路由后,即将往外发前改变一个包
+2.2.3
+	mangle用于改变包头，比如改变一包头的TOS域，为了过滤，记录，路由一个包对一个
+	包做标记用于统计一些信息，限制包的速度。
+	它有5个链
+	  PREROUTING 在路由前改变一个进来的包
+	  OUTPUT 在路由前改变一个本地产生的包
+ 	  INPUT 改变目的地是本机包
+	  FORWARD 改变路过的包
+	  POSTROUTING 在路由后，即将往外发前改变一个包
+2.3 流程图
+	见图'iptables包处理流理图.png'。原图在openSUSE-Leap-42.3官方文档之security
+	159面。

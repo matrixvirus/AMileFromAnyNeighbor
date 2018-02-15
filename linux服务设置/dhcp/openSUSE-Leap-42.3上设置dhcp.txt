@@ -1,0 +1,20 @@
+1
+	2018年01月12日。
+	参考书是openSUSE-Leap-42.3官方文档之Reference。
+2
+	编辑/etc/dhcpd.conf
+	
+	subnet 192.168.100.0 netmask 255.255.255.0
+	{
+		range 192.168.100.1 192.168.100.254;
+	}
+
+	执行
+	$ systemctl start dhcpd
+	报错，用systemctl status dhcpd，和journalctl -xe 两个命令没有发现有用信息，
+	只说启动失败，没有为什么。
+
+	用yast2图形界面工具配置dhcp,点开yast2->DHCP服务器 即报错"不能确定主机名，
+	。基于LDAP的DHCP服务器配置将不可用。"
+
+	上面写的/etc/dhcpd.conf没有问题，我在虚拟机CentOS-6.9上这么写没有问题。
