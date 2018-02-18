@@ -38,8 +38,8 @@
 	其中options可以是
 	  -e --enable 启用
 	  -d --disable 禁用
-      -n --name 别名
-	  -p --priority  一个整数代表优先级
+      -n --name 新别名
+	  -p --priority  修改优先级，是一个整数
 	  -k --keep-packages 安装完一个包后把下载的rpm包缓存起来不删除
 	  -K --no-keep-packages 禁用缓存rpm包
 	  -g --gpgcheck 启用gpg检查
@@ -56,12 +56,16 @@
 2.8 搜索
 	搜索名字包含openssl的包
 	$ zypper search(se) openssl
+
 	搜索名字包含openssl这个词的包，'-openssl-'可以，'libopenssl'不算
 	$ zypper search --match-words openssl
+
 	搜索叫openssl的包
 	$ zypper search --match-exact openssl
+
 	搜索哪个包提供了命令/usr/bin/openssl
 	$ zypper search --provides /usr/bin/openssl
+
 	搜索依赖openssl这个包的包
 	$ zypper search --match-exact --requires openssl
 
@@ -70,18 +74,22 @@
 	-C --case-sentitive 区分大小写
 	-i --installed-only 只搜索安装了的
 	-u --uninstalled-only 只搜索没安装的
-	-r --repo 源名字|别名|编号|路径 只在一个源里搜索
+	-r --repo 源名字|别名|编号|路径 在一个源里搜索
 2.9 查看某个包的信息
 	$ zypper info(if) 包名
 2.10 安装包
 	$ zypper install(in) 包名	
+
 	删除包
 	$ zypper remove(rm) 包名
+
 	安装一个软件组
 	$ zypper installl -t pattern 软件组名
+
 	删除一个软件组
 	$ zypper remove -t pattern 软件组名
-	只下载不安装
+
+	只下载不安装，加一个参数
 	-d --downlaod-only
 2.11 修改源的别名
 	$ zypper renamerepo(nr) 源名字|别名|编号|路径 新别名

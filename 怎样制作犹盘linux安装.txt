@@ -1,5 +1,6 @@
 1
 	2018年02月11日
 2
-	dd if=/linux/系统/镜象/路径 of=/dev/sdb
-	假设/dev/sdb是你的犹盘，后面没有数字。
+	$ dd if=/linux/系统/镜象/路径 of=/dev/sdb
+	
+	/dev/sdb是你的犹盘，后面没有数字。
