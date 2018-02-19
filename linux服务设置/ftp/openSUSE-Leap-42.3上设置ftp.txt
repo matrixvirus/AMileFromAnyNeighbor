@@ -2,9 +2,16 @@
 	2018年01月31日，练习设置ftp服务，用本机和一台虚拟机。
 	本机系统:openSUSE-Leap-42.3
 	虚拟机系统:CentOS-6.9
-2 起步步聚，最简单的安装，连接。
+2 最简单的安装，连接。
 2.1. 本机安装vsftpd
 	$ zypper install vsftpd
+
+	编辑/etc/vsftpd.conf,只改一行
+	把
+	write_enable=NO
+	改成
+	write_enable=YES
+	这样客户端可以向服务器上传文件。
 2.2. 虚拟机安装ftp
 	$ yum install ftp
 2.3 使用叫ftp的客户端
@@ -58,7 +65,7 @@
 	  lftp > mirror Music
 3.2 用wget下载目录 
 	$ wget --mirror ftp://用户名:密码@192.168.100.174/路径/
-4 客户端用root用户登录，服务端要设置什么
+4 怎样允许客户端用root用户登录
 	刚配的vsftpd只能用普通用户登录，要允许root登录，要改一些设置。
 4.1 openSUSE上的步聚
 	vim /etc/ftpusers

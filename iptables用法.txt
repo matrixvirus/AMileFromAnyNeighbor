@@ -42,3 +42,187 @@
 2.3 流程图
 	见图'iptables包处理流理图.png'。原图在openSUSE-Leap-42.3官方文档之security
 	159面。
+3 iptables规则语法
+	这部分内容参考redhat6文档之Security Guide。
+3.1 设置默认政策
+
+	设置filter表的INPUT链,OUTPUT链，FORWARD链的默认目标是DROP
+	$ iptables -P INPUT DROP
+	$ iptables -P OUTPUT DROP
+	$ iptables -P FOWRARD DROP
+	没有指定表，则默认是filter表，-P右边的INPUT指INPUT链，INPUT右边的DROP指目标
+	,'目标'是iptables的一个说法，是一个动作类型。这里的'目标' 只能是DROP或
+	ACCEPT。
+
+3.2 保存iptables规则
+	$ service iptables save	
+	或
+	$ iptables-save > 文件名
+	$ iptables-restore < 文件名
+3.3 根据地址，端口来过虑
+	$ iptables -A INPUT -p tcp -m tcp --dport 80 -j ACCEPT
+	-A append,把这条规则添加到INPUT链尾部，
+	-p tcp 针对tcp包
+	-m 指match,不是平常的动词，是iptables的一个概念，在iptables的man手册里，搜
+	   'MATCH EXTENSIONS' 讲这个概念，match的后面可以跟很多种词，tcp是其中一种
+	   ，当用了'-m tcp',后面就可以跟--source-port/-sport,或--destination-port
+	   /dport,或--tcp-flags,
+	--dport 80 针对目标端口是80的包,如果是针对源端口，则用--sport
+	-j ACCEPT 目标是iptables的概念，目标是ACCEPT，
+
+	本地接口lo接受所有包
+	$ iptables -I INPUT 1 -i lo -p all -j ACCEPT
+	-I INPUT 1 把这条规则插入到INPUT链，使其成为第1条规则，
+	-i lo lo接口
+	-p all 所有协议，包括tcp,udp,udplite,icmp,esp,ah,sctp。
+	-j ACCEPT 接受的意思
+
+	 拒绝所有来自192.168.100.111的90端口的包
+	$ iptables -t filter -I INPUT 1 -p tcp --source 192.168.100.111 --sport 90 -j ACCEPT
+	--source 源地址
+	--sport 源端口
+	
+	拒绝来自111,112两台机器的90到100端口的包
+	iptables -t filter -I INPUT 1 -p tcp --source 192.168.100.111,192.168.100.112 --dport 90:100 -j ACCEPT
+	
+	拒绝一个网段
+	$ iptables -A INPUT -s 192.168.0.0/16 -j REJECT
+3.4 nat表
+	为了使局域网内的私用IP可以和外网通信，需要在局域网对外的出口路由器上设置一条
+	规则，叫伪装，把局域网内发往外面的包用出口路由器的对外接口eth0的IP掩盖。
+	$ iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+
+	把收到的到80端口的包转发给另一台机器172.31.0.23的80端口
+	$ iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination 172.31.0.23:80
+
+	把收到的到80到90端口的包的目标端口都改成100,目标地址不变
+	$ iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 80:90 -j DNAT --to-destination :100
+3.5 可以根据连接状态来过虑包，连接状态有4种
+	NEW 发起新连接
+	ESTABLISHED 属于一个已存在的连接
+	RELATED 发起一个新连接，但是也属于一个已存在的连接，比如FTP用21号端口建立连
+		接，又用20号端口传数据。
+	INVALID 不是发起新连接，也不属于一个已有的连接
+
+	接收ESTABLISHED，RELATED两种状态的包
+	$ iptables -A FORWARD -m state --state ESTABLISHED,RELATED -j ACCEPT
+4 规则管理
+4.6 清空一个表的所有规则
+	清空filter表
+	$ iptables -F
+	清空nat表
+	$ iptables -t nat -F
+4.7 查看规则
+	查看nat表的PREROUTING链的规则
+	$ iptables -t nat -L PREROUTING
+	-L后面不跟参数的话是查看所有链的。
+
+	显示规则的编号
+	$ iptables -L -line-numbers
+
+	显示端口的数字，不显示端口的名字，加-n。
+4.8 删除规则
+	删除filter表PREROUTING第1条规则
+	$ iptables -D PREROUTING 1
+
+	根据规则定义删除规则
+	假设先设置了一条规则
+	$ iptables -I INPUT 1 -j ACCEPT
+	然后删除它
+	$ iptables -D INPUT -j ACCEPT
+5 怎样启用linux转发包功能
+方法1
+	$ sysctl -w net.ipv4.ip_forward=1
+	这种方法重启后失效。
+方法2
+	编辑/etc/sysctl.conf,改一行
+	net.ipv4.ip_forward = 1
+	然后执行命令，使修改生效，
+	$ systcl -p /etc/sysctl.conf
+6 怎样用iptables限制网速
+6.1 限制一段时间内的包数量
+	限制每分钟最多接受1个包
+	$ iptables -t filter -I INPUT 1 -m limit --limit  1/minute
+	1/minute 指每分钟1个，可用的时间还有second,hour,day。
+6.2 限制某种连接的同时数量，比如http
+	$ iptables -t filter -I INPUT 1 -m connlimit --connlimit-above 2 -p tcp --syn --dport 80 -j REJECT
+	这里有另一种写法
+	$ iptables -t filter -I INPUT 1 -m connlimit ! --connlimit-above 2 -p tcp --syn --dport 80 -j ACCEPT
+	
+	限制C类网段连接数量，加一个参数--connlimit-mask
+	$ iptables -p tcp --syn --dport 80 -m connlimit --connlimit-above 16 --connlimit-mask 24 -j REJECT
+
+7 iptables使用ipv6
+	命令名从iptables变成ip6tables,命令中地址要写ipv6的
+	例如
+	$ ip6tables -A INPUT -i eth0 -p tcp -s 3ffe:ffff:100::1/128 --dport 22 -j ACCEPT
+
+8 ipset
+	ipset 是一个工具，管理IP sets,这里的set是集合的意思，IP sets是一个概念，指一
+	种保存IP地址，端口，IP和物理地址对，IP和端口对的机制。这里的'对'是pair的意
+	思。这种集合使用了索引使匹配能很快。
+	这种集合在内核里，我们不需要知道它到底是什么格式。
+8.1  入门例子
+	假如有3条iptables命令
+	$ iptables -A INPUT -s 10.0.0.8/8 -j DROP
+	$ iptables -A INPUT -s 172.16.0.0/12 -j DROP
+	$ iptables -A INPUT -s 192.168.0.0/16 -j DROP
+
+	可以通过使用ipset，改写成这样
+	$ ipset create my-block-set hash:net
+	$ ipset add my-block-set 10.0.0.0/8
+	$ ipset add my-block-set 172.16.0.0/12
+	$ ipset add my-block-set 192.168.0.0/16
+	然后iptables引用这个集合
+	$ iptables -A INPUT -m set --set my-block-set src -j DROP
+
+	上面命令的ipset右边的create和add是ipset的子命令，一共有这些子命令
+	create add del test destroy list save restore flush rename swap help version
+
+	那个hash:net,hash指的是保存方法，一共有3种方法
+	bitmap hash list
+	net指的是数据类型，一共有5种数据类型
+	ip net mac port iface
+
+	用ipset add命令往一个集合添加的条目如果有多个部分，用逗号隔开,象这样
+	ipset add set-name ipaddr,portnum,ipaddr
+8.2 
+例2
+	$ ipset create my-set hash:ip,port,ip
+	$ ipset add my-set 192.168.1.2,80,192.168.2.2
+	$ ipset add my-set 192.168.1.2,443,192.168.2.2
+	'hash:ip,port,ip'定义的格式是ip,端口，ip，后面的add命令要符合这个格式。
+例3 列出一个集合信息
+	$ ip list my-set
+例4 检查一个条目是否在一个集合里
+	$ ipset test my-set 192.168.1.2,80,192.168.2.2
+	192.168.1.2,tcp:80,192.168.2.2 is in set my-set.
+8.3 bitmap格式
+例5 建立一个集合，条目是IP,限制范围
+	$ ipset create my-range bitmap:ip range 192.168.33.0/28
+	往这个集合添加一个地址
+	$ ipset add my-range 192.168.33.1
+	检查这个集合有哪些条目
+	$ ipset list my-range
+	添加连续多个地址
+	$ ipset add my-range 192.168.33.2-192.168.33.4
+例6 跟例5差不多，换一种写法格式
+	$ ipset create my-big-range bitmap:ip range 192.168.124.0-192.168.126.0 netmask 24
+	添加一个网段
+	$ ipset add my-big-range 192.168.124.0
+	如果你添加了一个IP,实际添加的是这个IP所在的网段
+	$ ipset add my-bit-range 192.168.125.150
+	实际添加了网段192.168.125.0/24
+例7 创建一个集合包含IP和物理地址对
+	$ ipset create my-range bitmap:ip,mac range 192.168.1.0/24
+	$ ipset add my-range 192.168.1.1,12:34:56:78:9A:BC
+例8 添加一个集合包含一段端口
+	$ ipset create my-permitted-port-range bitmap:port range 1024-49151
+	$ ipset add my-permitted-port-range 5060-5061
+8.4 hash格式
+例9
+	$ ipset create my-busy-addresses hash:ip maxelem 24 netmask 28 timeout 100
+	maxelem是这个集合最多有24个条目
+	netmask 指集合里的ip的掩码
+	timeout 指集合里的一个条目只存在100秒。
+	

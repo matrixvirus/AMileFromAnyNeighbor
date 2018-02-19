@@ -6,10 +6,11 @@
 	  一本不正规的文档叫Mail Server Implementation，Timothy Vismor,2005。
 
 	redhat6那文档质量有点差，讲得又不全又乱。那个不正规的只有几页的文档讲得逻
-	辑清楚些，但是内容不全，OREILLY出版的那本书400多页，看完有点麻烦。
+	辑清楚些，但是内容不全，OREILLY出版的那本书400多页，语言也很逻索,半天看不
+	到你想看的内容。
 
 	Managing IMAP这本书用得是postfix+cyrus架构，我照着它搞。
-2 上手，怎样在两台虚拟机间直接互发邮件,先不管原理
+2 上手，怎样在两台虚拟机间直接互发邮件
 2.1
 	有两台虚拟机，系统都是CentOS6.9,它们的IP和域名分别是
 		192.168.100.173 chivalry.horseman
@@ -120,6 +121,10 @@
 	& R
 	只回覆指定编号，假设2号邮件的发送者
 	& R 2
+3.3 发附件，加参数-a
+	mailx root@chivalry.horseman -a 文件路径
+
+	我不知道接收端怎么收附件，用bing只能搜出来怎么发附件。
 3.4 删除邮件
 	删除当前邮件
 	& delete
@@ -148,67 +153,48 @@
 	& list
 	显示常用命令和简短帮助
 	& help
-4.1
-	使用POP协议时，客户端下载所有邮件，下载后可以或不删除服务器端的邮件。POP
-	协议适合在一个地方读邮件的人，适合没有长时间连网条件的人，不适合网速慢的人
-	。
-	使用IMAP协议时，邮件在服务器上，客户端可以读，删除，还允许客户端在服务器端
-	创造，命名，删除文件夹以更好的组织邮件。IMTP适合在多台机器上访问邮件的人，
-	因为在打开前每封邮件只有头信息被下载，适合慢网速。用户可以不用查看，下载
-	而删除邮件。
-4 cyrus-imapd
+
+4 dovecot
 4.1 安装
-	$ yum install cyrus-imapd
-4.2 配置postfix使用cyrus-imapd
+	yum install dovecot
+4.2  配置postfix
+	这部分参考的是http://blog.csdn.net/mergerly/article/details/54410977。
 	编辑/etc/postfix/main.cf
 
-	# 这下面几行是前面配过的
-	myhostname = chivalry.horseman
-	# dns怎么设的myhostname就改成什么
-	mydomain = chivalry.horseman
-	myorigin $myhostname
-	inet_interfaces = all
-	inet_protocols = all
-	mydestination = $myhostname
-
-	# 这下面几行是安装cyrus-imapd后加的
-	# 来自不正规文档Mail Server Implementation。
-	virtual_mailbox_domains = chivalry.horseman
-	# Define the list of virtual mail box addresses.
-	# 我检查了，/etc/postfix/vmailbox不存在，可能是要手动创造
-	virtual_mailbox_maps = hash:/etc/postfix/vmailbox
-	# Use Cyrus Imap as the local delivery agent.
-	# /var/lib/imap这个目录cyrus-imapd软件包创造的
-	virtual_transport = lmtp:unix:/var/lib/imap/socket/lmtp
-	mailbox_transport = lmtp:unix:/var/lib/imap/socket/lmtp
-	# 启用TLS.
-	smtpd_use_tls = yes
-	# 证书和私钥位置
-	smtpd_tls_cert_file = /etc/pki/tls/certs/smtp.crt
-	smtpd_tls_key_file = /etc/pki/tls/private/smtp.key
-	# Tighten rejection criteria slightly.
-	# 稍微收紧拒绝标准
-	disable_vrfy_command = yes
-	smtpd_helo_required = yes
-	smtpd_data_restrictions =
-	reject_unauth_pipelining,
-	permit
-
-5 dovecot
-5.1 安装dovecot
-	$ yum install dovecot
-5.2 配置dovecot
-	编辑/etc/dovecot/dovecot.conf，编辑一行
-	  protocols = imap pop3 lmtp
-
-	IMAP和POP3协议要求客户端输用户名和密码，默认密码传输没有加密，
-	编辑/etc/dovecot/conf.d/10-ssl.conf,编辑一行,它原来是被注释的，取消注释
-	  ssl_cipher_list = ALL:!LOW:!SSLv2:!EXP:!aNULL
-	这一行使dovecot不使用不安全的SSLv2，SSLv3，
-
-	重启dovecot
-	  service dovecot restart
+	smtpd_sasl_type = dovecot
+	smtpd_sasl_path = private/auth
+	smtpd_sasl_auth_enable = yes
+	smtpd_sasl_security_options = noanonymous
+	smtpd_sasl_local_domain = $myhostname
+	smtpd_recipient_restrictions = permit_mynetworks,permit_auth_destination,permit_sasl_authenticated,reject
 	
-	文档里这部分内容只说到这了，然后怎么测试dovecot没说。
-	朱怡辰师范家外法密码mymm?4b4s!dryl!
-	没有密码？是不是沙！当然不是！
+4.3 配置dovecot
+	不需要编辑/etc/dovecot/dovecot.conf	
+
+	编辑/etc/dovecot/conf.d/10-auth.conf,只改2行
+	disable_plaintext_auth = no
+	auth_mechanisms = plain login
+
+	编辑/etc/dovecot/conf.d/10-master.conf,
+	unix_listener /var/spool/postfix/private/auth {
+		mode = 0666
+		user = postfix
+		group = postfix
+	}
+4.4 测试
+	我用客户端kmail，象设置163邮箱那样设置我自已的虚拟
+	机，imap服务器写chivalry.horseman,就是我的虚拟机,无SSL，端口143，身份认证
+	是plain模式，用户名写root,密码写940423,就是我虚拟机的root帐户。设置完后在
+	kmail界面左边看不到我刚设的邮箱。
+	我用thunderbird，说我用户名或密码错误，
+	不知道怎么搞。
+4.5 配置dovecot 使用ssl
+	以后再写。
+	
+5 cyrus-imapd
+	以后再写。
+6 postfix设置虚拟用户
+	虚拟用户是相对于linux系统用户来说。
+	网上搜到一篇教程，https://www.cnblogs.com/ilanni/p/5294553.html，
+	不过有点问题，它讲要用mysql,讲了postfix的配置文件关于连接mysql的，
+	却没说那个mysql的表怎么建。
