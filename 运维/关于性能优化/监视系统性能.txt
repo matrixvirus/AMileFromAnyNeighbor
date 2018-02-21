@@ -1,0 +1,305 @@
+1
+	2018年02月20日。
+	参考书是openSUSE-Leap-42.3文档之系统分析和优化指导。
+2 多功能的工具们
+2.1 vmstat
+	vmstat收集进程，内存，IO，中断，CPU的信息。
+	不带参数直接执行，显示自启动以来各个信息的平均值
+	$ vmstat
+	每隔2秒执行1次
+	$ vmstat 2
+	每隔2秒执行1次，只执行3次
+	$ vmstat 2 3
+	第1次显示的是系统启动以来的统计信息，后面的是上一次统计至今的统计信息，这里
+	是1秒。
+
+	它的输出的各列的意思是
+	r	
+		runnable状态的进程数
+	b 	
+		在等待除CPU以外的资源的进程数
+	swpd
+		单位KB,交换空间使用量
+	free 
+		单位KB，未使用内存
+	inact
+		单位KB，最近未使用的可以回收的内存。这一列只有加参数-a才显示
+	active
+		单位KB,正在使用的不能回收的内存。这一列只有加参数-a才显示
+	buff 
+		单位KB，包含了文件系统元数据的文件buffer cache，我不知道怎么翻译。加了
+		参数-a这个列不显示
+	cache
+		单位KB，包含实际文件内容的页cache。加了-a参数这个列不显示。
+	si
+		单位KB,从交换空间转到内存的量。这个值过高说明有一个长期不活沃的进程又活
+		跃了
+	so
+		单位KB，从内存转到交换空间的量。这个值过高说明内存不够	
+	bi
+		每秒从一个块设备收到的块数
+	bo
+		每秒发往一个块设备的块数
+	in
+		每秒中断数。网络IO过高，盘子IO过高能增加中断数。还要检查/proc/interrupts
+		确定中断增加的原因
+	cs
+		每秒背景切换数，内核用一个可执行程序替换另一个
+	us
+		执行应用程序占CPU比例
+	sy
+		执行内核程序占CPU比例
+	id
+		空闲CPU比例
+	wa
+		CPU等待IO的时间比例
+	st
+		被虚假机偷走的CPU时间。原文说的是偷
+2.2 dstat
+	dstat计划替代vmstat,iostat,netstat,ifstat。用python写的,可以用插件。
+	执行dstat,每秒1次
+	$ dstat
+	执行dstat,每2秒1次，只执行3次
+	$ dstat 2 3
+	
+2.3 sar
+2.3.1
+	sar产生关于系统活动的报告，包括CPU，内存，IRQ，IO,网络，信息都来自/proc。	
+	使用sar要安装sysstat。
+	统计CPU
+	$ sar
+	指定统计的间隔秒数，可能指定次数，
+	$ sar 1 
+2.3.2 统计内存
+	$ sar -r 
+2.3.3 统计页
+	$ sar -B
+	输出里majflt/s那一列是每秒从盘子载入了多少页。fault/s那一列过高可能是有个程
+	序正在启动,如果这一列一直过高，且pgsank/s那一列也高则可能是内存不够。
+	这些值为100或0最好，100是所有被转出去的不活沃的页被重用了，0是没有页被扫描，
+	这句我读不懂，照翻的。
+	一般这些值不应该低于30.
+2.3.4 统计块设备
+	$ sar -d
+	设备名那列的格式是dev m-n，m是设备的主号，n是设备的次号。
+	使用参数-p显示设备在/dev目录下面的名字
+	$ sar -d -p
+	svctm和%util那列过高说明IO慢。
+2.3.5 统计网络
+	统计所有网络设备
+	$ sar -n DEV	
+	统计所有网络设备的报错
+	$ sar -n EDEV
+	统计NFS客户端
+	$ sar -n NFS
+	统计NFS服务器
+	$ sar -n NFSD
+	统计socket
+	$ sar -n SOCK
+	统计上面所有
+	$ sar -n ALL
+3 系统信息
+3.1 iostat
+	监视设备负荷。要安装包sysstat。
+	直接执行iostat是显示系统以来的统计信息
+	$ iostat
+	可以指定重复执行间隔时间和次数
+	$ iostat 1 3
+	加参数-x显示更多信息
+	$ iostat -x
+	关于每列什么意思请看man手册。
+	指定监视哪块盘子
+	$ iostat -p sda
+3.2 mpstat
+	监视CPU活动，
+	$ mpstat 1
+3.3 turbostat
+	监视CPU频率。要安装包cpupowerutils。
+	我在虚假机CentOS-6.9执行这个命令遇到了报错
+		no /dev/cpu/0/msr, Try "# modprobe msr" 
+3.4 pidstat
+	监视linux内核管理的工作。
+	$ pidstat
+	指定监视httpd工作
+	$ pidstat -C httpd
+	监视工作们的IO
+	$ pidstat -d
+	
+3.5 内核环缓区
+	linux内核把一些信息保存在一个环缓区里，用dmesg命令查看
+	$ dmesg 
+3.6 lsof
+	检查一个进程打开了哪些文件
+	$ lsof -p PID 
+	列出所有打开网络文件。我不知道这个网络文件到底什么意思
+	$ lsof -i
+3.7 内核和udev事件序列查看器:udevadm monitor
+	命令udevadm monitor监听由udev规则发出的内核uevent和event，我不知道该怎么翻
+	译，显示这个事件的设备的路径。
+	执行
+	$ udevadm monitor
+	再插上油盘，屏幕上会有显示。
+4 进程
+4.1 ipcs
+	监视进程间通信。
+	$ ipcs
+4.2 ps
+	检查所有进程
+	$ ps aux
+	检查一个进程号
+	$ ps -p 100
+	检查一个程序比如firefox
+	$ ps -C firefox
+	自定输出格式
+	$ ps -o pid,pcpu
+	查看自定输出格式有哪些可用项
+	$ ps L
+	指定根据进程号排序
+	$ ps aux --sort pid
+	显示进程树
+	$ ps auxf
+4.3 pstree
+	显示进程树
+	$ pstree
+	显示一个进程的树
+	$ ps -p 100
+4.4 top
+	按q退出
+4.4.1 排序
+	M 按内存降序
+	P 按CPU降序
+	T 按运行时间降序
+	N 按进程号降序
+	R 改变排序方向
+	< 用左边列排序
+	> 用右边列排序
+4.4.2 给进程发信号
+	按k,然后按提示操作
+4.5 iotop
+	显示进程的IO信息，以类似top命令的风格。
+	显示每个进程的读写速度，从交换空间读入的时间比例，等待IO的时间比例。
+
+	按键：
+	左，右 改变用于排序的列
+	r 改变排序方向
+	o 切换显示所有进程还是只显示正在IO的进程
+	p 切换显示进程还是线程
+	a 切换显示实时统计信息还是系统启动来总统计信息
+4.6 nice renice
+	nice值越大，一个进程优先级越低，分到的CPU时间越少。nice范围是-20到19。负数
+	nice值只有root能设。
+
+	以指定的nice值运行bash命令
+	$ nice -n 10 bash	
+
+	把一个进程的nice值改成5
+	$ renice +5 100
+	改成-3
+	$ renice -3 100
+5 内存
+5.1 free
+	查看内存使用。
+	$ free
+	改变输出单位
+		-b byte
+		-k kb
+		-m mb
+		-g gb
+	每隔1秒重复执行
+	$ free -s 1
+5.2 /proc/meminfo
+	/proc/meminfo显示了内存的详细信息,free命令其实是读这个文件。
+	里面有很多项：
+	MemTotal
+	
+	MemFree
+
+	MemAvailable
+
+	Buffers
+
+	Cached
+
+	SwapCached
+
+	Active
+
+	Inactive
+
+	Unevictable
+
+	Mlocked
+
+	SwapTotal
+
+	SwapFree
+
+	Dirty
+
+	Writeback
+
+	Mapped
+
+	Shmem
+
+	太多了，不写了。
+6 网络
+6.1 ethtool
+	查看网卡信息
+	$ ethtool eth0
+	可以加参数指定查看哪些信息
+	-i 驱动信息
+	-k 卸货信息
+	-S 我不知道怎么翻译，帮原文贴这吧
+		Queries the specified network device for NIC and driver-specific statistics
+
+6.2 ss
+	统计socket。
+	$ ss
+	显示监听状态的端口
+	$ ss -l
+	显示tcp连接
+	$ ss -t
+	显示udp连接
+	$ ss -u
+	显示socket所属进程的进程号和程序名
+	$ ss -p
+7 
+7.1 strace
+	strace跟踪一个进程的系统调用和收到的信号。可以用来启动一个新程序或者跟踪一个
+	已存在的进程。它的输出的每一行是一个系统调用，和它的参数，返回值。
+	要安装包strace。
+	执行ls命令，跟踪它的系统调用
+	$ strace ls
+	跟踪100号进程
+	$ stract -p 100
+	跟踪1000号进程和网络有关的系统调用
+	$ strace -e trace=network -p 1000
+	跟踪和文件操作有关的系统调用
+	$ strace -e trace=file -p 1000
+	跟踪和指定文件操作有关的系统调用
+	$ strace -e trace=open,close,read,write -p 1000
+	跟踪和进程管理有关的系统调用
+	$ strace -e trace=prooces -p 1000
+	跟踪和信号有关的系统调用
+	$ strace -e trace=signal -p 1000
+	跟踪和IPC有关的系统调用
+	$ strace -e trace=ipc -p 1000
+	跟踪和文件描述符有关的系统调用
+	$ strace -e trace=desc -p 1000
+	跟踪和内存映射有关的系统调用
+	$ strace -e trace=memory -p 1000
+	计算内核在每个系统调用上花的时间
+	$ strace -c -p 1000
+	跟踪一个进程和其子进程
+	$ strace -f -p 1000
+	
+7.2 ltrace
+	跟踪一个进程的库调用。要安装包ltrace。
+	$ ltrace -p 100
+	跟踪和fnmatch,strlen函数有关的库调用
+	$ ltrace -e fnmatch,strlen -p 100
+	和strace一样跟踪系统调用
+	$ ltrace -S -p 100
+	跟踪和一个库有关的库调用
+	$ ltrace -l /lib64/librt.so.1 -p 100
