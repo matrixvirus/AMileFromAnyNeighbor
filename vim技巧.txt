@@ -25,11 +25,9 @@
 	打开文件，在命令行上，执行
 	$ vi FileName
 
-	以只读模式打开文件
-	$ vi -R FileName	
-	关闭文件，在vi里面，按esc，再按冒号进入命令模式,输入q!,你按了冒号后，屏幕底端会出现冒号
-	，后面的'q!'也会显示出来，'q!'的意思是不保存修改，直接退出。退出有多种模式，
-	后面再说。
+	关闭文件，在vi里面，按esc，再按冒号进入命令模式,输入q!,你按了冒号后，屏幕底
+	端会出现冒号，后面的'q!'也会显示出来，'q!'的意思是不保存修改，直接退出。退出
+	有多种模式，后面再说。
 3 移动光标
 3.1 根据行列移动
 	要移动光标时要换成操作模式。
@@ -62,7 +60,10 @@
 	M 移动到屏幕中间行首
 	L 移动到屏幕底部行首
 
-
+3.1.1 当一行有点长，显示上被折断，看起来是2行，实际是1行。我们把实际的一行称作
+	实际行，把看起来的2行称作幻觉行。
+	当你按了j，光标移到下一实际行，不是下一幻觉行，如果要让光标移到下一幻觉行，
+	请按gj, 按gk移到上一幻觉行。
 
 3.2 根据词移动
 	w 移动到下一个词首
@@ -91,6 +92,9 @@
 	关于节的解释，我看不懂，原文如下
 	a section is defined as text up to the next default section macro (.NH, .SH, .H 1, or .HU).
 	然后书上没讲'section macro','NH','SH'是什么。
+3.5 在配对括号间移动
+	把光标移到一个{上，按%,光标会移动和它配对的}上，有的话。再按一下%又回到{上，
+	[],() 一样。
 4 进入插入模式的方法
 	i 在光标所在字母前插入
 	a 在光标所在字母后插入
@@ -114,106 +118,96 @@
 	:0,$ 表示第1行到最后一行,就是所有行
 
 	:% 所有行
-5.1 删除
-5.1.1 删除字母
+	
+	:10,/abc/ 第10行到它下面第一次出现abc的那行
+5.2 删除
+5.2.1 删除字母
 	x 删除光标所在字母
 	2x 删除光标所在和后面的一个字母,共2个字母
 	X 删除光标前面的字母
-5.1.2 删除词
-	dw 删除光标所在字母至下一个词的前一个字母
-	db 删除光标所在词的首至光标前一个字母
-	de 删除光标所在字母至所在词的尾
-	dW 删除光标所在字母至下一个词的前一个字母,和词连着的标点当作词的一部分
-	dB 删除光标所在词的首至光标前一个字,和词连着的标点当作词的一部分
-	dE 删除光标所在字母至所在词的,和词连着的标点当作词的一部分
-5.1.3 删除行列
+5.2.2 删除词
+	因为删除，改变，复制词的语法一样，所以把它们写成表格。
+	删除 改变 复制 范围
+	dw   cw   yw   光标所在字母至下一个词的前一个字母
+	db   cb   yb   光标所在词的首至光标前一个字母
+	de   ce   ye   光标所在字母至所在词的尾
+	dW   cW   yW   光标所在字母至下一个词的前一个字母,和词连着的标点当作词
+					的一部分
+	dB   cB   yB   光标所在词的首至光标前一个字,和词连着的标点当作词的一部分
+	dE   cE   yE   光标所在字母至所在词的,和词连着的标点当作词的一部分
+5.2.3 删除行列
 	s 删除光标所在字母并在新光标位置前插入
 	S 删除一行并在行首插入
 	dd 删除光标所在行
 	D 删除光标所在行的内容，但是保留这个行，就是只剩一个换行符
-	2dj 删除光标所在行，加下面2行，共3行
-	2dk 删除光标所在行，加上面2行，共3行
-	d+ 删除当前行和下一行
-	d$ 删除光标所在字母至行尾
-	d0 删除行首至光标前一个字母
-	2dl 删除光标所在字母，加右边一个字母，共2个字母
-	2dh 删除光标所在字母，加左边一个字母，共2个字母
-	d4| 删除光标到第4列字母
 	:10,20d 删除10到20行
-	dH 删除当前行到屏幕顶的行
-	dL 删除当前行到屏幕底的行
-	dM 删除当前行到屏幕中间的行
-5.2 复制
-5.2.1 复制字母和词
-	yc 复制光标所在字母
-	yw 复制光标所在字母至下一个词的前一个字母
-	yb 复制光标所在词的首至光标前一个字母
-	ye 复制光标所在字母至所在词的尾
-	yW 复制光标所在字母至下一个词的前一个字母,和词连着的标点当作词的一部分
-	yB 复制光标所在词的首至光标前一个字,和词连着的标点当作词的一部分
-	yE 复制光标所在字母至所在词的,和词连着的标点当作词的一部分
-5.2.2 复制句子
-	yy或Y 复制光标所在行
-	2yj 复制光标所在行，加下面2行，共3行
-	2yk 复制光标所在行，加上面2行，共3行
-	y+ 复制当前行和下一行
-	y$ 复制光标所在字母至行尾
-	y0 复制行首至光标前一个字母
-	2yl 复制光标所在字母，加右边一个字母，共2个字母
-	2yh 复制光标所在字母，加左边一个字母，共2个字母
-	y4| 复制光标到第4列字母
+
+	因为有时删除，改变，复制的语法一样，所以把它们写成表格。
+	删除 改变 复制 范围
+	2dj  2cj  2yj  光标所在行，加下面2行，共3行
+	2dk  2ck  2yk  光标所在行，加上面2行，共3行
+	d+   c+   y+   当前行和下一行
+	d$   c$   y$   光标所在字母至行尾
+	d0   c0   y0   行首至光标前一个字母
+	2dl  2cl  2yl  光标所在字母，加右边一个字母，共2个字母
+	2dh  2ch  2yh  光标所在字母，加左边一个字母，共2个字母
+	d4|  c4|  y4|  光标到第4列字母
+	dH   cH   yH   当前行到屏幕顶的行
+	dL   cL   yL   当前行到屏幕底的行
+	dM   cM   yM   当前行到屏幕中间的行
+	d/abc c/abc y/abc 光标所在字母至第1个搜到的abc前一个字母
+	d,c,y的后面还可以跟{,},(,)，格式一样，不重复讲了。
+5.3 复制
+5.3.1 复制字母和词
+	yl或yh 复制光标所在字母
+	其它见5.1.2节表格
+5.3.2 复制句子
+	其它见5.1.3节表格。
 	:10,20y 复制10到20行
 
 	:10,20t30 把10至20行复制到第30行后
 	:10,20m30 把10至30行移动到第30行后
-	yH 复制当前行到屏幕顶的行
-	yL 复制当前行到屏幕底的行
-	yM 复制当前行到屏幕中间的行
-5.3 粘贴
+5.4 粘贴
 	p 粘贴到光标所在字母后面
 	P 粘贴到光标所在字母前面
-5.4 改变
-5.4.1 改变字母和词
+5.5 改变
+5.5.1 改变字母和词
 	r 修改光标所在字母
 	R 连续修改光标和其后面的字母，直至按esc
 	10rd 把光标所在字母加往右一共10个字母全部改成d 
 	~ 光标所在字母大写变小写，小写变大写
-	cw 改变光标所在字母至下一个词的前一个字母
-	cb 改变光标所在词的首至光标前一个字母
-	ce 改变光标所在字母至所在词的尾
-	cW 改变光标所在字母至下一个词的前一个字母,和词连着的标点当作词的一部分
-	cB 改变光标所在词的首至光标前一个字,和词连着的标点当作词的一部分
-	cE 改变光标所在字母至所在词的,和词连着的标点当作词的一部分
-5.4.2 改变行
-	cc 改变光标所在行
+	其它见5.1.2节表格。
+5.5.2 改变行
 	C 改变光标所在行的内容，但是保留这个行，就是只剩一个换行符
-	2cj 改变光标所在行，加下面2行，共3行
-	2ck 改变光标所在行，加上面2行，共3行
-	c+ 改变当前行和下一行
-	c$ 改变光标所在字母至行尾
-	c0 改变行首至光标前一个字母
-	2cl 改变光标所在字母，加右边一个字母，共2个字母
-	2ch 改变光标所在字母，加左边一个字母，共2个字母
-	c4| 改变光标到第4列字母
-	cH 改变当前行到屏幕顶的行
-	cL 改变当前行到屏幕底的行
-	cM 改变当前行到屏幕中间的行
-5.5 重复执行上一个操作
+	其它见5.1.2节表格。
+5.6 重复执行上一个操作
 	比如按了dd，再反复按.，反复删除。
-5.6 撤消
+5.7 撤消
 	u 撤消
 	U 撤消某一行相关的所有改变
 	Ctrl+R 恢复
-5.7 连接两行
+5.8 连接两行
 	J 把当前行,行尾加一个空格和下一行连成1行
 	10J 当前行，往下加9行，共10行，连成1行,每行后面会加一个空格,除了最后1行
-6 保存文件和退出文件
+5.9 有名字的缓冲区
+	用dd命令删除了一行后，或者用yy复制了一行，这一行被放进了缓冲区，然后执行p
+	命令粘贴缓冲区的内容。
+	缓冲区可以有多个，可以用单个字母命令，然后粘贴时可以指定粘贴哪个缓冲区的。
+	
+	复制第4行进名为f的缓冲区,先打双引号
+	"f4yy
+	复制第10行进名为a的缓冲区
+	"a10yy
+	然后粘贴名为f的缓冲区
+	"fp
+6 保存和退出文件
 6.1 保存和退出
 	:quit(q) 退出。 如果没修改文件或者前面保存过了，可以直接退出
 	:quit! 不保存修改直接退出 
 	:write(w) 保存 
 	:wq 保存并退出 
-	ZZ 操作模式的保存并退出 
+	:x 保存并退出
+	ZZ 保存并退出
 	:write! 强制保存 
 	:wq! 强制保存并退出 
 
@@ -227,6 +221,11 @@
 
 	把第10行到第20行追加到另一个文件
 	:10,20 write>> 	AnotherFileName
+6.3 读入另一个文件
+	把AnotherFile的内容加到当前行后
+	:read AnotherFile
+	把AnotherFile的内容加到第10行后	
+	:10read AnotherFile
 7 搜索
 7.1
 	在操作模式下按/，或者先按:进入命令模式再按/ 进入搜索功能
@@ -238,19 +237,496 @@
 	:?abc 
 	意思是反向搜索，从当前光标往上搜，然后你按n是跳到上一个所搜词头，按N是跳到
 	下一个所搜词头。
+7.3 g/
+	使用:g/abc, 可以对包含abc的行操作，
+	:g/abc/ d 删除所有包含abc的行
+	:g/abc/ y 复制最后一个包含abc的行
+	:g!/abc/ d 删除所有不包含abc的行
+	:g /a/ m /b/ 把包含a的那一行移动到包含b的那一行后面
+7.3 限制搜索范围
+	:1,10/abc 只在1到10行搜abc
+	:1,10g/abc/ d 只删除1到10行包含abc的行
+	5.1节讲的指定行范围的方法都能用。
+7.4  正则式基础
+7.4.1 元字符
+	. 任何单个字符
+	* 星号前面的字符出现0或任意次,比如1*表示0个或任意多个1
+	^ 行首。它有中括号里面的话不是行首，后面说。
+	$ 行尾
+	\ 把它后面有特殊意义的字符变成那个字符本来的意思，比如\.表示真正的点号。
+	[] 匹配中括号里的任意单个字符，比如[abc] 匹配a或b或c。这里面内容要多一点我
+		专门用一节讲这个，见7.4.2节
+	\(\) 给一个搜索模式分组，比如\(abc\)\(123\),替换的时候\1代表abc,\2代表123,
+		s/\(abc\)\(123\)/\2\1/ 表示把abc123替换成123abc
+	\<\> 匹配完整词，比如有一句话 1 abc abcd eabc. 则\<abc\>不会匹配abcd和eabc
+	~ 上一次匹配模式，比如你刚用/the 搜过了the,再写/~n就是搜索then
+7.4.2 中括号语法
+	[abc] 匹配a或b或c
+	[^abc] 匹配除a，b，c以外的任何字符,这里^不是行首的意思
+	[0-9] 匹配0到9
+	[a-z] 匹配小写a到z
+	[A-Z] 匹配大写A到Z
+	[\-a-z] 匹配减号或小写a到z
+	[:alnum:] 任何字母或数字 
+	[:alpha:] 任何字母
+	[:blank:] 空格和跳格
+	[:cntrl:] 控制字符
+	[:digit:] 数字
+	[:lower:] 小写字母
+	[:punct:] 任何标点
+	[:space:] 任何字符
+	象[:alnum:]这种形式，用法有点不一样，实际用的时候要写两层中括号，
+	[[:alnum:]]
+	匹配字母，数字和逗号
+	[[:alnum:],]
+7.4.3 正则式例子
+7.5 替换
+	格式是这样
+	:1,10s/abc/123/gc
+	1,10表示1到10行
+	s表示替换
+	把abc替换成123
+	g 表示一行里如果找到了多个，都替换掉，否则只替换第1个
+	c 表示光标每移动到一个abc上，等你按y确认把它替换成123,否则是直接全部替换掉
+
+	abc叫搜索模式，123叫替换模式，后面要用这两个概念以知道指的是哪部分。
+7.5.1 分组
+	:%s/\(12\)\(34\)\(56\)/\3\1\2/g
+	%表示所有行
+	12是第1组，34是第2组，56是第3组
+	\3指第3组，就是56,
+	\2指第2组，就是34,
+	\1指第1组，就是12,
+	\3\1\2 表示把第3组放在前面，第1组放中间，第2组放后面
+	123456 变成了561234
+7.5.2 &号
+	表示整个所搜字串
+	把123都替换成A123A
+	:%s/123/A&A/g
+7.5.3
+	\u 把匹配到了的字串的第1个字母变成大写
+	\l 把匹配到了的字串的第1个字母变成小写
+	\U 把匹配到了的字串全部变成大写
+	\L 把匹配到了的字串全部变成小写
+	它们要和&配合。
+	把所以单词都改成首字母大写
+	:%s/\<[[:alpha:]]\>*/\u&/g
 8 设置选项
 	设置选项是在命令模式。主要用set命令，但是不只set命令
 
 	要查看某个选项的帮助，比如textwidth
 	:help textwidth
-8.1 设置自动换行的文字最大宽度
-	设置光标距离屏幕右边界多少列时自动换行
-	set wrapmargin(wm)=10
-	括号里的wm是缩写，意思是这个命令也可以写成set wm=10
-
-	设置文字最大宽度,超过80列自动换行
+	set all
+		查看所有设置选
+	set wrapmargin(wm)=10 
+		设置光标距离屏幕右边界多少列时自动换行
+		括号里的wm是缩写，意思是这个命令也可以写成set wm=10
 	set textwidth(tw)=80
-9 分窗口
-10 vi内执行系统命令
+		设置行最大宽度,超过80列自动换行
+
+	set textwidth?
+		查看行最大宽度被设置成了多少
+		在任何一个设置项后面加问号表示查看。
+	set number(nu)
+		显示行号
+	set nonumber
+		不显示行号
+		对于值为布儿的设置项，前面加no表示不。
+	set tabstop=4
+		跳格键显示为4格
+	set expandtab
+		把跳格键转成空格
+	set shiftwidth
+		设置自动缩进是4格
+	colorscheme slate
+		设置颜色主题
+9 打开文件
+9.1 命令行的选项
+	以只读模式打开文件
+	$ vim -R FileName
+	
+	假如在用vim编辑文件AA.txt，不正常退出，AA.txt所在目录会多一个叫
+	.AA.txt.swp	的文件，再次用vim打开AA.txt时要加一个参数 -r,从.AA.txt.swp
+	恢复文件。
+	$ vim -r AA.txt
+9.2 分窗口
+9.2.1 打开多个窗口
+	打开2个文件，分上下2个窗口，
+	$ vim -o a b
+	打开vim时直接开纵向5个窗口
+	$ vim -o5
+	打开vim时直接开横向5个窗口
+	$ vim -O5
+	在vim里打开另一个文件，纵向分隔窗口
+	:split AnotherFile
+	指定新打开的文件的窗口只有4行
+	:4split AnotherFile
+	在vim里打开另一个文件，横向分隔窗口
+	:vsplit AnotherFile
+	指定新打开的文件的窗口只有4列
+	:4vsplit AnotherFile
+	打开一个空白窗口，纵向排列
+	:new
+	打开一个空白窗口，横向排列
+	:vnew
+	new的语法和split一样。
+	
+9.2.2 在窗口间移动
+	Ctrl+w j 光标移动到下面的窗口
+	Ctrl+w k 光标移动到上面的窗口
+	Ctrl+w l 光标移动到右边的窗口
+	Ctrl+w h 光标移动到左边的窗口
+9.2.3 调整窗口大小
+	Ctrl+w - 当前窗口减低一行
+	Ctrl+w + 当前窗口加高一行
+	Ctrl+w = 所有窗口等高
+	Ctrl+w > 当前窗口加宽一列
+	Ctrl+w < 当前窗口减窄一列
+	Ctrl+w | 所有窗口等宽
+
+	命令模式方法：
+	:resize +1 当前窗口加高一行
+	:resize 2 当前窗口变成2行
+	:vertical resize +1 当前窗口加宽一列
+	:vertical resize 3 当前窗口变成3列
+9.3 单窗口多文件
+	vi 可以一次打开多个文件，这样打开vi不会分窗口，屏幕上只显示1个文件，其它文件
+	都在后台
+	$ vi a b c
+
+	可以打开1个文件后再打开其它文件
+	:badd b
+	:badd c
+
+	用ls命令查看打开了哪些文件
+	:ls
+	1 #    "a.c"                          line 1
+  	2  a   "b.c"                          line 1
+  	3 %a   "c.c"                          line 1
+	每个文件都有1个数字编号
+
+	显示下一个文件
+	:bnext
+
+	显示上一个文件
+	:bpre
+
+	直接显示第3个文件，就是c.c那个
+	:buffer 3
+
+	关闭当前文件
+	:bdelete
+	关闭第2个文件，就是b.c那个
+	:bdelete 2
+
+	一次关闭所有文件
+	:quitall
+
+	以多窗口显示所有文件
+	:ball
+	隐茂当前窗口
+	:hide
+	开一个窗口显示第3个文件
+	:sbuffer 3
+10 配合ctags
+	假如有1个目录里有很多c文件，执行
+	$ ctags *.c
+	会产生1个文件叫tags,是一种符号表。
+
+	用vim打开一个c文件，对任何变量或者函数,假设叫fun1，执行
+	:tag fun1
+	光标会跳到fun1被定义的行，如果fun1是另一个c文件定义的，那个文件会被自动打开
+	，并光标跳到定义fun1的那一行。现在vim打开了两个文件，1个窗口,这种情况怎么在
+	多个文件间操作，见9.3节。
+11 vim剧本
+	注释是单个,不成对的双引号。
+11.1 if
+	语法是这样
+	if cond expr
+		line of vim code
+		another line of vim code
+	elseif some secondary cond expr
+		code for this case
+	else
+		code that runs if none of the cases apply
+	endif
+
+	if 后面的判断支持这种c风格的语法
+		cond ? expr1 : expr2
+11.2 strftime函数
+	strftime函数以指定格式输出格式化的时间，有两个参数，一个是输出格式，一个是距
+	1970年1月1日0秒的秒数,如果没指定则用当前时间。
+	例1：
+	if strftime("%H") < 6 + 0
+		colorscheme darkblue
+		echo "setting colorscheme to darkblue"
+	elseif strftime("%H") < 12 + 0
+		colorscheme morning
+		echo "setting colorscheme to morning"
+	elseif strftime("%H") < 18 + 0
+		colorscheme shine
+		echo "setting colorscheme to shine"
+	else
+		colorscheme evening
+		echo "setting colorscheme to evening"
+	endif
+
+	%H意思是小时。
+	0点到6点，使用darkblue颜色主题
+	6点到12点，使用morning颜色主题
+	12到18点，使用shine颜色主题
+	18点到24点，使用evening主题
+11.3 变量
+	vim定义变量有作用域，通过前缀指定
+	b: 变量只在一个缓区里有效
+	w: 变量只在一个窗口里有效
+	t: 变量只在一个tab里有效。把tab翻译成标签会和tag混宵，我不知道怎么翻译
+	g: 变量在所有作用域有效
+	l: 变量在一个函数里有效
+	s: 变量在一个剧本文件里有效
+	a: 变量是一个函数参数
+	v: 变量是一个vim变量，被vim控制。我不知道，书上只这么说
+
+	设置变量用let命令
+	:let var = "value"
+
+	例2：
+	let currentHour = strftime ("%H")
+	echo "currentHour is " currentHour
+	if currentHour < 6 + 0
+		colorscheme darkblue
+		echo "setting colorscheme to darkblue"
+	elseif currentHour < 12 + 0
+		colorscheme morning
+		echo "setting colorscheme to morning"
+	elseif currentHour < 18 + 0
+		colorscheme shine
+		echo "setting colorscheme to shine"
+	else
+		colorscheme evening
+		echo "setting colorscheme to evening"
+	endif
+
+	例3
+	let currentHour = strftime("%H")
+	echo "currentHour is " . currentHour
+	if currentHour < 6 + 0
+		let colorScheme = "darkblue"
+	elseif currentHour < 12 + 0
+		let colorScheme = "morning"
+	elseif currentHour < 18 + 0
+		let colorScheme = "shine"
+	else
+		let colorSchmee = "evening"
+	endif
+	echo "setting color scheme to " . colorScheme
+	execute colorscheme colorScheme
+
+	因为我们定义的变量colorScheme是一个变量，不是直接是一个颜色主题名，所有要用
+	execute, 它会分析哪些是vim命令，哪些是变量，把变量替换成它们的值。
+	如果变量被引号括起来了，则不会被execute替换。
+11.4 自定义函数
+	格式是这样
+	function myFunction(arg1,arg2,...)
+		lines of code	
+	endfunction
+	
+	例4：
+	function SeetTimeOfDayColors()
+		let currentHour = strftime("%H")
+		echo "currentHour is " . currentHour
+		if currentHour < 6 + 0
+			let colorScheme = "darkblue"
+		elseif currentHour < 12 + 0
+			let colorScheme = "morning"
+		else if currentHour < 18 + 0
+			let colorScheme = "shine"
+		else
+			let colorScheme = "evening"
+		endif
+		echo "setting color scheme to ". colorScheme
+		execute "colorscheme " . colorScheme
+	endfunction
+	
+	调用函数用call
+	call SetTimeOfDayColors()
+11.5 
+	statusline接受一个式子，并解释它，你可以在这个式子里包含你定义的函数，每当
+	状太栏更新，函数会被调用
+	set statusline=%<%t%h%m%r\ \ %a\ %{strftime(\"%c\")}%=0x%B\
+		\\ line:%l,\ \ col:%c%V\ %P
+	你这么设置一下，看看你的vim的状态栏有什么变化，和设置的一长串看不懂的字符
+	一一对应，就知道每个字符什么意思了。
+
+	你可以用这种语法往statusline后面加内容 
+	set statusline += \ %{SetTimeOfDayColors()}
+11.6 全局变量
+	你先执行这个命令
+	:echo g:colors_name
+	我的显示slate,意思是我目前的颜色主题是slate。
+
+	例5
+	function SeetTimeOfDayColors()
+		let currentHour = strftime("%H")
+		echo "currentHour is " . currentHour
+		if currentHour < 6 + 0
+			let colorScheme = "darkblue"
+		elseif currentHour < 12 + 0
+			let colorScheme = "morning"
+		else if currentHour < 18 + 0
+			let colorScheme = "shine"
+		else
+			let colorScheme = "evening"
+		endif
+		
+		" 如果当前不是希望的颜色，才改变颜色
+		if g:colors_name !~ colorScheme
+			echo "setting color scheme to ". colorScheme
+			execute "colorscheme " . colorScheme
+		endif
+
+	endfunction
+11.7 数组
+	定义数组语法是这样
+	let g:Favcolorschemes = ["darkblue", "morning", "schine", "evening"]
+
+	例6 
+	function SetTimeOfDayColors()
+		let g:CurrentHour = (strftime("%H") + 0) / 6
+		if g:colors_name !~ g:Favcolorschemes[g:CurrentHour]
+			execute "colorscheme " . g:Favcolorschemes[g:CurrentHour]
+			echo "excute " "colorscheme " . g:Favcolorschemes[g:CurrentHour]
+			redraw
+		endif
+	endfunction
+11.8 autocommands
+11.8.1
+	为事件定义动作，当事件发生，自动执行动作。
+	语法是这样
+	autocmd [group] event pattern [nested] command
+	
+	group 一个可选的命令组，后面说
+	event 触发命令的事件
+	pattern 匹配命令应该为哪个文件名执行
+	nested 可选的，允许autocommand嵌在另一个autocommand里
+	command vim命令，函数，或用户定义的剧本，事件发生时执行
+
+	一些事件：
+	BufNewFile
+		打开新文件
+	BufReadPre
+		移动到一个新缓区前
+	BufRead,BufReadPost
+		在读入文件后编辑这个新缓区
+	BufWrite,BufWritePre
+		把缓区写入到文件前
+	FileType
+		设置filetype后
+	VimResized
+		vim窗口大小变化
+	WinEnter,WinLeave
+		进入vim窗口，离开vim窗口
+	CursorMoved,CursorMovedI
+		在操作模式移动了光标，在插入模式移动了光标
+11.8.2
+	下面我们要实现一个功能，每次打开新文件时判断文件类型。
+	当在插入模式移动了光标，对任何文件，调用CheckFileType函数：
+	autocmd CursorMovedI * call CheckFileType()
+
+	下面是CheckFileType函数
+	例7
+	function CheckFileType()
+		if &filetype == ""
+			filetype detect
+		endif
+	endfunction
+
+	&filetype 意思是取filetype这个设置项的值
+	filetype detect 是在环境变量$VIMRUNTIME 里的一个vim剧本，
+
+	把这个函数，还有上面那行，加到你的/etc/vimrc里。
+	然后你编辑一个文件叫ScriptWithoutSuffic,
+
+	#!/bin/sh
+	inputFile="DailyReceipts"
+
+	用vim打开它看看语法高亮是否启用了，启用了就对了，因为没有后缀，正常情况不会
+	启用。
+11.8.3 exists函数
+	检查一个变量是否被定义了
+	if exists("b:countCheck") == 0
+		let b:countCheck = 0
+	endif
+11.8.4 autocommands和组
+	比如把上面定义的那个关联到一个组
+	augroup newFileDetection
+	autocmd CursorMovedI * call CheckFileType()
+	augroup END
+11.8.5 删除一个autocommands
+	语法是这样
+	autocmd! [group] [event] [pattern]
+	根据事件，匹配文件名的模式，或者这个autocommands所在组来删除。
+	根据组名删除上面定义的那个
+	autocmd! newFileDetection
+12 命令模式的命令
+12.1 怎样在vi内执行系统命令
 	比如执行ls命令
 	:!ls
+
+	在vim里面开一个系统终端
+	:sh
+	你在这个终端执行exit后回到vim
+
+	使用系统的sort命令给文字排序
+	给1到10行排序
+	:1,10!sort
+12.2 怎样连写多个命令
+	这部分不适合放在任何一节，书上讲到上面内容时讲到这里，我就也放这里。
+	先把1到5行移动到第10行后，再删除所有包含abc的行，两个命令用|号连接。可以没有
+	空格。
+	:1,5m10 | g/abc/ d
+12.3 怎样改变按键功能
+	:map j gj
+		按j实际等于按了gj
+	:unmap j
+		取消对j的映射，按j就是j
+	:map
+		查看所有按键映射
+	上面把j映射成gj有个问题，gj里面还有一个j,这个j岂不又要被映射成gj?
+	用noremap，阻止递归映射
+	:noremap j gj
+12.4 读配置文件
+	:source /etc/vimrc
+
+13 折叠
+13.1 手动操作
+	你先找一个c文件实验。
+	把光标移动任意位置，按
+	100zF 折叠下面100行
+	za 屏开这100行
+
+	下面是其它折叠命令
+	za 开关折叠状态,折叠的展开，展开的折叠
+	zA 开关折叠状态，递归的
+	zd 取消一个折叠
+	zD 取消一个折叠，递归的
+	zf100j 折叠下面100行
+	zf100k 折叠上面100行
+	zo 展开折叠
+	zO 展开折叠，递归的
+	zc 关闭折叠
+	zC 关闭折叠，递归的
+	zj 光标移动到下一个定义了折叠的地方，因为折叠展开了的话，你看不到哪里定义了
+		折叠
+	zk 光标移动到上一个定义了折叠的地方
+
+
+13.2 自动折叠
+	自动根据缩进折叠
+	:set foldmethod=indent
+	然后你的代码的2格以上的缩进都被自动折叠了。不知道这个功能c语言以外其它编程
+	语言能不能用。
+
+	自动根据语法折叠
+	:set foldmethod=syntax
+
