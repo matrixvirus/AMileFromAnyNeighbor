@@ -117,6 +117,23 @@
 	监视CPU频率。要安装包cpupowerutils。
 	我在虚假机CentOS-6.9执行这个命令遇到了报错
 		no /dev/cpu/0/msr, Try "# modprobe msr" 
+	在本机openSUSE-Leap-42.3上没有问题。
+	
+	turbostat先显示系统的总体信息，然后每隔5秒显示统计信息，包括这些列：
+	pkg
+		处理器包号
+	core
+		处理器核心号
+	CPU
+		CPU(逻辑处理器）号
+	%c0等
+		CPU在一种状态的时间比例
+	GHz
+		CPU在c0状态的平圴时钟频率
+	TSC
+		CPU平均时钟频率
+	%pc3等
+		CPU在一种P装态的时间比例
 3.4 pidstat
 	监视linux内核管理的工作。
 	$ pidstat
@@ -139,6 +156,21 @@
 	执行
 	$ udevadm monitor
 	再插上油盘，屏幕上会有显示。
+3.8 numastat
+	打断一下，我百度numastat,只搜出来一篇文章提到了它，从文字风格能看出来，这个
+	文档也是翻自英文，估计作者也不懂,在一张这个命令的输出截图下面，作者说，他的
+	机器不能执行这个命令，这个图是原文档的。
+
+	numastat命令为进程和一个NUMA节点的操作系统统计内存信息。我还是不知道节点是什
+	么。
+	它输出这些信息：
+	numa_hit
+		给该节点分配成功的数量。原文是这么说的，我不知道是分配什么
+	numa_miss
+	numa_foreign
+	interleave_hit
+	local_node
+	other_node
 4 进程
 4.1 ipcs
 	监视进程间通信。
@@ -303,54 +335,3 @@
 	$ ltrace -S -p 100
 	跟踪和一个库有关的库调用
 	$ ltrace -l /lib64/librt.so.1 -p 100
-8 cpu优化
-8.1 关于CPU状态的知识
-8.1.1 C状态
-	C的后面有数字，数字越大，表示CPU睡得越深，越多的
-	组件被关闭，唤醒所需时间越长。
-	C0 操作状态，所有组件开启，正常执行指令
-	C1 通过软件关闭CPU主内部钟，接口单元和APIC开启
-	C2 通过硬件关才CPU主内部钟
-	C3 关闭所有内部钟
-8.1.2 P状态
-	当处理器在C0状态，可以处于一种P状态，P后面的数字越大，CPU的频率和电压越低。
-	P0是性能最高状态。
-8.1.3 governor管辖者
-	管辖者是内核的一个概念，用于动态调整CPU频率，可以理解成一种预先定义的CPU能
-	耗模式。
-	有3种管辖者：
-	Performance Governor
-		CPU频率被设置成最高
-	Powersave Governor
-		CPU频率被设置成最低
-	On-demand Governor
-		on-demand是按需的意思。如果CPU使用率超过一个限值，则调高频率,低于一个限
-		值，则调低频率
-8.2 cpupower
-8.2.1
-	查看内核的cpufreq driver,我不知道怎么翻译
-	$ cpupower frequency-info
-	查看内核的cpuidle driver，我不知道怎么翻译
-	$ cpupower idle-info
-8.2.2
-	禁用C5状态
-	$ cpupower idle-set -d 5
-	禁用所有延迟大于80的状态
-	$ cpupower idle-set -D 80
-	我不知道这个80是秒还是什么，man手册没说。
-
-8.2.3 
-	monitor子命令报告处理器拓扑，频率和空闲能耗状态统计信息。
-	$ cpupower monitor
-	测试ls命令执行时的空闲和频率信息
-	$ cpupower monitor ls
-8.2.4
-	调整cpu频率不超过1GHz
-	$ cpupower frequency-set -u 1GHz
-	调整cpu频率不低于2GHz
-	$ cpupower frequency-set -d 2GHz
-	使用performance管辖者
-	$ cpupower frequency-set -g performance
-	它还有个-f参数，但是man手册说要先启用用户空间管辖者，我不知道是什么。
-	
-8.3 powertop
