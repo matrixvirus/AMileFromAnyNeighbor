@@ -340,6 +340,50 @@
 		设置自动缩进是4格
 	colorscheme slate
 		设置颜色主题
+	set autoindent
+		下一行自动和上一行保持相同缩进
+	set cindent
+		配合C语言的自动缩进
+	set cinkeys
+		在遇到这些c语言符号时缩进
+	set cinoptions
+		影响怎样为c语言缩进
+	set cinwords
+		认识哪些c语言关键字
+	set ignorecase
+		搜索时不区分大小写
+	set list
+		tab显示为^I,换行显示为$
+	set readonly
+		读只
+	set scroll
+		按Ctrl+D,Ctrl+B滚动的行数
+	shell
+		进入系统壳，退出这个壳后还在vim里
+	set showmatch
+		当输入一个左括号，再输入右括号，光标短暂跳到左括号，再回到右括号
+	set showmode
+		在插入模式时，在状态栏显示"插入"
+	set nowrapscan
+		搜索时，到最后一个后，不跳回第一个
+	syntax off 
+		关闭语法高亮
+	set ruler
+		在状态栏显示行数，列数
+	set nocompatible
+		一种更友好的模式
+	set backspace=indent,eol,start
+		允许退格键删除一切
+	set cursorcolumn 
+		为目前列显示一条竖线
+	set cursorline
+		为目前行显示一条横线
+	set fileformat
+		设置文件的换行模式，可以是dos,unix,mac
+	set paste
+		这个设置会自动设置一堆设置。当把网页上复制的东西往vim贴格式不会乱
+	set relativenumber
+		相对行号，显示每一行到目前行的距离
 9 打开文件
 9.1 命令行的选项
 	以只读模式打开文件
