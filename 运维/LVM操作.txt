@@ -1,0 +1,161 @@
+1
+	2018年02月22日
+	参考书是redhat6文档之Logical Volumn Manager Administration。
+2 名词解释
+2.1 
+	Pyhsical Volume,PV。LVM逻辑卷下层的物理保存单元是一个大块设备，一个分区或者
+	整块盘子。这个大块设备必须先被预设成一个物理卷。
+	多个物理卷被组合成一个卷组，在卷组里，盘子空间分成叫extent的，固定大小的单元
+	，在物理卷内，这些单元叫Physical Extent,PE。逻辑卷被按逻辑extent划分，和PE一
+	样大小。我给extent取个名字叫子牙,Logical Extent叫逻辑子牙，Pyhsical Volumn
+	叫物理子牙。子牙是逻辑卷增大减小的最小单位。
+	卷组被分成逻辑卷。
+	物理卷制作时物理子牙并不存在，也不存在大小，卷组制作时物理子牙大小才被指定，
+	逻辑卷制作时物理子牙才被实际分配。
+	逻辑卷有3种，线性卷，条纹卷，对称卷，它们的区别在逻辑子牙和物理子牙的对应
+	方式。
+	线性卷中，逻辑子牙和物理子牙一一对应，一对一，二对二，
+
+	条纹卷中，假设一个逻辑卷下面三个物理卷，有一个概念叫条纹，制作条纹卷时要指定
+	条纹宽度，我给它取个名字叫刘备。第一个刘备写进第一个物理卷，第二个刘备写进
+	第二个物理卷，第三个刘备写进第三个物理卷，第四个刘备又写进第一个物理卷。
+
+	制作条纹卷时，最大大小是最小的物理卷大小乘以物理卷数，比如有3个物理卷，大小
+	分别是2G,3G,4G,用这三个物理卷制作条纹卷的最大大小是2x3=6G。
+
+	对称卷中，同一个数据被写到两个物理卷上。当其中一个物理卷坏了，逻辑卷变成一个
+	线性卷。被同步的物理卷被分成512KB的小块，有一个日志记录着哪些小块已同步。
+	
+	稀逻辑卷可以比实际可用子牙更大。
+	
+	LVM快照机制可以快速为一个设备制作一个伪映象，当原设备有变化，被改变的数据会
+	被复制。因为只有快照被制作后改变的数据被复制，快照需要的空间很少，被照方变
+	化不频繁的话，快照的只需要被照方百分之三到五的空间。快照是一种伪复制，不能
+	代替备份。
+
+3 操作步聚
+3.1 我的伪机环境
+	一台伪机，系统CentOS-6.9,3盘伪盘子，用/dev/sdb,/dev/sdc做实验，5G。
+3.2 物理卷
+	检查可用于制作物理卷的大块设备
+	$ lvdiskscan
+
+	制作物理卷
+	$ pvcreate /dev/sdb /dev/sdc
+
+	检查所有盘物理卷
+	$ pvdisplay
+	$ pvdisplay /dev/sdb
+	$ pvs
+	$ pvs /dev/sdb
+	$ pvscan
+	pvdisplay的输出比pvs的详细些。pvscan的输出好象只是比pvs的多一行总和。
+
+	改变物理卷/dev/sdb大小，原来是5G
+	$ pvresize --setphysicalvolumesize 2G /dev/sdb
+	把物理卷/dev/sdb 变成它本身分区大小
+	$ pvresize /dev/sdb
+
+3.3 卷组	
+	制作卷组vg1
+	$ vgcreate vg1 /dev/sdb /dev/sdc
+
+	从卷组vg1里移除物理卷/dev/sdc
+	$ vgreduce vg1 /dev/sdc	
+	删除物理卷/dev/sdc
+	$ pvremove /dev/sdc
+	再制作它
+	$ pvcreate /dev/sdc
+
+	把物理卷/dev/sdc 添加到逻辑卷vg1
+	$ vgextend vg1 /dev/sdc
+	删除卷组vg1
+	$ vgremove vg1
+
+	再次制作卷组vg1,指定子牙大小是16M
+	$ vgcreate vg1 --physicalextentsize 16M /dev/sdb /dev/sdc
+	
+	检查卷组vg1
+	$ vgdisplay vg1
+	或者用vgscan
+	$ vgscan
+	我不知道为什么要同时存在这两个命令。
+
+	起活一个卷组的所有逻辑卷，-a右边的y是yes的意思
+	$ vgchange -a y vg1
+	灭活一个卷组的所有逻辑卷，-a右边的n是no的意思
+	$ vgchange -a n vg1
+	书上说很多情况会需要灭活一个卷组，没说是哪些情况。
+
+	把卷组vg1 改名成 vgshit
+	$ vgrename vg1 vgshit
+	再改回叫vg1
+	$ vgrename vgshit vg1
+
+3.4 逻辑卷
+3.4.1 线性逻辑卷
+	在卷组vg1上制作一个逻辑卷叫lv1,630个子牙，卷组vg1本来有638个子牙
+	$ lvcreate -l 630 -n lv1 vg1
+	然后/dev/下面多了一个目录vg1,vg1下面有一个文件叫lv1。
+	检查卷组vg1，Free Pe /Size 那一行显示还有8个子牙，128MB空间
+	$ vgdisplay vg1
+	
+	制作逻辑卷可以不用指定子牙数量，用指定大小的方法
+	$ lvcreate -L 5G -n lv1 vg1
+	不建议用这种方法，因为不能保证你指定的大小恰好和卷组一样，留几个子牙被浪费。
+
+	使用百分比的方法
+	使用卷组百分之六十空间
+	$ lvcreate -l 60%vg -n lv1 vg1
+	使用卷组未用空间百分之百
+	$ lvcreate -l 100%free -n lv1 vg1
+
+	指定使用哪个物理卷的哪些子牙
+	$ lvcreate -l 20 -n lv1 vg1 /dev/sdb:0:9 /dev/sdc:10-19
+
+	检查逻辑卷
+	$ lvdisplay /dev/vg1/lv1
+	删除
+	$ lvremove /dev/vg1/lv1
+3.4.2 条纹逻辑卷
+	制作条纹卷，使用2个物理卷，10G,刘备大小64KB
+	$ lvcreate -L 10G -i 2 -I 64 -n lv1 vg1
+3.4.3 对称逻辑卷
+	制作对称卷，一次备份，-m后的数字指定备份数量
+	$ lvcreate -l 300 -m1 -n lv1 vg1
+	双重备份
+	$ lvcreate -l 300 -m2 -n lv1 vg1
+3.4.4 制作快照
+	在卷组vg1上制作逻辑卷lv1时，要留一点空间制作快照，书上没说具体留多少
+	为/dev/vg1/lv1制作快照，100M
+	$ lvcreate --size 100M --snapshot --name snap /dev/vg1/lv1
+	检查/dev/vg1/lv1,发现"LV snapshot status"那一行有内容了
+	$ lvdisplay /dev/vg1/lv1
+	用lvs命令可以看见一行"snap",它有一列叫"Origin",显示是lv1
+	$ lvs
+	删除快照，名为snap的快照是为/dev/vg1/lv1制作的，它也在/dev/vg1目录下，它本身
+	也是一种逻辑卷
+	$ lvremove /dev/vg1/snap
+
+	使用快照恢复
+	$ lvconvert --merge /dev/vg1/snap
+	恢复后，/dev/vg1/snap不见了
+3.4.5 改变逻辑卷大小
+	减3个子牙大小
+	$ lvreduce -l -3 /dev/vg1/lv1
+	或
+	$ lvresize -l -3 /dev/vg1/lv1
+
+	加3个子牙大小	
+	$ lvextend -l +3 /dev/vg1/lv1
+	或
+	$ lvresize -l +3 /dev/vg1/lv1
+	
+	改成10个子牙大小
+	$ lvresize -l 10 /dev/vg1/lv1
+3.4.6 
+	把一个逻辑卷设成读只
+	$ lvchange -pr /dev/vg1/lv1
+	
+	改逻辑卷名字
+	$ lvrename /dev/vg1/lv1 /dev/vg1/lvshit

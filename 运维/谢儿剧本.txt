@@ -1,0 +1,413 @@
+1
+	2018年02月23日。
+	参考书Linux Shell Scripting Cookbook,Packet出版社，作者Sarath Lakshman。
+2
+2.1 echo
+	问题：一个变量叫a,值是2，怎样输出 $a ,不输出2
+	解：$ echo '$a'
+
+	问题：怎样不换行
+	解：加 -n
+	
+	使用\t,\n之类的转义字符
+	$ echo -e '1\t\n'
+
+	彩色
+	解：
+	字的色
+	$ echo -e '\e[1;31m light red\e[0m'
+	$ echo -e '\e[1;32m light green\e[0m'
+	$ echo -e '\e[1;33m light yellow\e[0m'
+	$ echo -e '\e[1;34m light purple\e[0m'
+	$ echo -e '\e[1;35m light pink\e[0m'
+	$ echo -e '\e[1;36m light blue\e[0m'
+	$ echo -e '\e[1;37m light white\e[0m'
+
+	背景色
+	31是设置字成红色，41是设置背景成红色，其它同理
+	$ echo -e '\e[1;41m red\e[0m'
+	
+	暗红色，把1,31m改成0,31m，其它同理
+	$ echo -e '\e[0;31m red\e[0m'
+	更暗的红色
+	$ echo -e '\e[2;31m red\e[0m'
+	斜体
+	$ echo -e '\e[3;31m red\e[0m'
+	下划线
+	$ echo -e '\e[4;31m red\e[0m'
+	
+2.2 printf
+	$ printf "%d %d\n" 1 2
+	%d的用法和C语言一样，后面1和2用空格隔开。
+3 数学计算
+3.1 let
+	$ a=2
+	$ let a++
+	$ let a=a+2
+	$ let a=2*a
+3.2 
+	$ a=$[2+3]
+	$ b=$[a*2]
+3.3 
+	双括号的用法和上面的中括号一样
+	$ a=$((2+3))
+	$ b=$((a*2))
+3.4 用expr
+	$ a=`expr 3 + 3`
+	或
+	$ a=$(expr 3 + 3)
+3.5 用bc
+	$ a=`echo '4 * 2' | bc`
+	计算数字8的二制
+	$ echo 'obase=2;8' | bc
+	计算二制'1000'等于十制多少
+	$ echo 'ibase=2;1000' | bc
+	计算八制的'21'等于二制多少
+	$ echo 'ibase=2;obase=2;21' | bc
+4 输入输出重定向
+	重定向时0,1,2的意义
+	0 stdin
+	1 stdout
+	2 stderr
+
+	stderr转成stdout
+	$ SomeCommand 2>&1
+
+	隐茂stdout和stderr
+	$ SomeCommand &>/dev/null
+
+	重定向stderr到一个文件
+	$ SomeCommand 2> FileName
+
+	既正常输出stdout,又把stdout输出到一个文件
+	$ SomeCommand | tee FileName
+
+	读入文件
+	$ cat < FileName
+5 数组
+5.1 普通数组
+	$ a=(1 2 3 4)
+	显示a的元素
+	$ echo ${a[0]}
+	$ echo ${a[1]}
+	显示a的所有元素
+	$ echo ${a[*]}
+	给a添加第五个元素
+	$ a[4]=100
+	显示a的元素个数
+	$ echo ${#a[*]}
+	删除a的第五个元素
+	$ a[4]=''
+	查看a的索引
+	$ echo ${!a[*]}
+5.2 联想数组
+	先要这么定义
+	$ declare -A a
+	$ a=([a]=11 [b]=22)
+	往a里添加元素
+	$ a[abc]=99
+	查看a的所有元素
+	$ echo ${a[*]}
+	查看a的索引
+	$ echo ${!a[*]}
+6 命令别名
+	定义ls命令等于3次ls
+	$ alias ls='ls;ls;ls'
+	取消上面的别名
+	$ unalias ls
+
+	查看有哪些别名
+	$ alias
+7 查看终端信息
+	终端有多少列
+	$ tput cols
+	终端有多少行
+	$ tput lines
+	终端的名字
+	$ tput longname
+	光标移动到最上面一行，第40列。因为提示符的存在，是从提示符往右数40列
+	$ tput cup 0 40
+	显示下划线
+	$ tput smul
+	取消显示下划线
+	$ tput rmul
+
+	打字不显示，比如输密码时
+	$ stty -echo
+	恢复显示
+	$ stty echo
+8 日期
+8.1 date
+	显示日期
+	$ date	
+	显示距1970-01-01 00:00:00 秒数
+	$ date +%s
+	显示YY-MM-DD
+	$ date +%y-%m-%d
+	显示YYYY-MM-DD
+	$ date +%Y-%m-%d
+	或者这样，和上面效果一样
+	$ date +%F
+	显示这一秒内过子多少纳秒	
+	$ date +%N
+	显示 HH:MM:SS
+	$ date +%T
+	
+	全部可用格式看man手册去。
+
+	不显示目前日期，显示指定日期，并调整输出格式。比如你想知道2018年05月09日是
+	星期几
+	$ date --date "2018-05-09" +%A
+
+	设置日期，
+	$ date --set '2018-02-24 11:22:22' 
+	可以只设置时间
+	$ date --set '11:22:22'
+	
+8.2 延时
+	延时10秒
+	$ sleep 10
+	延时100微秒
+	$ usleep 100
+9 剧本语法
+	剧本第一行都是
+	#!/bin/bash
+	注释是#
+9.1 if
+	if [ 1 -lt 2 ]
+	then
+		echo "i like you"
+	elif [ 2 -lt 3 ]
+	then
+		echo "i like your mother"
+	else
+		echo "your father like me"
+	fi	
+
+	if 下面有then,elif下面有then,else下面没有then,最后是fi。
+9.2 判断的语法
+	上面的if 右边的中括号是判断，[ 1 -lt 2 ] 的意思是如果1比2小。
+	你还可以写成这样
+	if test 1 -lt 2
+	所以它实际是一个命令叫test。
+	[右边必须有一个空格，]左边必须有空格。	
+	你可以在命令行上直接输[ 1 -lt 2 ]
+	$ [ 1 -lt 2]
+	再输
+	$ echo $?
+	0
+
+	说明判断成功，1比2小。
+
+	! 取反
+	[ ! 1 -lt 2 ]
+		1不比2小
+	[ 1 -lt 2 -a 2 -lt 3 ]
+		1比2小，且2比3小，-a是"且"的意思
+	上面的没有括号，有时式子变复杂，要加括号成这样
+	[[ (1 -lt 2) && (2 -lt 3) ]]
+		1比2小，或2比3小
+	[ 1 -lt 2 -o 2 -lt 3 ]
+		1比2小，或2比3小，-o是"或"的意思
+	[[ (1 -lt 2) || (2 -lt 3) ]]
+		1 比2小，或2比3小。
+
+	其它语法：
+	-n "aaa"
+		字串"aaa"的长度不为0
+	-z "aaa"
+		字串"aaa"的长度为0
+	"aaa" = "aaa"
+		两个字串相同
+	"aaa" != "aaa"
+		两个字串不同
+	1 -eq 1
+		两个数相等
+	1 -ge 2
+		大于或等于
+	1 -gt 2
+		大于
+	1 -le 2
+		小于或等于
+	1 -lt 2
+		小于
+	1 -ne 2
+		不等于
+	-d "aaa"
+		"aaa"是一个目录
+	-e "aaa"
+		存在"aaa"这个文件，可能是目录
+	-h "aaa"
+		"aaa"是一个链接
+	还有很多不常用的，请看man手册。
+
+9.3 case 语法
+	case x in
+	1) echo 1;
+		;;
+	2) echo 2;
+		;;
+	*)
+		;;
+	esac
+
+	开头是case ，然后变量，in。
+	1是一个可能值，右边跟括号，写成1)
+	然后是语句，后面跟两个分号，
+	*)是其它，
+	最后是esac。
+	
+
+9.4 for 语法
+9.4.1
+	x从1到100
+	for x in {1..100}
+	do
+		echo $x
+	done
+
+	x是a,b,c,d
+	for x in a b c d
+	do
+		echo $x
+	done
+
+	x是a到z
+	for x in {a..z}
+	do
+		echo $x
+	done
+	x是A到Z
+	for x in {A..Z}
+	do 
+		echo $x
+	done
+9.4.2
+	自定分隔符
+	data="name,sex,rollno,location"
+	oldIFS=$IFS
+	IFS=,
+	for x in $data
+	do
+		echo $x
+	done
+	IFS=$oldIFS
+
+	不这么写的话，data的4个词是一个整体，IFS是系统设置分隔符的变量，是空格，把
+	IFS设成逗号，data里的4个词可以被依次赋给x。
+9.4.3
+	for ((x=0;x<10;x++))
+	do
+		echo $x
+	done
+9.5 while 语法
+	形式:
+	while [ 1 -eq 1]
+	do
+		语句;
+	done
+
+	while 右边是判断，下一行是do，最后是done。
+
+	跳出循环：
+	while [ 1 -eq 1 ]
+	do
+		#跳出循环：
+		if [ 1 -eq 1 ]
+		then
+			break;
+		fi
+		#跳过循环：
+		if [ 1 -eq 1]
+		then	
+			continue;
+		fi
+	done
+9.6 函数
+	形式：
+	function fun1()
+	{
+		语句;
+	}
+
+	例子：
+	function fun1()
+	{
+		local a=$1
+		shift
+		local b=$1
+		echo $#
+		echo $@
+		return 0
+	}
+
+	$1 是第1个参数。
+	执行shift后，$1实际是第2个参数。
+	local 意思是变量a只在函数内有效，在函数外不可见。
+	$# 是函数参数个数
+	$@ 是所有参数
+	return 0 函数返回0，执行一个函数或命令后，用"echo $?"看到的是返回值。
+
+	使用函数，函数名后面跟参数
+	fun1 1 2
+9.8 
+	管道语法
+	$ cmd1 | cmd2 | cmd3
+
+	使a等于一个命令的输出
+	$ a=`SomeCommand`
+
+	使用一个新进程执行命令ls
+	$ (ls)
+9.9 判断的正则式
+	[[ 1 =~ .* ]]
+	两层中括号，使用"=~", 右边写正则式，不要带引号。
+10 read命令
+	只读N个字符
+	$ read -n 3 a
+	
+	不显示
+	$ read -s a
+	
+	先显示一个字串
+	$ read -p "你输呀:" a
+
+	在2秒内输入
+	$ read -t 2 a
+11 cat
+	合并空行
+	$ cat -s FileName
+	显示行号
+	$ cat -n FileName
+12 tr
+	合并空行。-s 意思是合并重复的
+	$ cat FileName | tr -s '\n'
+
+13 记录回放命令
+	$ script -t 2>timing.log
+
+	然后输入各种命令
+
+	然后退出
+	$ exit
+	这时是退出叫script那个命令。然后目录下面会多一个文件叫typescript，记录了你
+	刚才输的命令。
+	-t 把延时信息输出到stderr，
+	2>timing.log 把stderr输出到文件timing.log
+	
+	回放。回放时要用timging.log 和typescript两个文件
+	$ scriptreplay timing.log typescript
+14 find
+14.1 按文件名找
+	在目前目录下找叫a.txt的文件
+	$ find ./ -name 'a.txt'
+	找以txt结缀的文件
+	$ find ./ -name '*.txt'
+	找以txt或TXT结缀的文件，-iname 意思是不区分大小写
+	$ find ./ -iname '*.txt'
+14.2 组合条件
+	找以txt 或pdf结尾的文件
+	$ find ./ \( -name '*.txt' -o -name '*.pdf' \)
+	有两个条件，-name '*.txt',-name '*.pdf',它们中间是-o,是或的意思，两边是
+	\( \)，括号前面有斜杠，\(右边有空格，\)左边有空格。
+	

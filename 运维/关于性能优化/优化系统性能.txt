@@ -66,7 +66,18 @@
 1.3 powertop
 	监视系统能耗。
 	$ powertop
-	
+	它的输出有几个标页，按tab键在它们间切换。
+	标题为Overview那一页，列出了CPU每秒被唤醒次数，每个组件，组件类型，很多我不
+	知道什么意思，ops是什么？Usage那一列是什么？Events那一列是什么？
+	Idle stats那一页显示了CPU C状态所占时间比例。
+	Frequency那一页显示CPU P状态所占时间比例。
+	Device那一页显示了设备信息。
+	Tunable那一页显示优化建议。
+
+	输出网页格式的统计，因为它统计20秒的信息，你要等20秒
+	$ powertop --html=FileName.html
+	只统计1秒内的信息
+	$ powertop --html=FileName.html --time=1
 1.4 taskset
 	taskset命令得到或设置一个进程对一个CPU的亲密度，或者以一个指定的对一个CPU的
 	亲密度启动一个进程。
