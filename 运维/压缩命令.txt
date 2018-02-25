@@ -1,0 +1,6 @@
+22 制作iso文件
+	复制光盘成iso文件
+	$ dd if=/dev/cdrom of=image.iso
+
+	把目录Directory打包成iso
+	$ mkisofs -R -o image.iso Directory
