@@ -1,0 +1,14 @@
+1
+	2018年02月24日。
+2 wget
+	下载一个网站
+	$ wget --mirror 网址
+
+	测试一个机器一个端口
+	$ wget ip:port
+3 curl
+	测试一个主机一个端口
+	$ curl ip:port
+4 telnet
+	测试一个机器一个端口
+	$ telnet ip port

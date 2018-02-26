@@ -269,3 +269,17 @@
 	
 	不同步pdf文件和txt文件
 	$ rsync -r --exclude="*.pdf" --exclude="*.txt" 悟空/ 八戒	
+22 怎样把man手册另存为文件
+	$ man ssh | col -b > kk
+	然后叫kk这个文件的内容就是ssh的man手册内容,是文本格式，可以用vim打开。
+	
+	col这个命令的man手册解释我看不懂，原文是
+
+	filters out reverse (and half reverse) line feeds so the output is in
+     the correct order with only forward and half forward line feeds, and
+     replaces white-space characters with tabs where possible
+
+	我不知道'line feeds'是什么意思，百度翻译说是换行符，删除反向和半反向换行符
+	，输出只有正向和半正向换行符。我不知道什么是反向换行符，什么是半反向，什么
+	是半正向。
+	
