@@ -1,0 +1,17 @@
+1
+	2018年02月25日。
+	参考书是MySQL,作者Paul DuBois。
+2 mysqldump
+	备份库contact
+	$ mysqldump contact > ohayo.sql
+	备份库contact的表contact和表contact2
+	$ mysqldump contact contact contact2 > ohayo.sql
+
+	备份库contact和库mysql
+	$ mysqldump --databases contact mysql > ohayo.sql
+
+	备份所有库
+	$ mysqldump --all-databases > ohayo.sql
+
+	只备份一个库的结构，不备份数据
+	$ mysqldump --no-data contact > ohayo.sql

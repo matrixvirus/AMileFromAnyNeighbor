@@ -102,3 +102,10 @@
 	$ xz -kd 悟空.tar.xz
 7 rar
 	略。
+8 rpm
+	先把rpm包放在一个空目录里
+	rpm2cpio xxx.rpm | cpio -di
+
+	cpio命令的参数意思是
+	-d man手册的解释看不懂
+	-i 解压。好象不直观

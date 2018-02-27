@@ -1,0 +1,29 @@
+1
+	2018年02月26日。
+	参考zabbix官网。
+	我用伪机CentOS-6.9系统。
+2 安装
+2.1 官网给的步聚
+	在https://www.zabbix.com/download?zabbix=3.4&os_distribution=centos&os_version=6&db=MySQL
+	选择zabbix版本，操作系统版本，数据库，下面则会给出对应的步聚。
+	我选择了zabbix3.4,CentOS6,mysql组合。官网给了步聚：
+	# rpm -i http://repo.zabbix.com/zabbix/3.4/rhel/6/x86_64/zabbix-release-3.4-1.el6.noarch.rpm
+	# yum install zabbix-server-mysql zabbix-web-mysql zabbix-agent
+	
+	因为我不知道怎么让伪机上外网，不能直接用官方的步聚。所以我用曲折点的方法
+2.2 我的实际安装步聚
+	在本机下载http://repo.zabbix.com/zabbix/3.4/rhel/6/x86_64/zabbix-release-3.4-1.el6.noarch.rpm
+	把这个rpm包放在一个空目录里，解压
+	$ rpm2cpio 那个包.rpm | cpio -di
+	出现两个目录 etc和usr。打开etc/yum.repos.d/zabbix.repo，里面有个网址
+	http://repo.zabbix.com/zabbix/3.4/rhel/6
+	在上网器里打开这个网址。
+	下载http://repo.zabbix.com/zabbix/3.4/rhel/6/x86_64/deprecated/zabbix-server-mysql-3.4.0-1.el6.x86_64.rpm,
+	http://repo.zabbix.com/zabbix/3.4/rhel/6/x86_64/deprecated/zabbix-web-mysql-3.4.0-1.el6.noarch.rpm
+	http://repo.zabbix.com/zabbix/3.4/rhel/6/x86_64/zabbix-agent-3.4.0-1.el6.x86_64.rpm
+
+	把这个三个包下下来后，传给伪机。
+
+
+3
+

@@ -1,0 +1,99 @@
+1
+	2018年02月25日。
+	参考书是MySQL,作者Paul Dubois。
+	我用三台伪机做实验，
+	CentOS6.9 192.168.100.173
+	CentOS6.9 192.168.100.220
+	openSUSE-Leap-42.3 192.168.100.205
+
+	目标是实示173是220的主，220是205的主，205是173的主，循环的。
+
+2 使三台机器有一个库
+
+
+	在173上，用mysqldump备份库contact
+	$ mysqldump contact > ohayo.sql
+	把ohayo.sql传给220和205
+	$ scp ohayo.sql root@192.168.100.220:/root/
+	$ scp ohayo.sql root@192.168.100.205:/root/
+
+	在220，205上都执行：
+	mysql> CREATE DATABASE contact;
+	mysql> SOURCE ohayo.sql;
+
+	173，220,205上都建一个用户
+	mysql> CREATE USER 'zyc' IDENTIFIED BY '940423';
+	mysql> GRANT REPLICATION ON *.* TO 'zyc';
+
+3 改/etc/my.cnf
+	
+
+	173上编辑/etc/my.cnf, 在[mysqld]下面
+	
+	# 一个标志，每个机器间不能一样
+	server-id=1
+	# 启用二制日记
+	log-bin=mysql-bin.log
+	# 把从主机复制来和数据也记到自已的二制日记里
+	sync-binlog=1
+	# 不同步库mysql
+	binlog-ignore-db=mysql
+	log-slave-updates=1
+
+	220上编辑/etc/my.cnf, 在[mysqld]下面
+	server-id=2
+	log-bin=mysql-bin.log
+	sync-binlog=1
+	binlog-ignore-db=mysql
+	log-slave-updates=1
+
+
+	205上编辑/etc/my.cnf, 在[mysqld]下面
+	server-id=3
+	log-bin=mysql-bin.log
+	sync-binlog=1
+	binlog-ignore-db=mysql
+	log-slave-updates=1
+
+	我遇到了问题，173是CentOS6.9系统，建表时用的是utf8编码，能正常显示中文，220
+	是CentOS6.9系统，把173的表复制到220上，能正常显示中文，205是openSUSE-Leap-
+	2.3系统，把173的表复制到205上，不能显示中文。
+4 
+	
+	173上
+	mysql> FLUSH TABLES; SHOW MASTER STATUS;
+	+------------------+----------+--------------+------------------+
+	| File             | Position | Binlog_Do_DB | Binlog_Ignore_DB |
+	+------------------+----------+--------------+------------------+
+	| mysql-bin.000003 |      177 |              | mysql            |
+	+------------------+----------+--------------+------------------+
+
+	File那一列，Position那一列，下面要用。
+
+	在220上执行
+	mysql> CHANGE MASTER TO
+		-> MASTER_HOST='192.168.100.173',
+		-> MASTER_USER='zyc',
+		-> MASTER_PASSWORD='940423',
+		-> MASTER_LOG_FILE='mysql-bin.000003',
+		-> MASTER_LOG_POS=177;
+	mysql> START SLAVE;
+	mysql> SHOW SLAVE STATUS\G
+	如果上面命令的输出的Slave_IO_Running,Slave_SQL_Running是No，执行
+	mysql> STOP SLAVE;
+	再重新从这一节第一步操作。
+
+	按上面的步聚，再配置205为220的从，173为205的从。
+
+	配置完了如果没有错误，在其中任何一台机器上插入一条数据，在另外两台机器上都
+	能看到相同变化。
+
+	...
+	
+	失败了，系统是openSUSE-Leap-42.3的205的执行
+	mysql> SHOW SLAE STATUS
+	Slave_IO_Running一直是Connecting。
+	只有173到220的同步正常，没有链式传到205。
+	可能是mysql版本不同的问题。
+
+
