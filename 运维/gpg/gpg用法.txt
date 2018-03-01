@@ -172,6 +172,9 @@
 	执行toggle在显示公钥或私钥间切换
 	gpg> toggle
 	它的输出的最左边的sec表示主私钥，sbb表示副私钥。
+
+	以后要再次查看这个信息，执行list
+	gpg> list
 5.2 
 	公钥里的邮件地址信息可能被窃改。可以用公钥对应的私钥加密这个公钥，叫自签名。
 	包含用户信息的公钥可以当作一个证书。
@@ -206,4 +209,31 @@
 	$ gpg --edit-key 84A0D639
 	gpg> expire
 
+5.5 信任
+	你刚收到别人的钥对时
+	$ gpg --edit-key 333ACF43
+	输出是这样
+	________________________________________________________________________
+	pub  2048R/333ACF43  created: 2018-01-26  expires: never       usage: SC  
+                     trust: unknown       validity: unknown
+	sub  2048R/9496E463  created: 2018-01-26  expires: never       usage: E   
+	[ unknown] (1). opensuse <archimedes_newton@163.com>
+	________________________________________________________________________
+	第2行，'trust:unknown'
 
+	你执行
+	gpg> trust
+	然后选择'i trust ultimately',输出变成这样
+	________________________________________________________________________
+	pub  2048R/333ACF43  created: 2018-01-26  expires: never       usage: SC  
+                     trust: ultimate      validity: unknown
+	sub  2048R/9496E463  created: 2018-01-26  expires: never       usage: E   
+	________________________________________________________________________
+	第2行，'trust: ultimate'。
+
+5.6 改私钥密码
+	$ gpg --edit-key 333ACF43
+	gpg> passwd
+5.7 
+	$ gpg --edit-key 333ACF43
+	执行help查看所有命令，可用的命令还有delete,disable,enable等。
