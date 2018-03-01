@@ -1,0 +1,57 @@
+1
+	2018年02月27日。
+	本机系统openSUSE-Leap-42.3,zabbix-3.4.7。
+2
+	安装一些编译需要开发包
+	$ zypper install mysql-devel libxml2-devel net-snmp-devel libevent-devel \
+		pcre-devel curl-devel
+	解压zabbix-3.4.7.tar.gz,进入解压后的目录
+	$ ./configure --enable-server -enable-agent --enable-proxy --with-mysql \
+		--enable-ipv6 --with-net-snmp --with-libcurl --with-libxml2
+	这一步约需30秒。
+	$ make install
+	这一步约需2分。
+
+	建用户zabbix
+	$ useradd zabbix
+
+	建数据库
+	MariaDB [(none)]> CREATE DATABASE zabbix CHARACTER SET UTF8 COLLATE 
+		UTF8_BIN;
+	MariaDB [(none)]> GRANT ALL PRIVILEGES ON zabbix.* TO zabbix@localhost
+    	IDENTIFIED BY '940423';
+	用源码目录下面database/mysql/下面的剧本建表
+	MariaDB [(none)]> SOURCE schema.sql;
+	MariaDB [(none)]> SOURCE images.sql;
+	MariaDB [(none)]> SOURCE data.sql;
+	这三步要等很久。
+
+	编辑/usr/local/etc/zabbix_server.conf
+	DBName=zabbix
+	DBUser=zabbix
+	DBPassword=940423
+	
+	编辑/usr/local/etc/zabbix_agentd.conf
+	Server=::/0
+
+	在源码目录下面frontends/php下的内容复制到/srv/www/htdocs/zabbix
+	在你的apache 的伪主机设置里加上
+	Alias /zabbix /srv/www/htdocs/zabbix
+	<Directory /srv/www/htdocs/zabbix>
+		DirectoryIndex index.php	
+	</Directory>
+
+	编辑/etc/apache2/loadmodule.conf,加一行
+	LoadModule php5_module
+
+	编辑/etc/apache2/mod_mime-defaults.conf
+	AddType application/x-httpd-php-source .phps
+	AddType application/x-httpd-php .php
+
+	启动服务
+	$ /usr/local/sbin/zabbix_server
+	$ systemctl restart apache2
+	客户端要启动zabbix_agentd
+	$ /usr/local/sbin/zabbix_agentd
+
+	失败了，上网器打开https://michelangelo.newton/zabbix是下载那个php文件。

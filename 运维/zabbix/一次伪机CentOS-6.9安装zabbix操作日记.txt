@@ -1,0 +1,155 @@
+1
+	2018年02月26日。
+	参考zabbix官网。
+	我用伪机CentOS-6.9系统。
+2 安装
+2.1 rpm方法
+2.1.1
+	官网给的步聚
+	在https://www.zabbix.com/download?zabbix=3.4&os_distribution=centos&os_version=6&db=MySQL
+	选择zabbix版本，操作系统版本，数据库，下面则会给出对应的步聚。
+	我选择了zabbix3.4,CentOS6,mysql组合。官网给了步聚：
+	# rpm -i http://repo.zabbix.com/zabbix/3.4/rhel/6/x86_64/zabbix-release-3.4-1.el6.noarch.rpm
+	# yum install zabbix-server-mysql zabbix-web-mysql zabbix-agent
+
+	zabbix-server 是服务端，zabbix-agent是客户端	
+
+	因为我不知道怎么让伪机上外网，不能直接用官方的步聚。所以我用曲折点的方法
+2.1.2 我的实际安装步聚
+	在本机下载http://repo.zabbix.com/zabbix/3.4/rhel/6/x86_64/zabbix-release-3.4-1.el6.noarch.rpm
+	把这个rpm包放在一个空目录里，解压
+	$ rpm2cpio 那个包.rpm | cpio -di
+	出现两个目录 etc和usr。打开etc/yum.repos.d/zabbix.repo，根据里面的网址，和
+	官网说的要下载什么包，手动下载这几个包
+	http://repo.zabbix.com/zabbix/3.4/rhel/6/x86_64/deprecated/zabbix-server-mysql-3.4.0-1.el6.x86_64.rpm,
+	http://repo.zabbix.com/zabbix/3.4/rhel/6/x86_64/deprecated/zabbix-web-mysql-3.4.0-1.el6.noarch.rpm
+	http://repo.zabbix.com/zabbix/3.4/rhel/6/x86_64/zabbix-agent-3.4.0-1.el6.x86_64.rpm
+	http://repo.zabbix.com/non-supported/rhel/6/x86_64/fping-2.4b2-16.el6.x86_64.rpm
+	http://repo.zabbix.com/non-supported/rhel/6/x86_64/iksemel-1.4-2.el6.x86_64.rpm
+	一共5个包，下下来后，传给伪机，安装。
+	安装的时候，yum install *,同时安装5个包。
+
+2.1.3 设置
+2.1.3.1
+	 设置数据库
+	在mysql里
+	mysql> CREATE DATABASE zabbix CHARACTER SET UTF8 COLLATE UTF8_BIN;
+	mysql> GRANT ALL PRIVILEGES ON zabbix.* TO zabbix@localhost 
+		IDENTIFIED BY '940423';
+
+	下一步，官网说的是
+	zcat /usr/share/doc/zabbix-server-mysql*/create.sql.gz | mysql -uzabbix -p zabbix
+	但是报错说没选择数据库。
+	所以我这样做,
+	$ gzip -d /usr/share/doc/zabbix-server-mysql-3.4.0/create.sql.gz
+	$ cd /usr/share/doc/zabbix-server-mysql-3.4.0/
+	$ mysql
+	mysql> USE zabbix;
+	mysql> SOURCE create.sql;
+
+2.1.3.2 
+	改设置文件
+	编辑/etc/zabbix/zabbix_server.conf
+	取消这一行注释
+	DBHost=localhost
+	加这一行,改成你设的密码
+	DBPassword=940423
+2.1.3.3 
+	启动
+	$ service zabbix-server start
+	$ service zabbix-agent start
+	$ service httpd start
+
+
+	我这么安装遇到了问题，/etc/httpd/conf.d/zabbix.conf 不存在，我设置伪机桥接
+	上网屡失败。所以我又编译安装。
+2.2 编译方法
+2.2.1 下载安装 
+	下载https://excellmedia.dl.sourceforge.net/project/zabbix/ZABBIX%20Latest%20Stable/3.4.7/zabbix-3.4.7.tar.gz
+2.2.1.1
+	服务端
+	下面要安装的rpm包是我在编译过程中报错而知道的
+	$ yum install mysql-devel libxml2-devel net-snmp-devel libevent-devel \
+		pcre-devel curl-devel
+	然后
+	$ ./configure --enable-server --enable-agent --enable-proxy --with-mysql \
+	--enable-ipv6 --with-net-snmp --with-libcurl --with-libxml2
+
+	--enable-server 指这是服务端
+	--enable-agent 指这是客户端
+	--enable-proxy 指这是代理端
+	约需30秒。
+	在被监
+	$ make install
+	约需3分钟。
+
+	安装完后在/usr/local/sbin有zabbix的zabbix_agentd,zabbix_proxy,zabbix_serve
+	r，在/usr/local/etc下面有zabbix_agentd.conf,zabbix_proxy.conf,
+	zabbix_server.conf。
+
+	把源码下面的frontends/php 下面的东西复制到：
+	$ mkdir /var/www/html/zabbix
+	$ cp -r frontends/* /var/ww/html/zabbix/
+
+	建数据库
+	mysql> CREATE DATABASE zabbix CHARACTER SET UTF8 COLLATE UTF8_BIN;
+	mysql> GRANT ALL PRIVILEGES ON zabbix.* TO zabbix@localhost 
+		IDENTIFIED BY '940423';
+	用源码目录下面database/mysql 下面的文件建表
+	mysql> SOURCE schema.sql;
+	mysql> SOURCE images.sql;
+	mysql> SOURCE data.sql;
+2.2.1.2
+	客户端
+	$ yum install pcre-devel
+	$ ./configure --enable-agent
+	$ make install
+2.2.2 设置
+2.2.2.1
+	服务端
+
+	编辑/usr/local/etc/zabbix_server.conf，改这几行
+	DBName=zabbix
+	DBUser=zabbix
+	DBPassword=940423
+
+	设置httpd,使上网器打开http://zabbix服务端ip/zabbix时，打开的是服务端
+	/var/www/html/zabbix/ 下面的网页。不会写的话请另专门学习httpd。
+2.2.2.2
+	客户端
+	编辑/usr/local/etc/zabbix_agentd.conf，加一行	
+	Server=::/0
+	以允许来自任何地址的连接
+2.2.2.3
+	代理端，如果装了。
+	编辑/usr/local/etc/zabbix_proxy.conf, 改这几行
+	Server=服务端IP
+	Hostname=代理端的主机名
+	官网还说如果有数据库，要改 DBName, DBUser,DBPassword，但是没看到讲怎么建代
+	理端数据库。
+	建数据库，见上面。
+2.2.3 启动
+	服务端启动
+	$ zabbix_server
+	客户端启动
+	$ zabbix_agentd
+
+2.2.2.3 
+	上网器测试
+	上网器打开http://zabbix服务端IP/zabbix
+	页面空白。伪机/var/log/httpd/error_log有一条记录
+	[Wed Feb 28 05:00:02 2018] [error] [client 192.168.100.1] PHP Parse error:  syntax error, unexpected '[' in /var/www/html/zabbix/index.php on line 32
+	说明可能zabbix-3.4.7的php语法和系统装的php5.3.3不同。
+	用rpm包装时，zabbix版本是3.4.0,所以可能需要下载3.4.0版的源码。
+	我删除了/usr/local/bin,/usr/local/sbin/,/usr/local/etc下面zabbix的东西，又
+	rpm包安装了一遍，上一次用rpm包安装时没有/etc/httpd/conf.d/zabbix.conf这个文
+	件，我从鲍雷同志那里借到了一份，知道了rpm安装的zabbix的网页文件在
+	/usr/share/zabbix。
+	在你的httpd配置文件里加一句
+	Alias /zabbix /usr/share/zabbix
+
+	发现了问题，rpm包安装的zabbix也和系统的php5.3.3不和。要卸载系统的php,再安
+	装最新的php，我编译报错了。
+
+	这个放弃。
+	

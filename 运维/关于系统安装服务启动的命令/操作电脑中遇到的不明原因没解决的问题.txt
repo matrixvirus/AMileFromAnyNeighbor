@@ -53,3 +53,12 @@
 	两台虚拟机，系统都是CentOS-6.9，知道原因，已解决。
 	两台虚拟机，每台重启后都说磁盘坏了，要执行fsck，原来是它们使用了一块虚拟硬
 	盘。当初安装它们的时候怎么回事不记得了。
+
+2.5 
+	2018年02月28日。
+	伪机CentOS-6.9,突然发现不能用ssh连，报错'connection reset',sshd服务在运行，
+	重启sshd报错说/var/empty/sshd 不能为全局写，我执行
+	$ cd /var/empty
+	$ chmod a-x sshd
+	$ chmod g-x sshd
+	后，sshd启动成功，别的机器能用ssh连它。
