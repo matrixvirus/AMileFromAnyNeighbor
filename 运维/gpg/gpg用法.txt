@@ -237,3 +237,28 @@
 5.7 
 	$ gpg --edit-key 333ACF43
 	执行help查看所有命令，可用的命令还有delete,disable,enable等。
+
+6 关于产生钥对等待时间过长问题
+	执行gpg --gen-key,有时在最后，说在产生大量随机字符，请敲敲键盘，动动鼠标，
+	然后就卡着不动。
+	比较在不同环境下执行gpg --gen-key时间长短
+  1
+	真机，openSUSE-Leap-42.3,KDE桌面，RSA和RSA，2048位，时间几秒。
+  2
+	伪机，CentOS-6.9,无桌面，RSA和RSA，2048位，等待1分钟后没有产生钥对。
+  3
+	伪机，CentOS-6.9,无桌面，RSA和RSA，1024位，等待1分钟后没有产生钥对。
+  4 
+	伪机，openSUSE-Leap-42.3,无桌面，RSA和RSA，2048,时间几秒。
+
+	说明CentOS6.9有这个问题，一直出不来。
+	我在出不来的CentOS6.9系统上，用了一个剧本
+	#!/bin/bash
+	while :
+	do
+		dd if=/dev/zero of=/abc bs=4M count=100
+		rm abc
+	done
+	在gpg产生钥对时执行，不到3分钟，钥对产生完成了。说明持续大块的写文件有助于
+	产生随机字符。
+
