@@ -1,0 +1,85 @@
+1
+	2018年02月28日。
+	参考书是redhat6文档之Load Balancer Administration。
+	
+2 LVS NAT模式介绍
+2.1
+	转发者理论上应有两个网卡，四个IP，eth0对外，1个IP是自已的，1个IP是浮动的，
+	外网的客户端向eth0的浮动IP请求内容，
+	eth1对内，1个IP是自已的，1个IP是浮动的，用eth1的浮动IP与内网的真服务器通信，
+	转发者把从对外浮动IP收到的请求的源地址改（NAT)成它的对内浮动IP，把请求转发
+	给真服务器，真服务器向转发者对内浮动IP返回内容，转发者把内容的源地址改（NAT
+	）成自已的对外浮动IP,返回给外网的客户端。
+	转发者故障后，转发者的两个浮动IP被备转发者接手。
+	真实服务器把转发者对内的浮动IP作为自已的默认网关。
+	
+	NAT模式的缺点是返回流量要经过转发者。
+2.2 软件
+	pulse进程在主转发者和备转发者上运行。在备转发者上，pulse向主转发者发信息确
+	认主转发者正常。在主转发者上，pulse启动lvs进程，并响应备转发者的关于自已是
+	否健康的查询。
+	lvs进程使用ipvsadm程序设置内核里的IPVS路由表，为每个真服务器启动一个nanny
+	进程，nanny进程检查每个真服务器的一种服务的状态，如果检查到异常，lvs进程执
+	行ipvsadm把那台真服务器从IPVS路由表移除。
+	如果备转发者没有收到主转发者的响应，它执行send_arp，声明伪IP和它的物理地址
+	是一对，外网的客户端，或者外网和转发者间的路由器更新了自已的ARP表后，以后
+	发给伪IP的包就都到了备转发者。备转发者向主转发者发一个命令，命令主转发者停
+	止lvs进程，备转发者启动lvs进程。
+
+3	系统架构
+	本机,openSUSE-Leap-42.3,192.168.100.174,作客户端。
+	一台伪机，CentOS-6.9, 192.168.100.173,浮动IP是192.168.100.175，既对内也对外
+		，作转发者。
+	一台伪机，CentOS-6.9,192.168.100.220,作备用转发者，
+	一台伪机。openSUSE-Leap-42.3，192.168.100.205,作真服务器。
+	一台伪机。CentOS-6.9，192.168.100.206,作真服务器。
+4 设置
+4.1 主转发者设置
+4.1.1 piranha
+	piranha是一个网页工具，监视，设置，管理lvs。
+	
+	安装piranha
+	$ yum install piranha
+	安装后有了/usr/sbin/piranha_gui,/usr/sbin/pulse两个命令。
+	
+	为piranha设置密码
+	$ piranha-passwd
+	我设了940423.
+	
+	启动piranha
+	$ /sbin/service piranha-gui start
+	/usr/sbin/piranha_gui 会调用/usr/sbin/httpd，所以你要先安装httpd。注意执行
+	service httpd stop 或service httpd restart 会停止piranha-gui服务，需要重启
+	piranha-gui服务
+
+	piranha-gui服务使用3636洞，网页的设置文件在/etc/sysconfig/ha/conf/httpd.conf
+	。
+4.1.2 开转发
+	立即开转发
+	$ /sbin/sysctl -w net.ipv4.ip_forward=1
+	使永远开转发
+	$ vim /etc/sysctl.conf
+	net.ipv4.ip_forward = 1
+
+4.1.3 ipvsadm 命令
+	可以不用piranha的网页，在命令行设置伪服务器，真服务器。那个pulse搞着有点问
+	题，每次开机第一次可以启动，重启就报错
+	can not create heartbeat socket, running as root?
+	文档上没找到解释。而且pulse服务运行时，客户端测试连伪IP也一直是正在建立连
+	接，用ipvsadm -L 检查没问题，不知道为什么。
+	$ ipvsadm -A -t 192.168.100.175:80 -s rr
+	-A 添加一个伪服务
+	-t tcp
+	192.168.100.175:80 伪IP是192.168.100.175，洞口80
+	-s rr 意思是round robin
+	$ ipvsadm -a -t 192.168.100.175:80 -r 192.168.100.220 -m
+	-a 添加一个真服务器
+	192.168.100.175:80 添加到这个伪服务
+	-r 192.168.100.220 真服务器IP
+	-m 使用NAT模式
+	检查
+	$ ipvsadm -L
+4.3 真服务器
+	两台真服务器分别设置httpd服务，显示不同的网页内容以区分。
+	设置转发者的对内伪IP为默认网关
+	$ ip route add default via 192.168.100.175 dev eth0

@@ -10,5 +10,16 @@
 	测试一个主机一个端口
 	$ curl ip:port
 4 telnet
+4.1
 	测试一个机器一个端口
 	$ telnet ip port
+4.2 怎样用telnet远程登录
+	在被登录的机器上安装 telnet-server
+	$ yum install telnet-server
+
+	编辑/etc/xinetd.d/telnet，把'disable = yes' 改成no。
+
+	$ servcie xinetd restart
+
+	在另一台机器执行
+	$ telnet ip
