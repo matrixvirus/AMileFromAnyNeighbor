@@ -14,4 +14,6 @@
 	把hash叫乱麻，
 	把attacker叫坏人,
 	把port叫洞，
-	把permission叫认可。
+	把permission叫认可,
+	把readonly叫读只,
+	把Load Balancer 叫负载平衡，

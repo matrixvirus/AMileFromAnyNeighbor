@@ -1,0 +1,220 @@
+1
+	2018年03月02日。
+	参考书是Nginx HTTP Server,作者Clement Nedelcu, Packet出版社。
+	排版，内容顺序是按照这本书来的。
+
+	NGINX的优点，一使用异步插座，不每接到一个请求产生一个进程，降低了CPU和内存
+	使用，二它的设置文件通俗易懂，三它模块化强。
+2 安装
+	我的试验机器是一台伪机CentOS-6.9，NGINX源码版本1.9.3。
+2.1 
+	安装nginx前要安装gcc,pcre,pcre-devel,zlib,zlib-devel,openssl,openssl-devel
+	。
+2.2	安装步聚
+	解压源码后在源码目录
+	$ ./configure [--prefix=/某个其它路径]
+	$ make
+	$ make install
+	如果没有跟--prefix参数，默认安装到/usr/local/nginx。
+	
+2.3 nginx进程结构
+	nginx有两种进程主进程和工进程。
+	主进程必须以root启动。unix系统中开1024及以下洞口的工作都要root许可。
+	工进程由主进程启动，所属用户是你在nginx设置文件里用user指令定义的那个用户。
+2.4 启动和停止nginx
+	启动nginx
+	$ /usr/local/nginx/sbin/nginx
+	后面不再写全长路径，写nginx。
+
+	给主进程发信号，
+	立即停止，使用TERM信号
+	$ nginx -s stop
+	温和停止，使用QUIT信号
+	$ nginx -s quit
+	重新打开日志文件
+	$ nginx -s reopen
+	重新加载设置文件
+	$ nginx -s reload
+
+	检查设置
+	$ nginx -t
+	指定设置文件路径
+	$ nginx -t -c 设置文件路径
+
+	显示版本
+	$ nginx -V
+
+	使用-g在启动时指定设置文件没有设置的参数
+	$ nginx -g "timer_resolution 200ms"
+3 基本设置
+	默认安装的设置文件在/usr/local/nginx/conf/nginx.conf。
+3.1 设置文件里一些片断解释
+	nginx.conf里开头两行
+	___________________
+	#user nobody;
+	worker_processes 1;
+	___________________
+	# 是注释
+	第2行是一行指令。每行指令必须以分号结尾。
+
+	另一行
+	__________________
+	include mime.type;
+	__________________
+
+	include意思是包含另一个叫mime.type的文件，等于它的内容被插入到这一行的位置。
+	
+
+	另一行
+	____________________
+	include sites/*.conf
+	____________________
+	包含 sites目录下面所以conf后缀的文件。
+3.2 指令块
+	指令由模块带入，你启用一个模块，也启用了一系列指令。模块也可以启用指令块，把
+	指令逻辑的组合起来。
+	__________________________
+	events {
+		worker_conections 1024;
+	}
+	__________________________
+	events块由Events模块带入。模块启用的指令们只能在这个块内使用。这个例子里，
+	worker_connections只在events块的语境中有用。所以有些有全局影响的指令必须放
+	在外围，设置文件的最外围也叫main块。
+	块可以嵌套:
+	______________________________________________________
+	http{
+		server	{
+				listen	80;
+				server_name	example.com;
+				access_log	/var/log/nginx/example.com.log;
+				location	^~	/admin/	{
+				index	index.php;
+			}
+		}
+	}
+	______________________________________________________
+	外层是http块，server块定义一个伪主机，
+	server块内有location块，为符合一个模式的URI定做设置。
+	里层块会继承外层块的设置，比如server块里的access_log指令，在location块里有
+	效，除非location块里自已又定义了access_log。
+3.3 高级语法
+3.3.1
+	location块和rewrite指令支持正则语法，比如
+	_____________________________________________________________________
+	rewrite	^/(.*)\.(png|jpg|gif)$	/image.php?	file=$1&format=$2	last;
+	_____________________________________________________________________
+3.3.2	
+	有时可以用这些指定文件大小，
+	k/K Kilobytes
+	m/M Megabytes
+	g/G Gigabytes
+	比如
+	________________________
+	client_max_body_size 2G;
+	________________________
+
+	可以用这些指定时间
+	ms Milliseconds
+	s Seconds
+	m Minutes
+	h Hours
+	d Days
+	w Weeks
+	M Months(30 days)
+	y Year(365 days)
+	比如
+	_______________________
+	client_body_timeout 3m;
+	client_body_timeout '1m 30s 500ms';
+	_______________________
+3.3.3
+	以$号开头的是变量。
+	要用$号本身，应用'\$'。	
+3.4 基本模块指令
+	有三种基本模块
+	Core模块：包括基本性质和指令比如内存管理，安全
+	Events模块：设置网络能力的内部机制
+	Configuration模块：启用内部机制
+		打断一下，上面三行是照翻的，感觉讲得不好。
+	
+
+	。。。
+	这本书这里讲了很多，我想这种讲法不适合初学者，会不知所云的。
+4 HTTP设置
+4.1 默认设置解释
+	http {
+		include mime.types;
+		default_type appication/octet-stream;
+		sendfile on;	
+		keepalive_timeout 65;
+		server {
+			listen 80;
+			server_name localhost;
+			location / {
+				root html;
+				index index.html index.htm;
+			}
+			error_page 500 502 503 504 /50x.html;
+			location =/50x.html {
+				root html;
+			}
+		}
+	}
+	上面定义了一个伪机，监听80洞口，使用地址http://locahost访问，使用index.html
+	作为默认主页。
+4.2 另一个例子
+	http {
+# 启用gzip压缩
+		gzip on
+		server {
+			server_name localhost;
+			listen 80;
+			location /downloads/ {
+				gzip off;
+# 这个指令只对/downloads/目录内的文件有效
+				}
+		}
+	}
+4.3 主机设置语法
+4.3.1 listen
+	语境：server
+	语法：
+	listen [address][:port] [additional options]
+	附加选择可以是：
+	  default_server
+	  ssl
+	  spdy
+	  proxy_protocol
+	比如
+	listen 192.168.1.1:80;
+	listen 127.0.0.1;
+	listen 80 default;
+	listen [:::a8c9:1234]:80; ipv6地址要用中括号起来
+	liste 443 ssl;
+4.3.2 server_name
+	语境：server
+	设置一个或多个主机名，nginx根据收到的HTTP请求头包含的主机名，使用对应的
+	server块的设置。如果没有和HTTP请求头包含的主机名对应的server块，nginx会使用
+	第一个和listen指令匹配的。	
+	比如：
+	server_name www.website.com;
+	server_name www.website.com website.com;
+	server_name *.website.com;
+	server_name .website.com; # 包括了*.website.com和website.com
+	server_name *.website.*;
+	server_name ~^(www)\.example\.com$;
+4.3.3 server_name_in_redirect
+	语境：http,server,location
+	这个指令在内部改向时用，如果是on，nginx用server_name指令指定的第一个hostname
+	,如果是off,nginx用HTTP请求里的主机名。
+	语法：on/off
+	默认值：off
+4.3.4 port_in_redirect
+	语境：http,server,location	
+	改向时，定义nginx是否给改向URL加上洞口。
+	语法：on/off
+	默认值：on
+5 模块设置
+6 PHP和Python
+7 负载平衡

@@ -22,7 +22,8 @@
 	检查有哪些库
 	mysql> SHOW DATABASES;
 	创建一个库
-	mysql> CREATE DATABASE IF NOT EXISTS contact DEFAULT CHARACTER SET = UTF8;
+	mysql> CREATE DATABASE [IF NOT EXISTS] contact 
+		[DEFAULT CHARACTER SET = UTF8];
 	删除这个库，只是演示删除的用法，后面还要用这个库
 	mysql> DROP DATABASE contact;
 	进入这个库
@@ -32,9 +33,9 @@
 	检查有哪些表
 	mysql> SHOW TABLES;
 	制作一个表
-	mysql> CREATE TABLE IF NOT EXISTS contact 
+	mysql> CREATE TABLE [IF NOT EXISTS] contact 
 		(ID INT PRIMARY KEY AUTO_INCREMENT) 
-		ENGINE=innodb;
+		[ENGINE=innodb];
 
 	删除这个表，不删除只演示
 	mysql> DROP TABLE contact;
@@ -48,14 +49,14 @@
 3.2 改表
 3.2.1 加列删列
 	给表contact加一列
-	mysql> ALTER TABLE contact ADD COLUMN name varchar(32) NOT NULL AFTER ID;
+	mysql> ALTER TABLE contact ADD COLUMN name varchar(32) [NOT NULL] AFTER ID;
 	演示，删除刚加的那一列
 	mysql> ALTER TABLE contact DROP COLUMN name;
 	演示，如果要把这一列加到ID那一列前面
- 	mysql> ALTER TABLE contact ADD COLUMN name varchar(32) NOT NULL FIRST;	
+ 	mysql> ALTER TABLE contact ADD COLUMN name varchar(32) [NOT NULL] FIRST;	
 
 	加一列有空格的列名。要用反引号括起来
-	mysql> ALTER TABLE contact ADD COLUMN `Important Grade` INT DEFAULT 0 
+	mysql> ALTER TABLE contact ADD COLUMN `Important Grade` INT [DEFAULT 0]
 		AFTER `Phone1`;
 
 3.2.2 改列定义
@@ -63,12 +64,12 @@
 	mysql> ALTER TABLE contact CHAGE COLUMN ID Id INT;
 
 	把name那一列改名为Name,并修改值类型，并添加默认值
-	mysql> ALTER TABLE contact CHANGE COLUMN name Name varchar(64) NOT NULL
-		DEFAULT 'HADES';
+	mysql> ALTER TABLE contact CHANGE COLUMN name Name varchar(64) [NOT NULL]
+		[DEFAULT 'HADES'];
 
 	演示，只改变定义不改列名
-	mysql> ALTER TABLE contact CHANGE MODIFY varchar(64) NOT NULL
-		DEFAULT 'HADES';
+	mysql> ALTER TABLE contact CHANGE MODIFY varchar(64) [NOT NULL]
+		[DEFAULT 'HADES'];
 3.2.3 改主键
 	删除主键。这个例子中要先取消Id那一列的自动增属性
 	mysql> ALTER TABLE contact DROP PRIMARY KEY;
@@ -89,7 +90,7 @@
 4 使用剧本
 	写一个文件叫AtomBomb.sql，内容是
 	-- 这是注释
-	ALTER TABLE contact.contact ADD COLUMN Phone1 CHAR(32) NOT NULL;
+	ALTER TABLE contact.contact ADD COLUMN Phone1 CHAR(32) [NOT NULL];
 
 	在mysql内执行这个文件的方法
 	mysql> source AtomBomb.sql;	
@@ -98,8 +99,9 @@
 	$ mysql < AtomBomb.sql
 5 插数据
 5.1
-	插入一行
+	给表contact插入一行数据，只指定Name,Phone1两列
 	mysql> INSERT INTO contact (Name, Phone1) VALUES('仇庆子', '0085256484926');
+
 	一次插入多行
 	mysql> INSERT INTO contact (Name, Phone1) VALUES('东莞号朱光初', 
 		'13728223505'), ('丹霞', '15625098214'),('尹文婷', '18672233093');
@@ -184,10 +186,29 @@
 		contact,BodyInfo WHERE contact.Name='仇庆子' 
 		AND contact.Name = BodyInfo.Name;
 
-7.10 多个查询结果列在一起
+
+7.10 多个查询语句结果列在一起
 	把两个SELECT语句用UNION 隔开
 	mysql> SELECT * FROM contact UNION SELECT * FROM contact;
 	
+7.11 联结
+7.11.1 左联结
+	mysql> SELECT * FROM contact LEFT JOIN BodyInfo ON contact.Name = BodyInfo.Name\G
+	contact LEFT JOIN BodyInfo
+		表contact写在左边，叫左表，BodyInfo叫右表
+	ON contact.Name = BodyInfo.Name
+		左表的Name列等于右表的
+	规则是，以左表为准，左表的每一行数据和右表的每一相符的行配对，如果右表没有相
+	符的，则视作左表的这一行数据和右表一个数据全为空的行配对。
+7.11.2 右联结
+	mysql> SELECT * FROM contact RIGHT JOIN BodyInfo ON contact.Name = BodyInfo.Name\G
+	规则是，以右表为准，右表的每一行数据和左表的每一相符的行配对，如果左表没有相
+	符的，则视作右表的这一行数据和左表一个数据全为空的行配对。
+7.11.3 内联结
+	mysql> SELECT * FROM contact INNER JOIN BodyInfo ON contact.Name = BodyInfo.Name\G
+	只列出相符的配对。我不知道专门弄个内联结的概念做什么，因为上面一句和下面一句好象没
+	有区别
+	mysql> SELECT * FROM contact,BodyInfo WHERE contact.Name = BodyInfo.Name\G
 8 函数
 	统计一列的和
 	mysql> SELECT SUM(`Important Grade`) FROM contact;		
@@ -267,18 +288,19 @@
 	Sqrt
 	Tan
 9 视图
+	以一次查询结果建一个视图
 	mysql> CREATE VIEW TimeMachine AS SELECT * FROM contact;
 
 	再执行
 	mysql> SHOW TABLES;
 	发现视图被当作表列了出来。
 
-	删除
+	删除视图
 	mysql> drop view TimeMachine;
 
 10 存储过程
 10.1
-	制作一个
+	制作一个存储过程
 
 	mysql> DELIMITER //
 	mysql> CREATE PROCEDURE ohayo()
@@ -326,22 +348,22 @@
 	查这个变量
 	mysql> SELECT @a
 12 用户和许可
-	建一个用户
+	建一个用户，叫zyc,密码是940423
 	mysql> CREATE USER 'zyc' IDENTIFIED BY '940423';
 
 	删除用户
 	mysql> DROP USER 'zyc';
 
-	检查用户许可
+	检查用户的许可
 	mysql> SHOW GRANTS FOR 'zyc';
 
 	允许用户zyc查询库contact的所有表
 	mysql> GRANT SELECT ON contact.* TO 'zyc';
-	取消允许用户zyc查询,插入库contact的甩有表
+	取消允许用户zyc查询,插入库contact的所有表
 	mysql> REVOKE SELECT,INSERT ON contact.* FROM zyc;
 
 
-	可用的许可：ALL和其它命令
+	可用的许可：ALL和其它命令如SELECT,INSERT
 
 	把用户zyc的密码改成940423
 	mysql> SET PASSWORD FOR zyc = password('940423');
@@ -352,9 +374,10 @@
 	文件a用跳格分隔数据。
 
 	另一个表contact2,和表contact结构一样，没有内容。
+	表contact2从文件a.txt导入数据
 	mysql> LOAD DATA INFILE 'a.txt' INTO TABLE contact2
 
-	如果保存数据的那个文件是用逗号分隔的
+	如果保存数据的那个文件的数据是用逗号分隔的，则导入时要指定分隔符是逗号
 	mysql> LOAD DATA INFILE 'a.txt' INTO TABLE contact2 TERMINATED BY ',';
 
 
@@ -373,7 +396,7 @@
 15 外键
 	建表BodyInfo后设置Name列和表contact的Name列是外键关系，
 	mysql> ALTER TABLE BodyInfo ADD FOREIGN KEY (`Name`) REFERENCES 
-		contact(Name) ON UPDATE CASCADE;
+		contact(Name) [ON UPDATE CASCADE];
 	ON UPDATE RESTRICT 意思是表contact的Name列有变化，BodyInfo表的Name列不跟随。
 	
 	可用的选择
@@ -387,18 +410,21 @@
 	mysql> CREATE TABLE t1(Name VARCHAR(64), FOREIGN KEY (Name) REFERENCES 
 		contact(Name));
 15 索引
-	给表contact的列Name添加索引，名叫himalayan
-	mysql> ALTER TABLE contact ADD INDEX himalayan(Name);
+	给表contact的列Name添加索引，索引名叫himalayan
+	mysql> ALTER TABLE contact ADD [UNIQUE] INDEX himalayan(Name);
 	或者
-	mysql> CREATE INDEX himalayan ON contact (Name);
+	mysql> CREATE [UNIQUE] INDEX himalayan ON contact (Name);
+
+	UNIQUE 指被索引列不能有重复数据
 
 	建表的时候建索引
 	mysql> CREATE TABLE(
-		id int,INDEX himalayan(id));
+		id int,[UNIQUE] INDEX himalayan(id));
 
 	删除索引
 	mysql> DROP INDEX himalayan ON contact;
 		
+
 4
 	在系统命令行上检查有哪些库，上面是在mysql内
 	$ mysqlshow
