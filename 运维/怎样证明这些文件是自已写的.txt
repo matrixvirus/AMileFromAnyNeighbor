@@ -5,6 +5,13 @@
 	版：
 	每节用2.2.3这种形式标题，正文缩进4格，每行不超过80列，
 	
-	我有时故意不用大家已经习惯的翻译，我把virtual machine叫伪机，把browser
-	叫上网器，把shell叫谢儿,把script叫剧本，把trapdoor叫阱门，把hash叫乱麻，
-	把attacker叫坏人,把port叫洞。
+	我有时故意不用大家已经习惯的翻译，我把
+	virtual machine叫伪机，
+	把browser叫上网器，
+	把shell叫谢儿,
+	把script叫剧本，
+	把trapdoor叫阱门，
+	把hash叫乱麻，
+	把attacker叫坏人,
+	把port叫洞，
+	把permission叫认可。
