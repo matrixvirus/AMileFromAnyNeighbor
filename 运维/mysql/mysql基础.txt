@@ -377,9 +377,9 @@
 	ON UPDATE RESTRICT 意思是表contact的Name列有变化，BodyInfo表的Name列不跟随。
 	
 	可用的选择
-	ON DELETE RESTRICT 不跟随变化
+	ON DELETE RESTRICT 儿表不跟随妈表变化
 	ON DELETE NO ACTION 和 ON UPDATE RESTRICT 同义
-	ON DELETE CASCADE 跟随删除
+	ON DELETE CASCADE 妈表删除，儿表也删除
 	ON DELETE SET NULL 妈表删除后，儿表置空
 	UPDATE的和DELETE的一样。
 
@@ -391,6 +391,7 @@
 	mysql> ALTER TABLE contact ADD INDEX himalayan(Name);
 	或者
 	mysql> CREATE INDEX himalayan ON contact (Name);
+
 	建表的时候建索引
 	mysql> CREATE TABLE(
 		id int,INDEX himalayan(id));
