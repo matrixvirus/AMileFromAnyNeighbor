@@ -1,0 +1,176 @@
+1
+	2018年02月04日。
+	
+2 nginx.conf.default
+# 工进程以nobody的身份启动
+#user  nobody;
+# 工进程的数量为1
+worker_processes  1;
+# 见3.2节error_log
+#error_log  logs/error.log;
+#error_log  logs/error.log  notice;
+#error_log  logs/error.log  info;
+# 见3.3节pid
+#pid        logs/nginx.pid;
+
+# 见3.4节events模块
+events {
+	# 一个工进程可以同时处理的连接数为1024
+    worker_connections  1024;
+}
+
+
+http {
+    include       mime.types;
+	# 定义默认的MIME文件类型
+    default_type  application/octet-stream;
+
+    #log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+    #                  '$status $body_bytes_sent "$http_referer" '
+    #                  '"$http_user_agent" "$http_x_forwarded_for"';
+	# access_log路径是logs/access.log,等级是main
+    #access_log  logs/access.log  main;
+	# 使用sendfile内核调用处理文件传输
+    sendfile        on;
+	# 启用TCP_NOPUSH(FreeBSD)或TCP_CORK(Linux)插座选择。
+    #tcp_nopush     on;
+	# nginx关闭一个长效连接前等待的秒数
+    #keepalive_timeout  0;
+    keepalive_timeout  65;
+	# 对MIME文件使用gzip压缩
+    #gzip  on;
+
+    server {
+		# 监听80洞口
+        listen       80;
+		# 如果http请求头包含的目标域名是这个，使用这个块的设置
+        server_name  localhost;
+
+        #charset koi8-r;
+		# access_log路径在logs/host.access.log,等级是main
+        #access_log  logs/host.access.log  main;
+
+        location / {
+			# 网页根目录在html
+            root   html;
+			# 用index.html作为默认网页文件
+            index  index.html index.htm;
+        }
+		# 当遇到404响应码，返回404.html，因为root是html,所以是html/404.html
+        #error_page  404              /404.html;
+
+        # redirect server error pages to the static page /50x.html
+        #
+        error_page   500 502 503 504  /50x.html;
+		# = 指精确匹配
+        location = /50x.html {
+            root   html;
+        }
+
+        # proxy the PHP scripts to Apache listening on 127.0.0.1:80
+        # 见3.5节location
+		# 匹分大小写，以.php结尾
+        #location ~ \.php$ {
+			 # 改向
+        #    proxy_pass   http://127.0.0.1;
+        #}
+
+        # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
+        #
+        #location ~ \.php$ {
+        #    root           html;
+        #    fastcgi_pass   127.0.0.1:9000;
+        #    fastcgi_index  index.php;
+        #    fastcgi_param  SCRIPT_FILENAME  /scripts$fastcgi_script_name;
+        #    include        fastcgi_params;
+        #}
+
+        # deny access to .htaccess files, if Apache's document root
+        # concurs with nginx's one
+        #
+		# ~ 区分大小写，以.ht结尾
+        #location ~ /\.ht {
+        #    deny  all;
+        #}
+    }
+
+
+    # another virtual host using mix of IP-, name-, and port-based configuration
+    #
+    #server {
+		 # 监听所有网络接口的8000洞口
+    #    listen       8000;
+		 # 监听somename地址的8080洞口
+    #    listen       somename:8080;
+	# http请求头的目标主机域名是下面中的一个，都用这里的设置
+    #    server_name  somename  alias  another.alias;
+
+    #    location / {
+    #        root   html;
+    #        index  index.html index.htm;
+    #    }
+    #}
+
+
+    # HTTPS server
+    #
+    #server {
+		 # 监听443洞口，使用ssl
+    #    listen       443 ssl;
+    #    server_name  localhost;
+		 # 公钥
+    #    ssl_certificate      cert.pem;
+		 # 私钥
+    #    ssl_certificate_key  cert.key;
+		 # shared指的是一种类型，SSL是名字，1m是1M大小
+    #    ssl_session_cache    shared:SSL:1m;
+		 # 如果启用了SSL session，可以使用会话数据的时间。我不懂
+    #    ssl_session_timeout  5m;
+		 # 见3.6节ssl_ciphers
+    #    ssl_ciphers  HIGH:!aNULL:!MD5;
+		 # 指定服务器用的加密方法是否应该盖过客户端的加密方法
+    #    ssl_prefer_server_ciphers  on;
+
+    #    location / {
+    #        root   html;
+    #        index  index.html index.htm;
+    #    }
+    #}
+
+}
+
+3
+3.1 工进程
+3.2 error_log
+	语法: error_log /file/path level;
+	默认值:logs/error.log error
+	其中level可以是这些值：debug,info,notice,warn,error,crit,alert,emerg。
+	
+	下面这句禁用错误记录
+	error_log /dev/null crit;
+
+	除了指定文件路径，还可以写stderr送到stderr,写syslog送到系统日记，写memory
+	把日记保存在内存。
+3.3 pid
+	指定nginx主进程的pid文件，
+	假如nginx被编译安装在/usr/local/nginx,则
+	pid logs/nginx.pid
+	指的是/usr/local/nginx/logs/nginx.pid。
+3.4 events
+	events模块里的指令可以设置网络机制，有些对性能有影响。象worker_connections
+	这个指令必须放在events模块里。
+3.5 location
+	location = /uri/
+		精确匹配
+	location ^~ /uri/
+		匹配开头
+	location ~ /uri/
+		区分大小写的正则
+	location ~* /uri/
+		不区分大小写的正则
+	location !~ /uri/
+		区分大小写，不匹配某个正则
+	location !~*  /uri/
+		不区分大小写，不匹配某个正则
+3.6 ssl_ciphers
+	定义应该使用哪种加密。可用的选择可以通过执行openssl ciphers得到	

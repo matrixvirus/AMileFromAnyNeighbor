@@ -176,7 +176,7 @@
 				}
 		}
 	}
-4.3 主机设置语法
+4.3 与主机相关设置
 4.3.1 listen
 	语境：server
 	语法：
@@ -215,6 +215,63 @@
 	改向时，定义nginx是否给改向URL加上洞口。
 	语法：on/off
 	默认值：on
+4.3.5 alias
+	语境：location
+	例子：
+	http	{
+		server	{
+			server_name	localhost;
+				root	/var/www/website.com/html;
+				location	/admin/	{
+					alias	/var/www/locked/;
+			}
+		}
+	}
+	意思是当网址是http://localhost/admin,使用系统目录/var/www/locked/下面的网页
+	。
+4.3.6 error_page
+	语境：http,server,location,if
+	指定对一种http响应码返回什么页面，或者替换成其它响应码
+	例子：
+	error_page 404 /not_found.html;
+	error_page 500 501 502 503 504 /server_error.html;
+	error_page 403 http://website.com/;
+	error_page 404 @notfound; # 跳到叫notfound的location块
+	error_page 404 =200 /index.html; # 对404错误，改向到index.html并返回200
+4.3.7 index	
+	语境：http,server,location
+	如果请求中没有指定文件名，nginx用哪个文件作网页。可以指定多个文件名，首先被
+	找到文件将被使用，如果没有文件找到，并且autoindex指令启用了，nginx会尝试产生
+	文件们的自动索引。打断一下，我不知道自动索引是什么。否则nginx返回403 
+	Forbidden 错误页。你可以使用绝对路径，比如/page.html，从root指令定义的目录
+	算，但是这种写法只能放在最后。
+	默认值：index.html
+	例子：
+	index index.php index.html index.htm;
+	index index.php index2.php /catchall.php;
+
+	。。。
+4.3.8 rewrite
+	在186面。
+4.4 与客户端请求相关设置
+4.4.1 keepalive_requests
+	语境：http,server,location
+	一个长效连接服务的最大请求数。
+	语法：数值
+	默认值：100
+4.4.2 keepalive_timeout
+	语境：http,server,locaton
+	服务器关闭一个长效连接前等待的秒数。
+	语法：数值
+	默认值：75
+4.4.3 send_timeout
+	语境：http,server,location
+	指定nginx关闭不活跃连接前等待的秒数
+	语法：数值
+	默认值：60
+
+	。。。
+	
 5 模块设置
 6 PHP和Python
 7 负载平衡
