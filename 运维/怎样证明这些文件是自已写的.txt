@@ -5,7 +5,7 @@
 	版：
 	每节用2.2.3这种形式标题，正文缩进4格，每行不超过80列，
 	
-	我有时故意不用大家已经习惯的翻译，我把
+	我有时故意不用业内已经习惯的翻译，我把
 	virtual machine叫伪机，
 	把browser叫上网器，
 	把shell叫谢儿,
@@ -17,3 +17,5 @@
 	把permission叫认可,
 	把readonly叫读只,
 	把Load Balancer 叫负载平衡，
+	把distribution叫分散式，
+	把log叫日记。

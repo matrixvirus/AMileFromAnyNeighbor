@@ -141,6 +141,9 @@ http {
 
 3
 3.1 工进程
+	nginx有两种进程主进程和工进程。
+	主进程必须以root启动。unix系统中开1024及以下洞口的工作都要root许可。
+	工进程由主进程启动，所属用户是你在nginx设置文件里用user指令定义的那个用户。
 3.2 error_log
 	语法: error_log /file/path level;
 	默认值:logs/error.log error

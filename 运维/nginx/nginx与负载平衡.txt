@@ -1,0 +1,81 @@
+1
+	2018年02月05日。
+	参考书是Nginx HTTP Server,Packet出版社的。负载平衡是书上第8章。
+2 upstream模块 http负载平衡
+2.1
+	nginx的负载平衡设计比较聪明，允许你在你的架构的不同层次分散负载，它不只可以
+	代理HTTP,还能代理FastCGi，能分散负载到memcached服务器上。任何以_pass结尾的
+	指令，象proxy_pass,fastcgi_pass,memcached_pass,可以接受一组服务器作为参数。
+	
+	第一步要声明一个服务器组，用upstream块，它必须放在http块里，在upstream块里
+	用server指令声明一到多个服务器
+	http {
+		upstream MyUpstream {
+			server 192.168.100.173;
+			server 192.168.100.220;
+			server 192.168.100.205;
+		}
+	}
+
+	然后在server块里加一句
+	server {
+		...
+		proxy_pass http://MyUpstream;
+		...
+	}
+
+	然后这个伪主机收到的请求将平分到那三台机器上，默认平分算法是round robin。
+2.2 
+	默认每台机器的权重都是1.可以给一个机器指定不同的权重
+	upstream MyUpstream {
+		server 192.168.100.173 weight=3;
+		server 192.168.100.220 weight=2;
+		server 192.168.100.205;
+	}
+
+	除了weight,还有这些设置可用
+	  fail_timeout=N 
+	  	把一个请求分给一台机器后，经过多少秒这台机器没有响应，则认为这台机器处
+		理这个请求失败了
+	  max_fails=N 
+	    一台机器尝试处理一个请求失败多少次后，这个请求由一下台机器处理。默认是1
+	  backup
+	  	指示这台机器是备用机，只有有其它机器失效才用
+	  down
+	    指示这台机器永远不用
+	  	
+2.3
+	这个设置，多了一句ip_hash
+	upstream {
+		server 192.168.100.173;
+		server 192.168.100.220;
+		server 192.168.100.205;
+		ip_hash;
+	}
+	
+	ip_hash意思是根据客户端ipv4或ipv6地址的前3个字节计算一个乱麻(hash)值，根据这
+	个值把请求分给哪台机器，所以来自同一个IP的请求总是分给同一台机器。
+3 stream模块 tcp负载平衡
+3.1 
+	nginx不止可以做http负载平衡，还可以做tcp的，为任何tcp形式的流量做平衡，包括
+	数据库的，邮件服务器的。
+
+	stream模块用于tcp负载平衡。stream模块必须放在设置文件最外层。
+	在stream块里，
+	  server块 声明监听哪个网络接口哪个洞口，是否使用ssl。分散流量给哪个服务器
+	  	组。
+	  upstream块 定义一组服务器。
+3.2 例子 为mysql做负载科衡
+	stream {
+		upstream MyGroup {
+			# 使用基于IP地址的分散算法
+			hash $remote_addr;
+			server 192.168.100.220 weight=2;
+			server 192.168.100.205;
+			server 192.168.100.206 backup;
+		}
+		server {
+			listen 3306;
+			proxy_pass MyGroup;
+		}
+	}

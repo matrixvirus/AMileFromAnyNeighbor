@@ -1,0 +1,50 @@
+1
+	2018年02月05日。
+	参考书是Nginx HTTP Server,Packet出版社的。
+	php在原书第259面，标题是PHP with Nginx。
+2
+	设置nginx使用php要使用FastCGI。你要安装php-fpm包。
+	FastCGI是一种运行于插座的通信协议，所以它有服务端和客户端，客户端是nginx,
+	服务端可能是php，但不止php。
+	理论上php支持FastCGI协议。php可以通过插座与nginx交互，但是我们要使用另一个
+	东西提高进程管理，FastCGI进程管理器，就是php-fpm。
+
+	这个进程管理器，是一个管理php进程的剧本。它等待，接受nginx的指示，并运行所
+	需的php剧本。php-fpm可以：
+	  自动把php放到后面运行
+	  在chroot环境执行剧本
+	  改进日记，IP地址限制，池划分，等。
+3 设置php和php-fpm
+3.1
+	编辑/etc/php-fpm.conf。我发现实际要改/etc/php-fpm.d/www.conf
+	  user=nobody
+	  group=nobody
+	    与nginx.conf里的设置一致
+		实际我发现这样改了它不工作，不改是对的，他妈的。
+	  listen = 127.0.0.1:9000
+	  listen.allowed_clients = any
+	  pm.max_children = 50
+	    改可以同时处理的请求数
+3.2
+	运行php-fpm,php-fpm是rpm包装的话，执行
+	$ php-fpm -D
+	-D 后台
+
+	如果是编译安装的，可能要加这些参数
+	-c php.ini的路径
+	--fpm-cnfig=php-fpm.conf的路径
+3.3 nginx的设置
+	使nginx.conf，location块里有这一句
+		index index.php
+	这一句可以放在location块里或server块里。
+
+	使有这个location块
+	location ~* \.php$ {
+		fastcgi_pass 127.0.0.1:9000;
+		fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+		fastcgi_param PATH_INFO $fastcgi_script_name;
+		include fastcgi_params;
+	}
+
+	执行
+	$ nginx -s reload
