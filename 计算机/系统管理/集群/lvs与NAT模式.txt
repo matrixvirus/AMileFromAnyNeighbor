@@ -57,6 +57,8 @@
 
 	在上网器打开http://ip:3636，登录的用户名是piranha，密码是你用piranha-passwd
 	设的。
+
+	在piranha网页上对lvs的设置保存在/etc/sysconfig/ha/lvs.cf里。
 4.1.2 开转发
 	立即开转发
 	$ /sbin/sysctl -w net.ipv4.ip_forward=1

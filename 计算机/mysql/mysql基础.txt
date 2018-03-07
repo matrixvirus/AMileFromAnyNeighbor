@@ -5,6 +5,9 @@
 2 安装
 	$ yum install mysql mysql-server
 	$ service mysqld start
+	在openSUSE-Leap-42.3上，这样启动mysql服务
+	$ systemctl start mysql
+
 	检查mysql版本
 	$ mysql --version
 	执行mysql命令，没有参数，连接本机
