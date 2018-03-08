@@ -1,0 +1,457 @@
+1
+	2018年02月06日。
+	参考书是mongodb the definitive guide,OREILLY出版社。
+
+	为了有助于证明这些文字是我写的，我故意使用独特的翻译：
+	document -> 记录，
+	collection -> 收藏
+	permission -> 许可
+2 数据类型
+2.1 记录(document)
+	一个记录是一集键值对。不同编程语言对记录的表示不一样，但是基本都有类似的数
+	据结构，比如映射，乱麻，字典。在javascript里，记录是对象：
+		{"greeting":"Hello,world!"}
+	这个记录有一个键"greeting",一个值"Hello,world!"。
+	记录可以有多个键值对:
+		{"greeting":"Hello,world!","foo":3}
+	以它为例讲几点记录的性质：
+	1 键值对有顺序，上面的例子和下面这个不一样
+	  {"foo":3,"greeting":"Hello,world!"}
+	2 值的类型可以不唯一，"Hello,world!"是字串，3是数字。
+
+	键的类型是字串。有几点要注意：
+	1 键名内不能有\0，这个字符用来标志键名结束
+	2 .和$有特殊意义应避免使用。
+	3 以_开头的键是mongodb预留的，但这不是强制的。
+	
+	mongodb是类型敏感和大小写敏感的，这两个记录是不同的：
+		{"foo":3}
+		{"foo":"3"}
+	这两个记录也是不同的：
+		{"foo":3}
+		{"Foo":3}
+
+	一个记录里键名不能重复。
+
+2.2 收藏（collecton)
+2.2.1 形式自由
+	一个收藏是一组记录。相当于sql里的表。
+	收藏是形式自由的（schema-free)，一个收藏里的记录可以各有不同的键。比如这两
+	个记录可以放在一个收藏里：
+		{"greeting":"Hello,world!"}
+		{"foo":5}
+	
+2.2.2 名字
+	一个收藏有一个名字。可以是任何utf8字符。
+	有几点限制要注意：
+	1 不能以"system."开头，这是mongodb预留的。比如system.users包含一个数据库的
+	  用户信息，system.namespaces 包含一个数据库的所有收藏的信息。
+	2 不建议有$号。虽然很多驱动支持带$号的收藏名字，因为很多系统产生的收藏包含
+	  这个号。
+2.2.3 儿收藏
+	可以用 . 号使用儿收藏。比如有个收藏叫blog，它可以有一个儿收藏叫blog.posts,
+	一个儿收藏叫blog.authors。收藏和它的儿收藏并不存在关系，这个功能只是为了方
+	便管理。
+2.3 数据库(database)
+	多个收藏组成一个数据库。一个mongodb实例可以有多个数据库，每个数据库都是独立
+	的。一个数据库有自已的许可,在盘子上是单独一个文件。
+
+	一个数据库有一个名字，可以是任何utf8字符。有几占限制要注意：
+	1 不能是空
+	2 不能有空格 . $ / \ \0
+	3 必须是全小写
+	4 长度不能超过64个字节
+	
+	有一些系统预留的数据库：
+	1 admin
+		它是"root"数据库，与授权有关。如果一个用户被加进了admin库，这个用户自动
+		继承了所有数据库的许可。有的命令只能在admin库上执行，比如列出所有数据
+		库，关闭服务器。
+	2 local
+		这个库不能被传输，用于保存必须在一个单个服务器上的收藏。
+	3 config
+		当mongodb使用瓷片模式（sharded setup),config库被在内部使用，保存瓷处
+		(shard)的信息。
+
+	收藏名跟在数据库名后面构成一个全称，叫名字空间（namespace)，比如cms库的
+	blog收藏和posts儿收藏，名字空间是cms.blog.posts。名字空间不能超过121字节。
+	
+3 上手
+3.1 启动服务端
+	启动服务端前先建目录/data/db
+	$ mkdir -p /data/db
+	启动服务端
+	$ mongod &>/dev/null &
+	
+	它监听27017洞口。它还启动一个http服务器，监听在28017洞口，比27017大1000，
+	打断一下，书上这么说，我没看到。
+	
+3.2 客户端
+3.2.1 作javascript解释器用
+	mongodb有一个javascript谢儿用于交互。
+	$ mongo
+
+	这个谢儿是一个完整的javascript解释器，可以执行任何javascript代码。
+	你可以先做一些计算：
+	> x = 200
+	200
+	> x / 5;
+	40
+
+	你可以使用所有javascript标准库：
+	> Math.sin(Math.PI / 2);
+	1
+	> new Date("2018/03/06");
+	ISODate("2018-03-06T05:00:00Z")
+	> "Hello,World!".replace("World","MongoDB")
+	Hello,MongoDB!
+
+	可以定义和调用javascript方法:
+	> function factorial (n) {
+	... if (n<=1) return 1;
+	... return n * factorial(n-1);
+	... }
+	> factorial(5)
+	120
+
+	你写方法的时候，这个谢儿会判断你一行有没有写完。
+3.2.2
+	检查在使用哪个数据库
+	> db	
+	test
+
+	检查有哪些数据库
+	> show dbs
+	admin   0.000GB
+	config  0.000GB
+	local   0.000GB
+
+	检查正在使用的test库有哪些收藏
+	> show collections
+
+	切换到foobar库，假设存在
+	> use foobar
+
+	检查所用mongodb版本
+	> db.version()
+3.2.3
+	定义一个记录
+	> post = {"title":"My Blog Post",
+	... "content":"Here's my blog post.",
+	... "date":new Date()}
+	{
+			"title" : "My Blog Post",
+			"content" : "Here's my blog post.",
+			"date" : ISODate("2018-03-07T15:28:39.801Z")
+	}
+
+	把这个记录插入到（正在使用的库的）blog收藏
+	> db.blog.insert(post)
+	如果blog收藏不存在，这个命令会自动制作它。
+
+	检查blog收藏里有哪些记录
+	> db.blog.find()
+	你从输出里可以看到那个记录有一个键'_id'不是我们写的。
+
+	只检查一个收藏里的第一个记录
+	> db.blog.findOne()
+
+	修改记录用update方法，它有两个参数，第一个参数确定修改哪一个记录，把它修改成
+	第二个参数
+	修改 键id的值为1 的那个记录
+	> db.blog.update({'id':1},{'name':2})
+
+	删除键id的值为1的那个记录
+	> db.blog.remove({'id':1})
+3.2.4
+	查看帮助
+	> help
+	查看数据库方面的帮助
+	> db.help()
+	如果不加括号，是查看db.help的代码。
+	查看收藏方面的帮助
+	> db.foo.help()
+	其中foo是任意一个收藏。
+	
+	假如有一个收藏和一个属性，比如version,同名，要使用getCollection方法
+	> db.getCollection('version')
+
+4 数据类型
+4.1 
+	null
+		比如 {'x':null}
+	boolean
+		可以是true或false,比如{'x':true}
+	32位整数
+		理论上有，实际不用
+	64位整数
+		理论上有，实际不用
+	64位浮动点数
+		所有数其实都是这个类型，3.14是一个浮动点数，3也是。
+	字串
+		任何utf8字符。
+	象征符号(symbol)
+		mongodb的谢儿不支持这个，如果谢儿从数据库里取到一个象征，会把它转成一个
+		字串。
+	对象id
+		每个记录都有一个id,12字节。
+	日期
+		被记录为从元年过去的毫秒数。不记录时区。
+	正则式
+	代码(code)
+		javascript代码，比如可以是一个方法
+		{'x':function() {...}}
+	二制数据
+		谢儿不能处理它
+	最大值
+		BSON有一种特殊类型用于表示最大值，谢儿没有这种类型
+	最小值
+		BSON有一种特殊类型用于表示最小值，谢儿没有这种类型
+	未定义(undefined)
+		{'x':undefined}
+	数组
+		{'x':['a','b','c']
+	内含记录
+		一个记录的一个键的值可以是另一个记录
+		{'x':{'foo':'bar'}}
+4.2 _id 与ObjectIds
+	每个记录都必须有一个'_id'键，'_id'键的值可以是任何值，默认是ObjectId。一个
+	收藏里每个记录的'_id'不一样。
+
+	ObjectId的设计有这个考虑：很难在多个服务器间同步自动增主键。
+	ObjectId有12字节，或者说24位16制数。
+	如果你连续快速执行 new ObjectId()，你会发现每次只有最右边2位，或左数第8位
+	有变化，这和ObjectId的设计有关系。它的12个字节是这样排列的：
+	|0 1 2 3 |4 5 6 |7 8 |9 A B |
+	|_______ |_____ |___ |_____ |
+	|时戳    |机器  |PID |增加值|
+	|_______ |_____ |___ |______|
+
+	前面4个字节是时戳。时戳，机器号，加PID的组合可以使在一秒内连续快速产生的
+	ObjectId不重复。
+	第4到6个字节是机器号，通常是对主机名的乱麻（hash)。
+	PID 确保不同进程产生的ObjectId不同。
+	后面3字节确保一个机器的一个进程在一秒内的产生不重复。
+	
+	用'_id'决定删除哪个记录
+	> db.blog.remove({'_id':ObjectId('4b2d75476cc613d5ee930164')})
+5 新建，修改，删除记录
+5.1
+	你插入一个记录时，驱动把你的输入转成BSON格式再传给数据库。
+
+5.2
+	remove不带参数是删除所有。
+
+	一段python代码例子
+	import time
+	from pymongo import Connection
+	db = Connection().foo
+	collection = db.bar
+	start = time.time()
+	collection.remove()
+	collection.find_one()
+	total = time.time() - start
+	print '%d seconds' % total
+5.3 
+5.3.1
+	修改用update。实际是用一个记录替换一个记录。
+
+	把a为2那个记录替换成{'b':2}
+	> db.blog.update({'a':2}, {'b':2})
+
+	可以先把记录取出来，做些处理，再放回去
+	> bb = db.blog.findOne({'a':2})
+	> bb.b = 2
+	> db.blog.save(bb)
+	
+	注意这里要用save，不能用insert，因为在外面的bb和里面的那个有一样的 _id。
+5.3.2
+	如果只有记录的一部分要修改，用update不高效。可以这样写
+	> db.blog.update({'a':2}, {'$inc':{'b':2}})
+	$inc 意思是只把键b的值加2。如果键b不存在，则新建键b,值为2。
+	
+	> db.blog.update({'a':2}, {'$set':{'b':2}})
+	$set 只把键b的值改成2.如果键b不存，会被新建。
+
+	给数组加一个元素
+	> db.blog.update({'a':2}, {'$push':{'c':2}})
+	如果键c不存在，会被新建。
+
+	确保不会给数组插入重复值
+	> db.blog.update({'a':2},{'$addToSet':{'c':2}})
+
+	删除数组的一个元素
+	> db.blog.update({'a':2},{'$pull":{'c':2}})
+5.3.3
+	对于记录嵌套的情况，比如下面的，键c的值是一个记录，这个记录有一个键d
+	{
+		'c':
+			{
+				'd':2
+			}
+	}
+	把里层的键d改成3
+	> db.blog.update({'a':2}, {'$set':{'c.d':3}})
+
+	一次执行多个修改动作，比如给a加一个元素，再把b加1
+	> db.blog.update({'$push':{'a':1}, '$inc':{'b':1}})
+6 查
+6.1
+	列出所有
+	> db.c.find()
+	或者
+	> db.c.find({})
+	列出键a值为2且键b值为3的
+	> db.c.find({'a':2,'b':3})
+
+	统计有多少个记录
+	> db.blog.count()
+
+6.2 限制显示哪些列
+	查所有，但不显示每个记录的键c
+	> db.c.find({},{'c':0})	
+	这里find方法有两个参数，第一个参数{} 表示查所有，第二个参数{'c':0} 表示在
+	结果中不显示键c。
+
+	查所有，但只显示每个记录的键c
+	> db.c.find({}, {'c':1})
+	{'c':1} 这里任何不是0的数都表示显示。
+
+	查所有，但只显示每个记录的键c和键b
+	> db.c.find({}, {'c':1,'b':1})
+6.3 数值大小
+	找出a大于等于18,小于等于30的
+	> db.c.find({'a':{'$gte':18,'$lte':30}})
+
+	$lt		小于
+	$lte	小于等于
+	$gt		大于
+	$gte	大于等于
+	$ne 	不等于
+6.4 或
+	找出a等于1或等于2或等于3的
+	> db.c.find({'a':{'$in':[1,2,3]}})
+
+	找出a不等于1,2,3中任何一个的
+	> db.c.find({'a':{'$nin':[1,2,3]}})
+	
+	找出a等于2或b等于3的
+	> db.c.find({'$or':[{'a':2},{'b':3}]})
+
+	找出a等于1或等于2或等于3的另一种写法
+	> db.c.find({'$or':[{'a':1},{'a':2},{'a':3}]})
+
+	找出a的值除以5余1的
+	> db.c.find({'a':{'$mod':[5,1]}})
+	找出a的值除以5不余1的
+	> db.c.find({'a':{'$not':{'$mod':[5,1]}}})
+
+	找出是null的
+	> db.c.find({'y':null})
+6.5 正则式
+	正则式是用两个//夹起来，注意没有引号。
+
+	找出name是joe,不区分大小写的
+	> db.c.find({'name':/joe/i})
+	/joe/ 右边的i 指不区分大小写
+
+	找出以txt结尾的
+	> db.c.find({'name':/txt$/})
+
+	正则式不会的话，请另专门学习。
+6.5 查数组
+6.5.1
+	查键a的数组里有2的
+	> db.c.find({'a':2})
+	
+	查键a的数组里有1和2的
+	> db.c.find({'a':{'$all':[1,2]}})
+
+	查键a的数组里只有1和2的
+	> db.c.find({'a':[1,2]})
+	
+	查键a的数组的第2个元素是'abc'的。注意是'a.1'
+	> db.c.find({'a.1':'abc'})
+
+	查有3个元素的
+	> db.c.find({'a':{'$size':3}})
+6.5.2	
+	书上第52面讲怎样返回数组前10个元素
+	> db.blog.posts.findOne(criteria, {'comments':{'$slice':10}})
+	我没看懂，书上没说criteria是什么。
+
+6.6 查嵌套记录
+	假设键a的值是一个记录，它有一个键b
+	> db.c.find({'a.b':2})
+6.7 $where
+	有些复杂的匹配条件可能无法直接用上面的方法做。
+	假设有两个记录
+	> db.foo.insert({"apple" : 1, "banana" : 6, "peach" : 3})
+	> db.foo.insert({"apple" : 8, "spinach" : 4, "watermelon" : 4})
+	第二个记录的右边两个值相等。
+	目标是找出spinach和watermelon两个值相等的记录
+
+	db.foo.find({'$where':function () {
+		for (var current in this) {
+			for (var other in this) {
+				if (current != other && this[current] = this[other]) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}})
+
+	这段代码我看不懂，我不会javascript，等我学了javascript再来看它。
+
+	找出键x和键y的和为10的记录
+	> db.foo.find({'$where':'this.x+this.y ==10'})
+	或
+	> db.foo.find({'$where':'function() {return this.x+this.y== 10;}'})
+6.8 游标
+	find方法返回的是一个游标
+	> var cursor = db.blog.find()
+
+	用游标依次对一个收藏的所有值做一些操作
+	while (cursor.hasNext) {
+		obj = cursor.next()
+		// do stuff
+	}
+
+	也可以用forEach 
+	> var cursor = db.blog.find()
+	> cursor.forEach(function(x) {
+	... print(x.name)
+	... })
+
+	当你执行find方法，谢儿并不立即查数据库，直到你要求显示结果，所以find方法后
+	你还可以做些其它操作。比如
+	> var cursor = db.foo.find().sort({'x':1}).limit(1).skip(10);
+
+	sort({'x':1}) 意思是对键x用升序(小的在上）排序。如果是sort({'x':-1}) ,则是
+		降序(大的在上）排序。
+	limit(1) 意思是只显示前面3条结果。
+	skip(10) 意思是不显示前面10条结果。
+	
+	使用sort时，如果一个键在值的类型在每个记录里都不一样，不同类型的级别，从小
+	到大依次是
+	1 最小值(注意，是一种类型）
+	2 null
+	3 数字
+	4 字串
+	5 Object/记录
+	6 数组
+	7 二制数据
+	8 Object ID
+	9 布林
+	10 日期
+	11 时戳
+	12 正则式
+	13 最大值（注意，是一种类型）
+	
+	findOne返回记录本身，不返回游标。
+6.8 
+	> db.blog.find({'a':2}).sort({'x':1})
+	可以写成
+	> db.blog.find({'$query':{'a':2},'$orderby':{'x':1}})
+
