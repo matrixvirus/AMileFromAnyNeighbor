@@ -16,3 +16,33 @@
 
 	列出所有命令
 	> db.listCommands()
+
+	显示版本和其它一些信息
+	> db.runCommand({'buildInfo':1})
+
+	显示名叫abc的收藏的一些状态信息
+	> db.runCommand({'collStats':'abc'})
+
+	删除数据库
+	> db.runCommand({'dropDatabase':1})
+
+	删除收藏abc上的名叫bcd的索引
+	> db.runCommand({'dropIndexes':'abc','index':'bcd'})
+	如果要删除所索引，索引名部分写'*'
+
+	检查本服务器是主还是从
+	> db.runCommand({'isMaster':1})
+
+	列出所有数据库
+	> db.runCommand('{listDatabases':1})
+
+	检查服务器是否活着
+	> db.runCommand({'ping':1})
+
+	把收藏a改名为b
+	> db.runCommand({'renameCollection':a,'to':b})
+
+	显示一些服务器的信息
+	> db.runCommand({'serverStatsu':1})
+
+	

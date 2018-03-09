@@ -70,7 +70,7 @@
 	2 local
 		这个库不能被传输，用于保存必须在一个单个服务器上的收藏。
 	3 config
-		当mongodb使用瓷片模式（sharded setup),config库被在内部使用，保存瓷处
+		当mongodb使用瓷片模式（sharded setup),config库被在内部使用，保存瓷片
 		(shard)的信息。
 
 	收藏名跟在数据库名后面构成一个全称，叫名字空间（namespace)，比如cms库的
@@ -235,7 +235,7 @@
 	
 	用'_id'决定删除哪个记录
 	> db.blog.remove({'_id':ObjectId('4b2d75476cc613d5ee930164')})
-5 新建，修改，删除记录
+5 新建 删除
 5.1
 	你插入一个记录时，驱动把你的输入转成BSON格式再传给数据库。
 
@@ -255,8 +255,8 @@
 	collection.find_one()
 	total = time.time() - start
 	print '%d seconds' % total
-5.3 
-5.3.1
+6 修改
+6.1
 	修改用update。实际是用一个记录替换一个记录。
 
 	把a为2那个记录替换成{'b':2}
@@ -265,13 +265,12 @@
 	可以先把记录取出来，做些处理，再放回去
 	> bb = db.blog.findOne({'a':2})
 	> bb.b = 2
+	> delete bb.a # 删除键a
 	> db.blog.save(bb)
 	
 	注意这里要用save，不能用insert，因为在外面的bb和里面的那个有一样的 _id。
 
-	删除键a
-	> delete db.blog.a
-5.3.2
+6.2
 	如果只有记录的一部分要修改，用update不高效。可以这样写
 	> db.blog.update({'a':2}, {'$inc':{'b':2}})
 	$inc 意思是只把键b的值加2。如果键b不存在，则新建键b,值为2。
@@ -288,7 +287,7 @@
 
 	删除数组的一个元素
 	> db.blog.update({'a':2},{'$pull":{'c':2}})
-5.3.3
+6.3
 	对于记录嵌套的情况，比如下面的，键c的值是一个记录，这个记录有一个键d
 	{
 		'c':
@@ -301,8 +300,17 @@
 
 	一次执行多个修改动作，比如给a加一个元素，再把b加1
 	> db.blog.update({'$push':{'a':1}, '$inc':{'b':1}})
-6 查
-6.1
+6.4 一次修改多个记录
+	update默认只修改找到的第一个记录，如果有修改所有符合条件的记录，可以给update
+	传第4个参数true
+	> db.users.update({'birthday':'08/03/1018'},
+	... {'$set':{'gift':'Happy Birthday!'}}, false, true)
+
+	检查上一条命令修改了多少条记录
+	>db.runCommand({getLastError:1})
+	检查它的输出中的'n'。
+7 查
+7.1
 	列出所有
 	> db.c.find()
 	或者
@@ -313,7 +321,7 @@
 	统计有多少个记录
 	> db.blog.count()
 
-6.2 限制显示哪些列
+7.2 限制显示哪些列
 	查所有，但不显示每个记录的键c
 	> db.c.find({},{'c':0})	
 	这里find方法有两个参数，第一个参数{} 表示查所有，第二个参数{'c':0} 表示在
@@ -325,7 +333,7 @@
 
 	查所有，但只显示每个记录的键c和键b
 	> db.c.find({}, {'c':1,'b':1})
-6.3 数值大小
+7.3 数值大小
 	找出a大于等于18,小于等于30的
 	> db.c.find({'a':{'$gte':18,'$lte':30}})
 
@@ -334,7 +342,7 @@
 	$gt		大于
 	$gte	大于等于
 	$ne 	不等于
-6.4 或
+7.4 或
 	找出a等于1或等于2或等于3的
 	> db.c.find({'a':{'$in':[1,2,3]}})
 
@@ -354,7 +362,7 @@
 
 	找出是null的
 	> db.c.find({'y':null})
-6.5 正则式
+7.5 正则式
 	正则式是用两个//夹起来，注意没有引号。
 
 	找出name是joe,不区分大小写的
@@ -365,8 +373,8 @@
 	> db.c.find({'name':/txt$/})
 
 	正则式不会的话，请另专门学习。
-6.5 查数组
-6.5.1
+7.5 查数组
+7.5.1
 	查键a的数组里有2的
 	> db.c.find({'a':2})
 	
@@ -381,15 +389,15 @@
 
 	查有3个元素的
 	> db.c.find({'a':{'$size':3}})
-6.5.2	
+7.5.2	
 	书上第52面讲怎样返回数组前10个元素
 	> db.blog.posts.findOne(criteria, {'comments':{'$slice':10}})
 	我没看懂，书上没说criteria是什么。
 
-6.6 查嵌套记录
+7.6 查嵌套记录
 	假设键a的值是一个记录，它有一个键b
 	> db.c.find({'a.b':2})
-6.7 $where
+7.7 $where
 	有些复杂的匹配条件可能无法直接用上面的方法做。
 	假设有两个记录
 	> db.foo.insert({"apple" : 1, "banana" : 6, "peach" : 3})
@@ -414,7 +422,7 @@
 	> db.foo.find({'$where':'this.x+this.y ==10'})
 	或
 	> db.foo.find({'$where':'function() {return this.x+this.y== 10;}'})
-6.8 游标
+7.8 游标
 	find方法返回的是一个游标
 	> var cursor = db.blog.find()
 
@@ -456,11 +464,11 @@
 	13 最大值（注意，是一种类型）
 	
 	findOne返回记录本身，不返回游标。
-6.8 
+7.8 
 	> db.blog.find({'a':2}).sort({'x':1})
 	可以写成
 	> db.blog.find({'$query':{'a':2},'$orderby':{'x':1}})
-7 索引
+8 索引
 	这节先放一放，书上写的
 	> db.people.ensureIndex({"username" : 1})
 	没看懂，不知道这个1是什么意思。
