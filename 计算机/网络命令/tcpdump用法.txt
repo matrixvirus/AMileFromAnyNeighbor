@@ -10,7 +10,7 @@
 	tcpdump src host 173 and dst port 80
 2.4 拦截不是发向80端口的流量
 	tcpdump dst port not 80
-2.5 拦截发向80或80端口的流量
+2.5 拦截发向80或81端口的流量
 	tcpdump dst port 80 or 81
 	可以加上括号
 	tcpdump dst port \(80 or 81\)

@@ -27,6 +27,10 @@
 	创建一个库
 	mysql> CREATE DATABASE [IF NOT EXISTS] contact 
 		[DEFAULT CHARACTER SET = UTF8];
+	
+	检查刚制作的库
+	mysql> SHOW CREATE DATABASE contact;
+
 	删除这个库，只是演示删除的用法，后面还要用这个库
 	mysql> DROP DATABASE contact;
 	进入这个库

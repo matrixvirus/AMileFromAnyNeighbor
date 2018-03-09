@@ -1,0 +1,18 @@
+1
+	2018年03月08日。
+	参考书是Mongodb The Definitive Guide,OREILLY出版社的。
+2
+	检查上一条命令的出错信息
+	> db.runCommand({getLastError:1})
+
+	删除一个叫abc的收藏
+	> db.abc.drop()
+	或者这样写
+	> db.runCommand({'drop':'abc'})
+
+	mongodb里的命令实际上是在名为 $cmd 的收藏上执行一种特殊类型的查询。
+	runCommand方法把作为命令的记录作为参数。所以drop还可以这样写
+	> db.$cmd.findOne({'drop':'abc'})
+
+	列出所有命令
+	> db.listCommands()

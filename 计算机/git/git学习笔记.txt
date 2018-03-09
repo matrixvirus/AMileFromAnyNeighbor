@@ -5,17 +5,19 @@
  $开头表示在命令行上输入的命令
  #开头表示在文件里面输入的内容
  %开头表示终端输出的内容
- 每行命令前面有一个数字为它编号, 便于引用。
 1 克隆远程仓库
 1.1 方法1:
-    $ git clone 远程仓库网址 &1
+    $ git clone 远程仓库网址 
 1.2 方法2:
-    $ mkdir 远程仓库名 &1
-    $ cd 上述建的目录 &2
-    $ git init  &3
-    $ git remote add origin 远程仓库网址 &4
-    如果上述命令4的网址敲错了，可以这样修改
-    $ git remote set-url origin 新远程仓库网址 &5
+    $ mkdir 远程仓库名 
+    $ cd 上述建的目录 
+    $ git init  
+
+    $ git remote add origin 远程仓库网址 
+
+    如果上述命令的网址敲错了，可以这样修改
+    $ git remote set-url origin 新远程仓库网址 
+
     检查为远程仓库网址设置的别名origin
     $ git remote show -n origin &6
 1.3 git 的man手册查看方法
@@ -23,14 +25,17 @@
     $ man git-config
     中间用减号连接。
 2 设置名字和邮箱,
-    $ git config --global user.name 名字 &1
-    $ git config --global user.email 邮箱 &2
+    $ git config --global user.name 名字 
+    $ git config --global user.email 邮箱 
+
     取消设置一个值
     $ git config --global --unset user.name
+
     专门为本仓库设置一个名字，而不是全局的
     $ git config user.name 名字
+
     检查上述命令设置的名字和邮箱
-    $ git config --list &3
+    $ git config --list 
     这里设置的名字和邮箱会作为提交时的身份，用git log查看提交历史时的Author部分 能看见名字和邮箱。
     在一台电脑的一处设置后，在同一电脑和其它终端，都用这个名字和邮箱。
     gitlab会根据这里设置的邮箱把名字换成gitlab注册的这个邮箱对应的昵称，与这里设置 的名字无关，比如，在gitlab注册了一个用户叫socrates,昵称苏格拉底，邮箱 pyh@woxintech.com, 你在命令行上用git config 设置名字为me,邮箱为pyh@woxintech.com
@@ -38,7 +43,8 @@
 3 公钥
    要使用ssh形式的远程仓库网址,要先设置钥对。
 	生成公钥私钥
-    $ ssh-keygen &1
+    $ ssh-keygen 
+
 	上传公钥
     复制文件~/.ssh/id_rsa.pub的内容，登录gitlab, 找到用户设置->SSH keys, 有一个输入框，把刚复制的内容粘贴上，点按钮Add key。
      
@@ -52,163 +58,201 @@
     http://socrates@10.0.0.3/andromeda/venus.git
 5 上传一个文件
 	新建一个文件
-    $ touch readme &1
+    $ touch readme 
+
     用git status命令查看工作树状态，显示刚建的文件readme状态是未跟踪。
-    $ git status &2
+    $ git status 
+
 	往暂存区添加文件readme
-    $ git add readme &1
+    $ git add readme 
     注意git add对空目录无效。
+
     再次用git status命令显示文件readme状态是新建
-    $ git status &2
+    $ git status 
+
 	提交
-    $ git commit -m "注释" &1
+    $ git commit -m "注释" 
     如果git commit 后面没跟-m参数注释，命令会调vim让你写注释.
+
     再次用git status命令显示工作树没有要提效的
-    $ git status &2
+    $ git status 
+
     用git log命令查看提交历史
-    $ git log &3
+    $ git log 
+
 	删除
-    $ git rm 文件名 &1
-    $ git commit &2
+    $ git rm 文件名 
+    $ git commit 
+
 	上传
     $ git push origin master
     origin是远程主机名,master是远程分支名,命令意思是把当前本地仓库所在分支上传到origin代指的远程仓库的master分支。
 6 编辑文件撤回
 6.1 假设修改了文件readme的内容，还没执行git add命令, 
-    $ git checkout master readme &1
+    $ git checkout master readme 
     可以不写master:
-    $ git checkout readme &2
+    $ git checkout readme 
     如果有一个分支也叫readme, 则要在本应是文件名的readme前面加上--:
-    $ git checkout -- readme &3
+    $ git checkout -- readme 
     最好总是加上--。
 6.2 如果已经执行了git add,则
-    $ git reset -- readme &1
-    $ git checkout -- readme &2
+    $ git reset -- readme 
+    $ git checkout -- readme 
     注意checkout 另一个功能是切换分支
 6.3 如果已经执行了git commit,
     检查提交历史，找到要撤消的那次提交的散列值
-    $ git log &1
-    $ git revert 散列值 &2
+    $ git log 
+    $ git revert 散列值 
 6.4 删除文件的恢复
-6.4.1 用系统命令删除了
-    $ git checkout -- 文件名 &1
-6.4.2 用git rm 命令删除了
-    $ git reset --hard HEAD &1
+	如果是用系统命令删除了
+    $ git checkout -- 文件名 
+
+	如果是用git rm 命令删除了
+    $ git reset --hard HEAD 
 7 分支
-7.1 创建一个新分支,
-    $ git branch 新分支名 &1
-7.2 查看有哪些分支和当前所在分支
-    $ git branch &1
-7.3 切换分支
-    $ git checkout 分支名 &1
-7.4 删除分支
-    $ git branch -D 分支名 &1
-7.5 查看远端origin上有哪些分支
-    $ git branch -r &1
-7.6 删除远程分支
+	创建一个新分支,
+    $ git branch 新分支名 
+
+	查看有哪些分支和当前所在分支
+    $ git branch 
+
+	切换分支
+    $ git checkout 分支名 
+
+	删除分支
+    $ git branch -D 分支名 
+
+	查看远端origin上有哪些分支
+    $ git branch -r 
+
+	删除远程分支
     方法一
-    $ git push origin --delete 远程分支名 &1
+    $ git push origin --delete 远程分支名 
+
     方法二
-    $ git push origin :远程分支名 &2
+    $ git push origin :远程分支名 
 8 标签
     注意标签针对的是分支
 8.1 新建标签
-    $ git tag 标签名 &1
+    $ git tag 标签名 
+
 8.2 查看标签
-    $ git tag &1
+    $ git tag 
+
 8.3 删除标签
-    $ git tag -d 标签名 &1
+    $ git tag -d 标签名 
+
 8.4 上传本地所建标签至远程仓库
-    $ git push --tag origin 远程分支名 &1
+    $ git push --tag origin 远程分支名 
     本地往远程上传时要指定连标签一起上传，下载远程至远程的git pull却会自动连标签一起下载。
+
 8.5 删除远程标签
-    $ git push origin --delete tag 远程标签名 &1
+    $ git push origin --delete tag 远程标签名 
+
 8.6 根据标签新建分支
-    $ git branch 新分支名 标签名 &1
+    $ git branch 新分支名 标签名 
     新分支是当初建标签时所在分支的状态。
+
 9 拉取
 9.1 用远程仓库的master分支更新本地当前分支。
-    $ git pull origin master &1
+    $ git pull origin master 
+
 9.2 拉取同本地仓库另一个分支
-    $ git pull . 另一分支名 &1
+    $ git pull . 另一分支名 
 10 清理
 10.1 清理未添加到暂存区的文件
-    $ git clean -d -f &1
+    $ git clean -d -f 
     -d 的意思删除未追踪的目录，-f的意思是强制。
+
     如果设置了
-    $ git config --global clean.requireForce false &2
+    $ git config --global clean.requireForce false 
     则可以不带-f:
-    $ git clean -d &3
+    $ git clean -d 
 10.2 .gitignore文件
     一般放在根目录下，对所在目录和子目录起效。任何子目录都能有自已的.gitignore文件， 对这个子目录和更下层的子目录起效。
     比如，忽略所有后缀为.swp的文件
     # *.swp
 10.3 清理被忽略的文件
-    命令git clean默认不会清理被文件.gitignore忽略的文件，要加参数-x
+    命令git clean默认不会清理被文件.gitignore忽略的文件，
+	如果要清它们要加参数-x
     $ git clean -dfx
 11 合并
-11.1 手动解决冲突
+11.1 合并后手动编辑冲突文件
     执行git pull,或git merge后，如果是手动编辑了冲突文件，编辑完后执行
-    $ git add; $ git commit &1
-11.2 合并冲突
-11.2.1 情景一，强制用另一个库覆盖当前库
-    $ git fetch 远程主机 远程分支 &1
-    $ git reset --hard FETCH_HEAD &2
-11.2.2 情景二，把本库另一分支合并到当前分支，有冲突时自动选择用自已的还是对方的版本
+    $ git add; $ git commit 
+11.2 情景一，强制用另一个库覆盖当前库
+    $ git fetch 远程主机 远程分支 
+    $ git reset --hard FETCH_HEAD 
+11.3 情景二，把本库另一分支合并到当前分支，有冲突时自动选择用自已的还是对方的版本
     有冲突时直接选择对方的版本，放弃自已的
-    $ git merge 分支名 -X theirs &1
+    $ git merge 分支名 -X theirs 
     有冲突时直接选择自已的版本，丢弃对放的
-    $ git merge 分支名 -X ours &2
-11.2.3 情景三，把远程某分支合并到本地当前分支，有冲突时自动选择用自已的还是对方的版本
+    $ git merge 分支名 -X ours 
+11.4 情景三，把远程某分支合并到本地当前分支，有冲突时自动选择用自已的还是对方的版本
     有冲突时直接选择对方的版本，放弃自已的
-    $ git pull origin 远程分支名 -X theirs &1
+    $ git pull origin 远程分支名 -X theirs 
+
     有冲突时直接选择自已的版本，丢弃对方的
-    $ git pull origin 远程分支名 -X ours &2
-11.2.4 情景四, 执行git pull 或git merge后，手动选择个别文件用自已的还是对方的
-    $ git checkout --theirs 文件名 &1
-    $ git add; $ git commit &2
+    $ git pull origin 远程分支名 -X ours 
+11.5 情景四, 执行git pull 或git merge后，手动选择个别文件用自已的还是对方的
+    $ git checkout --theirs 文件名 
+    $ git add; $ git commit 
+
     在选择哪个版本前，查看自已版是什么样子，和对方版本，共同祖选版本是什么样子
-    $ git show :1:文件名 祖先版本 &3
-    $ git show :2:文件名 自已版本 &4
-    $ git show :3:文件名 对方版本 &5
+    $ git show :1:文件名 祖先版本 
+    $ git show :2:文件名 自已版本 
+    $ git show :3:文件名 对方版本 
 11.2.5 如果遇到报错，“拒绝合并无关的历史",
 	加一个参数 --allow-unreleated-histories
 	$ git pull origin master --allow-unreleated-histories
+
 11.3 取消合并
 11.3.1 合并还没提交
-   $ git reset --hard HEAD &1
+   $ git reset --hard HEAD 
    或
-   $ git reset --merge &2
+   $ git reset --merge 
    或
-   $ git reset --hard ORIG_HEAD &3
+   $ git reset --hard ORIG_HEAD 
 11.3.2  如果没有冲突的合并了, 或者手动提交了，上述三条命令不会把文件退到合并前
     $ git revert 提交的SHA -m 1
+
 11.3.3 取消合并再次合并
     $ git revert 取消合并的那次提交
+
 11.4 快进合并
     快进合并后，本分支的提交历史变得和远程分支一样，不会多出一个"合并提交"。
+
 12 自已建一个可以被git push的本地仓库
     服务器上的仓库是祼仓库，可以被push,一般仓库被push是没有效果的。 一般仓库下面是文件和一个.git目录，祼仓库直接是.git目录的内容。
     $ git init --bare
 13 git log参数
-13.1 用diff显示具体文件变化
-    $ git log -p &1
-13.2 只显示文件client.py的提交
-    $ git log -- client.py &1
-13.3 精简的每个提交占一行
-    $ git log --pretty=oneline &1
-13.4 显示最近地两次提交
-    $ git log -2 &1
-13.5 显示每个提交的增改行统计
-    $ git log --stat &1
+13.1
+	用diff显示具体文件变化
+    $ git log -p 
+
+	只显示文件client.py的提交
+    $ git log -- client.py 
+
+	精简的每个提交占一行
+    $ git log --pretty=oneline 
+
+	显示最近地两次提交
+    $ git log -2 
+
+	显示每个提交的增改行统计
+    $ git log --stat 
+
     只显示增改行数总量，不显示具体单个文件
-    $ git log --shortstat &2
-13.6 以c语言的printf格式化风格输出
-    $ git log --pretty=format:'%H' &1
+    $ git log --shortstat 
+13.2
+	以c语言的printf格式化风格输出
+    $ git log --pretty=format:'%H' 
+
     可以不写format
-    $ git log --pretty='%H' &2
+    $ git log --pretty='%H' 
+
     也可以写--format
-    $ git log --format='%H' &3
+    $ git log --format='%H' 
     上例的%H是提交的完整散列值，完整的格式字符列表可以git-log man手册里搜%H跳到，
 13.6.1 常用格式字符
     %H 完整的提交的散列值
@@ -216,7 +260,7 @@
     %cn 提交者名字
     %ce 提交者邮箱
     %cd 提交日期，这个参数可以和一个参数--date配合,比如
-        $ git log --format='cd' --date='iso' &1
+        $ git log --format='cd' --date='iso' 
         有的--format='cd',--date对有一个等价的不需要配合--date的独立参数
         --format='%cd' --date='default' 等于 --format='%cd'
         --format='%cd' --date='rfc' 等于 --format='%cD'
@@ -233,46 +277,50 @@
         raw形式是这样 1504491113 -0400
         short形式是这样 2017-09-03
     %x00 打印十六进制数对应的字符，比如要输出'0'
-        $ git log --format='%0x30' &2
+        $ git log --format='%0x30' 
     %% 打印一个纯%号
     %n 换行
-    %C(数字) 指定顔色，里面的数字代表不同顔色，没看懂这个数字应该怎么写。欧阳环宇也没看出数字和输出顔色的对应规筆。
+    %C(数字) 指定顔色，里面的数字代表不同顔色，没看懂这个数字应该怎么写。
     %Cred 红色 %Cgreen 绿色 %Cblue 蓝色
         比如用红色显示提交者，用蓝色显示日期
-        $ git log --format='%Cred%cn %Cblue%ci' &3
+        $ git log --format='%Cred%cn %Cblue%ci' 
 13.7 只显示某个提交者的提交
-    $ git log --committer=名字 &1
+    $ git log --committer=名字 
 13.8 显示指定时间之后，指定时间之前的提交
-    $ git log --since='2017-09-06 20:16:29' --until='2017-09-06 20:16:29' &1
+    $ git log --since='2017-09-06 20:16:29' --until='2017-09-06 20:16:29' 
     --since的算法是大于或等于，--until的算法是小于。
     --since和--after是同义词，--until和--before是同义词。
+
     如果是iso格式，时间部分不写则默认是零点，日期部分不写则默认是今天，日期格式
 	必须完整，不能写"2017-09"，时间格式可能只有时和分，或只有时。
     时间格式可以混合，比如可以前面用2017-09-01,后面用时间戳格式1504870791
-    $ git log --since='2017-09-01' --until='1504870791' &2
+    $ git log --since='2017-09-01' --until='1504870791' 
 14 修改提交的注释
 	修改最后一个提交的注释
     $ git commit --amend
-	修改更旧的提交的注释
+
     修改倒数5个提交的注释
-    $ git rebase -i HEAD~5 &1
+    $ git rebase -i HEAD~5 
     然后会进入一个编辑界面，以时间倒序列出最近的5次提交，最旧的提交在上面，最新
 	的提交在下面，每行以pick开头，然后跟散列值缩写，和旧注释，
-    # pick 0d885b3 椭圆曲线 &2
+    # pick 0d885b3 椭圆曲线 
     把要修改注释的提交前面的pick改成reword，
-    # reword 0d885b3 椭圆曲线 &3
+    # reword 0d885b3 椭圆曲线 
     保存退出, 然后会依次让你编辑每个要修改的提交
     再次用命令git log查看，发现被修改的提交注释变了，散列值也变了，所以这实际是
 	创建了一个新提交。
 15 制作归档
     把仓库内容做成压缩文件，不会包含.git目录未被纳进版本管理的临时文件。
 	制作tar格式归档
-    $ git archive HEAD --format=tar > 文件名.tar &1
+    $ git archive HEAD --format=tar > 文件名.tar 
+
 	制作gz格式归档
-    $ git archive HEAD --format=tar | gzip > 文件名.tar.gz &1
+    $ git archive HEAD --format=tar | gzip > 文件名.tar.gz 
+
 	不用git命令，手动归档
-    $ tar --exclude=文件1 --exclude=文件2 -cf 输出文件名.tar 被压缩的目录 &1
-    命令&1的--exclude参数可以有多个。
+    $ tar --exclude=文件1 --exclude=文件2 -cf 输出文件名.tar 被压缩的目录 
+
+    --exclude参数可以有多个。
     用git命令归档的好处是能自动排除不该放进压缩文件的文件。
 
 16 清理空间

@@ -239,6 +239,9 @@
 5.1
 	你插入一个记录时，驱动把你的输入转成BSON格式再传给数据库。
 
+	你可建立任意层次的儿收藏，比如往收藏blog下面的儿收藏abc的儿收藏bcd插一个记
+	录
+	> db.blog.abc.bcd.insert({'a':1})
 5.2
 	remove不带参数是删除所有。
 
@@ -265,6 +268,9 @@
 	> db.blog.save(bb)
 	
 	注意这里要用save，不能用insert，因为在外面的bb和里面的那个有一样的 _id。
+
+	删除键a
+	> delete db.blog.a
 5.3.2
 	如果只有记录的一部分要修改，用update不高效。可以这样写
 	> db.blog.update({'a':2}, {'$inc':{'b':2}})
@@ -454,4 +460,7 @@
 	> db.blog.find({'a':2}).sort({'x':1})
 	可以写成
 	> db.blog.find({'$query':{'a':2},'$orderby':{'x':1}})
-
+7 索引
+	这节先放一放，书上写的
+	> db.people.ensureIndex({"username" : 1})
+	没看懂，不知道这个1是什么意思。
