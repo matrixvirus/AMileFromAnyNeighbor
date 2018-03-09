@@ -17,12 +17,12 @@
     $ cd 上述建的目录 
     $ git init  
 
-    $ git remote add origin 远程仓库网址 
+    $ git remote add origin 远程仓库地址 
 
-    如果上述命令的网址敲错了，可以这样修改
-    $ git remote set-url origin 新远程仓库网址 
+    如果上述命令的地址敲错了，可以这样修改
+    $ git remote set-url origin 新远程仓库地址 
 
-    检查为远程仓库网址设置的别名origin
+    检查为远程仓库地址设置的别名origin
     $ git remote show -n origin &6
 1.3 git 的man手册查看方法
     命令行上，git后面跟的是子命令，比如要查git config的手册
@@ -45,18 +45,18 @@
     gitlab会根据这里设置的邮箱把名字换成gitlab注册的这个邮箱对应的昵称，与这里设置 的名字无关，比如，在gitlab注册了一个用户叫socrates,昵称苏格拉底，邮箱 pyh@woxintech.com, 你在命令行上用git config 设置名字为me,邮箱为pyh@woxintech.com
 ,名字不一样，邮箱一样。有了提交后，在gitlab页面上看提交历史显示提交者是苏格 拉底.
 3 公钥
-   要使用ssh形式的远程仓库网址,要先设置钥对。
+   要使用ssh形式的远程仓库地址,要先设置钥对。
 	生成公钥私钥
     $ ssh-keygen 
 
 	上传公钥
     复制文件~/.ssh/id_rsa.pub的内容，登录gitlab, 找到用户设置->SSH keys, 有一个输入框，把刚复制的内容粘贴上，点按钮Add key。
      
-4 http格式网址使用方法
-    从gitlab项目主页复制下来的http格式网址是这个样子
+4 http格式地址使用方法
+    从gitlab项目主页复制下来的http格式地址是这个样子
     http://localhost/andromeda/venus.git
     andromeda是组名，venus.git是项目在gitlab服务器上的目录名, 项目名叫venus,去掉.git。
-    需要对上述网址做一些修改,
+    需要对上述地址做一些修改,
     1. 把localhost改成gitlab服务器IP
     2. 在IP前面加上在gitlab注册的用户名，和IP间用@分隔,变成这样
     http://socrates@10.0.0.3/andromeda/venus.git
