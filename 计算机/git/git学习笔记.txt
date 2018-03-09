@@ -45,23 +45,24 @@
     $ git config --list 
     这里设置的名字和邮箱会作为提交时的身份，用git log查看提交历史时的Author部分 能看见名字和邮箱。
     在一台电脑的一处设置后，在同一电脑和其它终端，都用这个名字和邮箱。
-    gitlab会根据这里设置的邮箱把名字换成gitlab注册的这个邮箱对应的昵称，与这里设置 的名字无关，比如，在gitlab注册了一个用户叫socrates,昵称苏格拉底，邮箱 pyh@woxintech.com, 你在命令行上用git config 设置名字为me,邮箱为pyh@woxintech.com
-,名字不一样，邮箱一样。有了提交后，在gitlab页面上看提交历史显示提交者是苏格 拉底.
+    github/gitlab会根据这里设置的邮箱把名字换成注册的这个邮箱对应的昵称，与这里设置 的名字无关，比如，注册了一个用户叫socrates,昵称苏格拉底，邮箱 pyh@woxintech.com, 你在命令行上用git config 设置名字为me,邮箱为pyh@woxintech.com
+,名字不一样，邮箱一样。有了提交后，在页面上看提交历史显示提交者是苏格 拉底.
 3 公钥
    要使用ssh形式的远程仓库地址,要先设置钥对。
 	生成公钥私钥
     $ ssh-keygen 
 
 	上传公钥
-    复制文件~/.ssh/id_rsa.pub的内容，登录gitlab, 找到用户设置->SSH keys, 有一个输入框，把刚复制的内容粘贴上，点按钮Add key。
+    复制文件~/.ssh/id_rsa.pub的内容，登录github/gitlab, 找到用户设置->SSH keys, 有一个输入框，把刚复制的内容粘贴上，点按钮Add key。
      
 4 http格式地址使用方法
-    从gitlab项目主页复制下来的http格式地址是这个样子
-    http://localhost/andromeda/venus.git
-    andromeda是组名，venus.git是项目在gitlab服务器上的目录名, 项目名叫venus,去掉.git。
+    从github/gitlab项目主页复制下来的http格式地址是这个样子
+    http://服务器ip/andromeda/venus.git
+    andromeda是组名，venus.git是项目在服务器上的目录名, 项目名叫venus,去掉.git。
     需要对上述地址做一些修改,
-    1. 把localhost改成gitlab服务器IP
-    2. 在IP前面加上在gitlab注册的用户名，和IP间用@分隔,变成这样
+    1. 如果服务器ip部分是'locahost',当你用自已搭建的gitlab会遇到这种情况，把
+		localhost改成正确的服务器IP
+    2. 在IP前面加上用户名，和IP间用@分隔,变成这样
     http://socrates@10.0.0.3/andromeda/venus.git
 5 上传一个文件
 	新建一个文件
@@ -140,31 +141,31 @@
     $ git push origin :远程分支名 
 8 标签
     注意标签针对的是分支
-8.1 新建标签
+	新建标签
     $ git tag 标签名 
 
-8.2 查看标签
+	查看标签
     $ git tag 
 
-8.3 删除标签
+	删除标签
     $ git tag -d 标签名 
 
-8.4 上传本地所建标签至远程仓库
+	上传本地所建标签至远程仓库
     $ git push --tag origin 远程分支名 
     本地往远程上传时要指定连标签一起上传，下载远程至远程的git pull却会自动连标签一起下载。
 
-8.5 删除远程标签
+	删除远程标签
     $ git push origin --delete tag 远程标签名 
 
-8.6 根据标签新建分支
+	根据标签新建分支
     $ git branch 新分支名 标签名 
     新分支是当初建标签时所在分支的状态。
 
 9 拉取
-9.1 用远程仓库的master分支更新本地当前分支。
+	用远程仓库的master分支更新本地当前分支。
     $ git pull origin master 
 
-9.2 拉取同本地仓库另一个分支
+	拉取同本地仓库另一个分支
     $ git pull . 另一分支名 
 10 清理
 10.1 清理未添加到暂存区的文件
@@ -193,6 +194,7 @@
 11.3 情景二，把本库另一分支合并到当前分支，有冲突时自动选择用自已的还是对方的版本
     有冲突时直接选择对方的版本，放弃自已的
     $ git merge 分支名 -X theirs 
+
     有冲突时直接选择自已的版本，丢弃对放的
     $ git merge 分支名 -X ours 
 11.4 情景三，把远程某分支合并到本地当前分支，有冲突时自动选择用自已的还是对方的版本
@@ -206,9 +208,9 @@
     $ git add; $ git commit 
 
     在选择哪个版本前，查看自已版是什么样子，和对方版本，共同祖选版本是什么样子
-    $ git show :1:文件名 祖先版本 
-    $ git show :2:文件名 自已版本 
-    $ git show :3:文件名 对方版本 
+    $ git show :1:文件名 # 显示共同祖先版本 
+    $ git show :2:文件名 # 显示自已的版本 
+    $ git show :3:文件名 # 显示对方的版本 
 11.2.5 如果遇到报错，“拒绝合并无关的历史",
 	加一个参数 --allow-unreleated-histories
 	$ git pull origin master --allow-unreleated-histories
@@ -237,10 +239,10 @@
 	用diff显示具体文件变化
     $ git log -p 
 
-	只显示文件client.py的提交
+	只显示与文件client.py有关的提交
     $ git log -- client.py 
 
-	精简的每个提交占一行
+	精简的显示，每个提交占一行
     $ git log --pretty=oneline 
 
 	显示最近地两次提交
