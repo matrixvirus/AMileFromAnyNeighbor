@@ -1,0 +1,26 @@
+1
+	2018年03月08日。
+	参考书是Mongodb Definitive Guide, OREILLY 出版社的。
+2
+	mongodb的数据存在/data/db 目录下面。如果要修改成使用其它目录，启动服务端时
+	加一个参数--dbpath。备份可以是简单的备份这个目录。建议复制前停止mongod进程。
+3 mongodump和mongorestore
+	mongodump可以在不关闭服务端时备份，它实际是查询服务器并把结果写入一个文件。
+	
+	mongodump有这些常用参数：
+		-h|--host 服务端地址
+		-d|--db 用哪个库
+		-c|--collection 用哪个收藏
+		-u|--username 用户名
+		-p|--password 密码
+		--dbpath 数据所在目录，默认是/data/db
+		--directoryperdb 每个数据库使用一个目录
+		-o|--out 输出目录
+
+	备份test库，输出放在backup目录下
+	$ mongodump -d test -o backup
+	然后会多一个目录backup，它下面有一个目录test
+
+	用mongorestore恢复，新库叫abc
+	$ mongorestore -d abc backup/test
+	意思是把backup/test下面的数据恢复到abc库里。

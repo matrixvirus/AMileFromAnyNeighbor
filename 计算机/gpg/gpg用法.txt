@@ -101,8 +101,12 @@
 
 	导入后要一一确认
 	$ gpg --edit-key 84A0D639
-	检查指纹
+
+	检查钥对的指纹是否和发送者的一致
 	Command>  fpr
+	检查指纹还可以在执行命令
+	$ gpg --fingerprint
+
 	确认
 	Command> sign
 	检查

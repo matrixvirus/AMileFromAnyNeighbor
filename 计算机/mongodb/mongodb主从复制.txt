@@ -1,0 +1,35 @@
+1
+	2018年03月08日。
+	参考书是Mongodb Definitive Guide,OREILLY出版社的。
+2
+	下面演示在同一台机器上启动两个mongod进程，一个是主，一个是从。因为是在一台
+	机器上，两个进程使用不同端口。
+2.1
+	在主服务器上建一个目录
+	$ mkdir -p ~/dbs/master
+
+	启动主服务器的mongod
+	$ mongod --dbpath ~/dbs/master --port 10000 --master
+2.2
+	在从服务器上建一个目录
+	$ mkdir -p ~/dbs/slave
+	
+	启动从服务器的mongod
+	$ mongod --dbpath ~/dbs/slave --port 10001 --slave --source localhost:10000
+
+	--source 指主服务器地址
+
+	我执行
+	$ mongo --host localhost:10001
+
+	> show dbs
+	遇到了报错
+	listDatabases failed:{
+			"ok" : 0,
+			"errmsg" : "not master and slaveOk=false",
+			"code" : 13435,
+			"codeName" : "NotMasterNoSlaveOk"
+	} :
+	我不知道为什么，书上也没有找到解释。
+		
+	多个从进程可以连接一个主进程。不支持链式复制。	

@@ -2,47 +2,86 @@
 	2018年03月08日。
 	参考书是Mongodb The Definitive Guide,OREILLY出版社的。
 2
-	检查上一条命令的出错信息
-	> db.runCommand({getLastError:1})
-
-	删除一个叫abc的收藏
-	> db.abc.drop()
-	或者这样写
-	> db.runCommand({'drop':'abc'})
-
-	mongodb里的命令实际上是在名为 $cmd 的收藏上执行一种特殊类型的查询。
-	runCommand方法把作为命令的记录作为参数。所以drop还可以这样写
-	> db.$cmd.findOne({'drop':'abc'})
-
 	列出所有命令
 	> db.listCommands()
 
 	显示版本和其它一些信息
 	> db.runCommand({'buildInfo':1})
 
-	显示名叫abc的收藏的一些状态信息
-	> db.runCommand({'collStats':'abc'})
-
-	删除数据库
-	> db.runCommand({'dropDatabase':1})
-
-	删除收藏abc上的名叫bcd的索引
-	> db.runCommand({'dropIndexes':'abc','index':'bcd'})
-	如果要删除所索引，索引名部分写'*'
-
 	检查本服务器是主还是从
 	> db.runCommand({'isMaster':1})
-
-	列出所有数据库
-	> db.runCommand('{listDatabases':1})
 
 	检查服务器是否活着
 	> db.runCommand({'ping':1})
 
-	把收藏a改名为b
-	> db.runCommand({'renameCollection':a,'to':b})
-
 	显示一些服务器的信息
 	> db.runCommand({'serverStatsu':1})
+3 用户管理
+	每个数据库有自已的用户。
+	用户信息存在system.users收藏里。
+3.1 建用户
+
+	给admin库添加一个用户，叫root,密码是abcd
+	> user admin
+	> db.addUser('root', 'abcd')
+
+	奇怪，报错说没addUser这个函数。上网查了下，因为新版的不用addUser,现在是用
+	createUser，官网的讲解在这里
+
+	https://docs.mongodb.com/manual/reference/method/db.createUser/#create-administrative-user-with-roles
+
+	新方法是这样：
+	建一个用户对config库有readWrite权限，可以管理集群比如与负载平衡相关的设置
+	use admin
+	db.createUser(
+	   {
+		 user: 'appAdmin',
+		 pwd: 'password',
+		 roles:
+		   [
+			 { role: 'readWrite', db: 'config' },
+			 'clusterAdmin'
+		   ]
+	   }
+	)
+
+	建一个用户，只能从192.0.2.0登录到198.51.100.0
+	use admin
+	db.createUser(
+		{
+			user:'restricted',
+			pwd:'password',
+			roles:[]
+			authenticationRestrictions:[ {
+				clientSource:['192.0.2.0'],
+				serverAddresss:['198.51.100.0']
+			}]
+		}
+	}
+3.2 切换用户
+	切换到root用户，密码是940423
+	> db.auth('root', '940423')
+
+	书上好象没讲怎么检查正在使用哪个用户。
+3.3删除用户
+	删除叫root的用户
+	> db.dropUser('root')
+
+	删除所有用户
+	> db.dropAllUsers()
+
+	或者这样删除叫root的用户
+	> db.system.users.remove({'user':'root'})
+3.4 改密码
+	把用户root的密码改成940423
+	> db.changeUserPassword('root, '940423)
+3.5 检查用户信息
+	检查用户root的信息
+	> db.getUser('root')
+
+	检查所有用户的信息
+	> db.getUsers()
+3.6 给用户增加角色
+	官网的我没看懂。
 
 	

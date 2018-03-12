@@ -129,7 +129,7 @@
 	检查正在使用的test库有哪些收藏
 	> show collections
 
-	切换到foobar库，假设存在
+	切换到foobar库。如果这个库不存在，会被制作。
 	> use foobar
 
 	检查所用mongodb版本
@@ -261,7 +261,7 @@
 
 	把a为2那个记录替换成{'b':2}
 	> db.blog.update({'a':2}, {'b':2})
-
+6.2
 	可以先把记录取出来，做些处理，再放回去
 	> bb = db.blog.findOne({'a':2})
 	> bb.b = 2
@@ -269,9 +269,11 @@
 	> db.blog.save(bb)
 	
 	注意这里要用save，不能用insert，因为在外面的bb和里面的那个有一样的 _id。
+	
+	关于能对取出的记录做哪些修改，见6.7,6.8,6.9节。
 
-6.2
-	如果只有记录的一部分要修改，用update不高效。可以这样写
+6.3
+	如果只有记录的一部分要修改，用update不高效。比如把一个值加1可以这样写
 	> db.blog.update({'a':2}, {'$inc':{'b':2}})
 	$inc 意思是只把键b的值加2。如果键b不存在，则新建键b,值为2。
 	
@@ -287,7 +289,7 @@
 
 	删除数组的一个元素
 	> db.blog.update({'a':2},{'$pull":{'c':2}})
-6.3
+6.4
 	对于记录嵌套的情况，比如下面的，键c的值是一个记录，这个记录有一个键d
 	{
 		'c':
@@ -300,7 +302,7 @@
 
 	一次执行多个修改动作，比如给a加一个元素，再把b加1
 	> db.blog.update({'$push':{'a':1}, '$inc':{'b':1}})
-6.4 一次修改多个记录
+6.5 一次修改多个记录
 	update默认只修改找到的第一个记录，如果有修改所有符合条件的记录，可以给update
 	传第4个参数true
 	> db.users.update({'birthday':'08/03/1018'},
@@ -309,6 +311,106 @@
 	检查上一条命令修改了多少条记录
 	>db.runCommand({getLastError:1})
 	检查它的输出中的'n'。
+6.7 数字类型的方法
+	数字转字串
+	> b = 2
+	> b.toString()
+6.8 字串类型的方法
+	令a等于'abc'
+	> a = 'abc'
+
+	> a.charAt(n)
+		返回a的第n个字符
+
+	> a.charCodeAt(n)
+		返回a的第n个字符的ASCII码
+	
+	> a.concat('123')
+	abc123
+		和'123拼接
+	
+	> a.indexOf('b')
+		字符'b'在字串a中第一次出现的位置。0是第1位
+
+	> a.lastIndexOf('b')
+		字符'b'在字串a中最后一次出现的位置。0是第1位
+
+	> a.length
+		字串的长度
+
+	> a.ltrim()
+	或
+	> a.trimLeft()
+		删除字串左边的空白字符，包括空格，跳格和换行
+
+	> a.match('b{3}')
+		找出字串中3个'b'连在一起的字串。match方法的参数是正则式。
+
+	> a.replace('123', '444')
+		把字串a中的字串'123替换成'444'
+
+	> a.rtrim()
+	或
+	> a.trimRight()
+		删除字串右边的空白字符，包括空格，跳格和换行
+	
+	> a.search('b{3}')
+		返回字串a中子串'bbb'第一次出现的位置。search的参数是一个正则式
+
+	> a.slice(3)
+		删除字串的前面3个字符
+
+	> a.split(' ')
+		把a以空格为界分成多个字串，split的参数可以单个字符或字串
+
+	> a.substr('4')
+		删除字串前面4个字符。好象和slice一样。
+
+	> a.substring('4')
+		删除字串前面4个字符，好象和substr,slice一样。
+
+	> a.toLowerCase()
+		把大写都变成小写
+
+	> a.toUpperCase()
+		把小写都变成大写
+
+	> a.trim()
+		删除字串两边的空白字符，包括空格，跳格和换行
+
+		
+6.9 数组类型的方法
+	假设变量a是一个数组
+	a[n]
+		数组的第n个元素
+	a.concat(n)
+		其中n可以是任何类型，可以是数字，字串，数组，记录。是一个把数组和n拼接
+		成一个新数组
+	a.every(fun1)
+		其中fun1是一个函数名，它接受一个参数，把数组的每个元素依次作为函数的参
+		数，执行函数，如果每次函数的返回值都大于0,则every方法返回true,如果有至
+		少一次函数的返回值等于0,则该方法返回false
+	a.forEach(fun1)
+		其中fun1是一个函数名，依次把数组的元素作为函数的参数，执行函数。和every
+		的曲别是不关心函数返回true还是false。
+	a.indexOf(n)
+		其中n是任何值，检查一个值在数组中第一次出现的位置。
+	a.lastIndexOf(n)
+		其中n是任何值，检查一个值在数组中最后一次出丗的位置。
+	a.join(n)
+		其中n是任何字符，把数组的所有元素拼接成一个字串，元素间用字符n间隔。
+	a.length
+		数组长度。
+	a.pop()
+		删除a右边一个元素。
+	a.push(b)
+		其中b是任何类型，把元素b放入数组的右边。
+	a.reverse()
+		倒置。
+	a.sort()
+		排序。
+	...
+	未完待续
 7 查
 7.1
 	列出所有
@@ -472,3 +574,35 @@
 	这节先放一放，书上写的
 	> db.people.ensureIndex({"username" : 1})
 	没看懂，不知道这个1是什么意思。
+9 映射化简(MapReduce)
+9.1 演示用映射化简列出一个收藏的所有键
+	这一节没看懂。
+
+10 管理数据库和收藏
+	检查上一条命令的出错信息
+	> db.runCommand({getLastError:1})
+
+	删除一个叫abc的收藏
+	> db.abc.drop()
+	或者这样写
+	> db.runCommand({'drop':'abc'})
+
+	mongodb里的命令实际上是在名为 $cmd 的收藏上执行一种特殊类型的查询。
+	runCommand方法把作为命令的记录作为参数。所以drop还可以这样写
+	> db.$cmd.findOne({'drop':'abc'})
+
+	显示名叫abc的收藏的一些状态信息
+	> db.runCommand({'collStats':'abc'})
+
+	删除数据库
+	> db.runCommand({'dropDatabase':1})
+
+	删除收藏abc上的名叫bcd的索引
+	> db.runCommand({'dropIndexes':'abc','index':'bcd'})
+	如果要删除所索引，索引名部分写'*'
+
+	列出所有数据库
+	> db.runCommand('{listDatabases':1})
+
+	把收藏a改名为b
+	> db.runCommand({'renameCollection':a,'to':b})

@@ -26,7 +26,7 @@
     $ git remote set-url origin 新远程仓库地址 
 
     检查为远程仓库地址设置的别名origin
-    $ git remote show -n origin &6
+    $ git remote show -n origin 
 1.3 git 的man手册查看方法
     命令行上，git后面跟的是子命令，比如要查git config的手册
     $ man git-config
