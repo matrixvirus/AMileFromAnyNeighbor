@@ -1,0 +1,151 @@
+1
+	2018年03月11日。
+2 open,create,close
+2.1 open
+	#include <sys/types.h>
+	#include <sys/stat.h>
+	#include <fcntl.h>
+	int open(const char * pathname, int flags);
+	int open(const char * pathname, int flags, mode_t mode);
+	int creat(const char * pathname, mode_t mode);
+	其中flags必须指定O_RDONLY,O_WRONLY,O_RDWR三个中的一个，且只能一个。下面这些
+	常量是可选的：
+	O_APPEND 每次写时追加到文件尾。即使你用了lseek调整了文件偏量，不在结尾，调
+		用write时还是往尾写。
+	O_CREAT 如果文件不存在则制作它。
+	O_TRUNC 如果不是读只模式，则把文件长度截短为零。
+
+	多个常量间用位或计算加入flags参数。
+
+	如果使用了O_CREAT,则要指定第3个参数mode,它是一个或多个下列值的位或：
+	S_IRWXU 700
+	S_IRUSR 400
+	S_IWUSR 200
+	S_IXUSR 100
+	S_IRWXG 070
+	S_IRGRP 040
+	S_IWGRP 020
+	S_IXGRP 010
+	S_IRWXO 007
+	S_IROTH 004
+	S_IWOTH 002
+	S_IXOTH 001
+
+	顺利返回文件符，失败返回-1.
+2.2 creat
+	可以直接用creat函数制作文件，它的第2个参数的规则和open的一样。
+	顺利返回文件符，失败返回-1.
+2.3 close
+	#include <unistd.h>
+	int close(int fd);
+
+	顺利返回0,失败返回-1,errno被设置，可能是
+	EBADF fd不是一个有效的文件符。
+	EINTR close 调用被信号打断了。
+	EIO 发生了进出错误。
+	
+3 lseek
+	#include <sys/types.h>
+	#include <unistd.h>
+	off_t lseek(int fd, off_t offset, int whence);
+	
+	改变一个文件的偏移量,单位是字节。
+	第2个参数是偏移量，
+	第3个参数whence是从哪里开始偏移,可以是
+	SEEK_SET 0 文件首
+	SEEK_CUR 1 目前偏移
+	SEEK_END 2 文件尾
+
+	文件首的偏移量算作0。如果文件是空，则文件尾的偏移量也是0,如果文件有内容，则
+	文件尾的偏移量是文件长度加1,文件尾前面会是一个换行符，ASCII值是10,再前面才
+	是真正的文件的最后一个字符。
+
+	返回值是新的以文件首算的偏移，错误返回-1,errno被设置成：
+	EBADF fd不是一个有效的文件符。
+	EINVAL 参数whence不是SEEK_SET,SEEK_CUR,SEEK_END三个中的一个，或者最终的文件
+		偏移量将是负数或超过一个最大值。
+	EOVERFLOW
+		最终的文件偏移量超过了off_t类型的表示范围。
+	ESPIPE
+		fd 指向的是一个管道，插座，或先进先出。
+
+4 read
+	#include <unistd.h>
+	ssize_t read(int fd, void * buf, size_t count); 
+
+	顺利返回读到的字节数，文件偏移量也将增加这么多。错误返回-1,errno被设置成：
+	略。
+5 write
+	#include <unistd.h>
+	ssize_t write(int fd,const void *buf,size_t count);
+	
+	把buf里最多count个字节写进fd。返回值是写了多少字节，出错返回-1.
+
+6 pread,pwrite
+	对于先执行lseek，再执行write的方法，有一个问题，假设先执行lseek的进程是A,如
+	果有另一个进程B也打开了这个文件，在A进程执行lseek后也执行了lseek，然后进程
+	A再执行write就结果不正常。
+	pread函数把定位和读集成在一个函数里，pwrite把定位和写集成在一个函数里，不会
+	被其它进程干扰。
+
+	#include <unistd.h>
+	ssize_t pread(int fd, void *buf, size_t count, off_t offset);
+	ssize_t pwrite(int fd, const void *buf, size_t count, off_t offset);
+7 dup,dup2
+	#include <unistd.h>
+	int dup(int oldfd);
+	int dup2(int oldfd, int newfd);
+	
+	函数dup返回一个新文件符，打开由oldfd打开的同一个文件,新文件符的值是可用文件
+	符的最小值。新文件符和旧文件符指向同一个文件表，所以有相同的偏移量和文件状
+	态标志（只读，只写，读写等）。
+	
+	函数dup2使用第2个参数newfd作为新文件符。
+8 sync,fsync, fdatasync
+	将数据写入文件时，内核通常先将数据复制到缓区，待缓区满了再写入盘子，如果要
+	在缓区未满前将其中的数据写入盘子，可以用sync,fsync或fdatasync。
+
+	#include <unistd.h>
+	int fsync(int fd);
+	int fdatasync(int fd);
+	void sync(void);
+
+	sync把所有修改过的缓区排入写队列，不等待实际写盘子结束即返回。
+	fatasync的曲别是它只影响文件的数据部分，不更新文件的属性。
+9 fcntl
+	fcntl可以改变已打开文件的性质。
+
+	#include <unistd.h>	
+	#include <fcntl.h>
+	int fcntl(int fd, int cmd, ... /* args* /);
+
+	第2个参数cmd指示对文件符fd 做什么操作，它可以是
+	F_DUPFD
+		复制文件符，新文件符作为返回值。新文件符的值是可用文件符中最小的大于或
+		等于第3个参数的。
+	F_GETFD
+		返回文件符标志。
+	F_SETFD
+		用第3个参数，是个long型，设置文件符标志。
+	F_GETFL
+		返回文件状态标志。第3个参数被忽略。文件状态是open函数的第2个参数。	
+		O_RDONLY,O_WRONLY,O_RDWR,O_EXEC,O_SEARCH这5个位因为不是独立的因而不能检
+		测。打断一下，O_EXEC是为执行而打开,O_SEARCH为搜索目录而打开，书上只在这
+		里提到了这两个值。对这5个位要用O_ACCMODE与函数返回值或算，再与这5个值比
+		较，见例子p3.4。
+	F_SETFL
+		用第3个参数，是个long型，设置文件状态标志。linux上只能修改O_APPEND,
+		O_ASYNC,O_DIRECT,O_NOATIME,O_NONBLOCK标志。
+	F_GETOWN
+		返回负责为fd接收SIGIO,SIGURG信号的进程号或进程组号，进程号作为正数返回，
+		进程组号作为负数返回。
+	F_SETOWN
+		第3个参数是long型。设置负责接收SIGIO和SIGURG信号的进程号或进程组号，进
+		程号是正数，进程组号是负数。
+
+	如果出错，所有命令都返回-1.
+
+	例子，见p3.4.c，打印一个文件符的文件标志。
+	例子，见p3.12.c,使用fcntl给一个文件符加上或取消某个标志。
+
+

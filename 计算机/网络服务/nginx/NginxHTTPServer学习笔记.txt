@@ -204,6 +204,9 @@
 	server_name .website.com; # 包括了*.website.com和website.com
 	server_name *.website.*;
 	server_name ~^(www)\.example\.com$;
+
+	server_name _;
+		_ 的意思是匹配任何。
 4.3.3 server_name_in_redirect
 	语境：http,server,location
 	这个指令在内部改向时用，如果是on，nginx用server_name指令指定的第一个hostname
@@ -253,6 +256,13 @@
 	。。。
 4.3.8 rewrite
 	在186面。
+4.3.9 autoindex
+	location /abc/ {
+		autoindex on;
+	}
+	如果abc目录下面没有index.html，则列出这个目录的内容。
+	假如abc目录在系统中的绝对路径是/a/b/c/abc，则nginx必须对abc目录上层的a,b,c
+	目录都有执行许可，对abc有读许可。
 4.4 与客户端请求相关设置
 4.4.1 keepalive_requests
 	语境：http,server,location

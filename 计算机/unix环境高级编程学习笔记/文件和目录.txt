@@ -1,0 +1,77 @@
+1
+	2018年03月14日。
+	参考书unix环境高级编程。
+2 stat,fstat,lstat
+	#include <sys/types.h>
+	#include <sys/stat.h>
+	#include <unistd.h>
+	int stat(const char *pathname, struct stat *buf);
+	int fstat(int fd, struct stat *buf);
+	int lstat(const char * pathname, struct stat * buf);
+
+	stat函数返回与一个文件有关的信息结构，fstat和stat的区别是使用文件符作参数，
+	lstat的特点是当文件链接，返回该链接本身的信息，而不是它指向的文件。	
+
+	3个函数都是正常返回0,出错返回-1。
+
+	struct stat 的结构是：
+	struct stat {
+		mode_t st_mode;
+			// 文件类型 & 模式 (许可)
+		ino_t st__ino;
+			// i节号
+		dev_t st_dev;
+			// 设备号（文件系统）
+		dev_t st_rdev;
+			// 特殊文件的设备号
+		nlink_t st_nlink;
+			// 链接数量
+		uid_t st_uid;
+			// 所有者的用户ID
+		gid_t st_gid;
+			// 所有者的组ID
+		off_t st_size;
+			// 大小，单位字节，对于普通文件
+		time_t st_atime;
+			// 最后访问时间
+		time_t st_mtime;
+			// 最后文件内容修改时间
+		time_t st_ctime;
+			// 最后文件状态修改时间
+		blksize_t st_blksize;
+			// 最好的输进输出块大小
+		blkcnt_t st_blocks;
+			// 被分配的盘子块数量
+	}
+
+	文件类型有7种，
+	1 普通文件
+	2 目录
+	3 块特殊文件
+		这种文件类型提供对设备（如盘子）带缓冲的访问，每次访问以固定长度为单位
+		进行。
+	4 字符特殊文件
+		这种文件类型提供对设备不带缓冲的访问，每次访问长度可变。系统中的所有设
+		备要么是字符特殊文件，要么是块特殊文件。
+	5 先进先出（FIFO）
+		这种文件类型用于进程间通信，有时也叫命令的管道(named pipe)。
+	6 插座
+		这种文件类型用于进程间网络通信。
+	7 符号链接
+		这种文件类型指向另一个文件。
+
+	例子，检查一个文件的类型，见p4.1.c。
+
+	<sys/stat.h>中的检查文件类型宏
+	S_ISREG()
+	S_ISDIR()
+	S_ISCHR()
+	S_ISBLK()
+	S_ISFIFO()
+	S_ISLNK()
+	S_ISSOCK()
+
+	<sys/stat.h>中的检查IPC类型宏
+	S_TYPEISMQ()
+	S_TYPEISSEM()
+	S_TYPEISSHM()
