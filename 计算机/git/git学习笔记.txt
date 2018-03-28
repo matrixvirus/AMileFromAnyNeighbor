@@ -6,26 +6,31 @@
  #开头表示在文件里面输入的内容
  %开头表示终端输出的内容
 1 克隆远程仓库
-	远程仓库是指github或gitlab的仓库，你要在github/gitlab上注册一个帐号
+	这里远程仓库是指github或gitlab的仓库，你要在github/gitlab上注册一个帐号
 	建自已的一个项目（或者叫库），一个仓库刚建立时在其主页会显示其地址。
 
-	当你给这个库传了些文件后，它的主页就不显示它的地址了，这时你可以在项目主页
-	上点那个'Setting'按钮，往下翻，找到'Github Pages'，那里显示了你的项目地址。
-	
-	其中gitlab可以是你自已搭建的，这里不讲怎么搭建。
 1.1 方法1:
     $ git clone 远程仓库地址 
+
+	其中仓库地址有http和ssh两种，http的是这个样子
+	https://github.com/matrixvirus/AMileFromAnyNeighbor.git
+	
+	ssh的是这个样子
+	git@github.com:matrixvirus/AMileFromAnyNeighbor.git
+
+	其中http的是http还是https取决于仓库所在服务端的设置。
 1.2 方法2:
-    $ mkdir 远程仓库名 
+    $ mkdir 仓库名 
     $ cd 上述建的目录 
     $ git init  
 
+	为远程仓库地址设置一个别名，不一定必须是origin
     $ git remote add origin 远程仓库地址 
 
     如果上述命令的地址敲错了，可以这样修改
     $ git remote set-url origin 新远程仓库地址 
 
-    检查为远程仓库地址设置的别名origin
+    检查设置的别名
     $ git remote show -n origin 
 1.3 git 的man手册查看方法
     命令行上，git后面跟的是子命令，比如要查git config的手册
