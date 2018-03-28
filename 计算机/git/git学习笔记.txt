@@ -18,7 +18,14 @@
 	ssh的是这个样子
 	git@github.com:matrixvirus/AMileFromAnyNeighbor.git
 
-	其中http的是http还是https取决于仓库所在服务端的设置。
+	其中http的是http还是https取决于仓库所在服务机的设置。
+
+    从github/gitlab项目主页复制下来的http格式地址是这个样子
+    http://服务器ip/andromeda/venus.git
+    andromeda是组名或用户名，venus.git是项目在服务器上的目录名, 项目叫venus。
+    需要对上述地址做一些修改, 在IP前面加上用户名，和IP间用@分隔,变成这样
+	https://matrixvirus@github.com/matrixvirus/AMileFromAnyNeighbor.git
+		    ___________
 1.2 方法2:
     $ mkdir 仓库名 
     $ cd 上述建的目录 
@@ -30,8 +37,12 @@
     如果上述命令的地址敲错了，可以这样修改
     $ git remote set-url origin 新远程仓库地址 
 
-    检查设置的别名
+    检查设置的别名origin
     $ git remote show -n origin 
+	其中-n参数跟别名，但是可以不写-n直接写别名。
+
+	列出设置了哪些别名
+	$ git remote show
 1.3 git 的man手册查看方法
     命令行上，git后面跟的是子命令，比如要查git config的手册
     $ man git-config
@@ -40,45 +51,44 @@
     $ git config --global user.name 名字 
     $ git config --global user.email 邮箱 
 
-    取消设置一个值
+    取消设置一个值，使用--unset
     $ git config --global --unset user.name
 
-    专门为本仓库设置一个名字，而不是全局的
+    专门为本仓库设置一个用户名，而不是全局的，不加--global
     $ git config user.name 名字
 
-    检查上述命令设置的名字和邮箱
+    检查上述设置的用户名和邮箱
     $ git config --list 
+
     这里设置的名字和邮箱会作为提交时的身份，用git log查看提交历史时的Author部分 能看见名字和邮箱。
-    在一台电脑的一处设置后，在同一电脑和其它终端，都用这个名字和邮箱。
-    github/gitlab会根据这里设置的邮箱把名字换成注册的这个邮箱对应的昵称，与这里设置 的名字无关，比如，注册了一个用户叫socrates,昵称苏格拉底，邮箱 pyh@woxintech.com, 你在命令行上用git config 设置名字为me,邮箱为pyh@woxintech.com
-,名字不一样，邮箱一样。有了提交后，在页面上看提交历史显示提交者是苏格 拉底.
+
+    github/gitlab会根据这里设置的邮箱把名字换成注册的这个邮箱对应的昵称，与这里
+设置 的名字无关，比如，注册了一个用户叫socrates,昵称苏格拉底，邮箱 
+archimedes_newton@163.com, 你在命令行上用git config 设置名字为me,邮箱为
+archimedes_newton@163.com
+,名字不一样，邮箱一样。有了一次提交后，在页面上看提交历史显示提交者是苏格 拉底.
+
 3 公钥
    要使用ssh形式的远程仓库地址,要先设置钥对。
+
 	生成公钥私钥
     $ ssh-keygen 
+	然后按提示操作。
 
 	上传公钥
     复制文件~/.ssh/id_rsa.pub的内容，登录github/gitlab, 找到用户设置->SSH keys, 有一个输入框，把刚复制的内容粘贴上，点按钮Add key。
      
-4 http格式地址使用方法
-    从github/gitlab项目主页复制下来的http格式地址是这个样子
-    http://服务器ip/andromeda/venus.git
-    andromeda是组名，venus.git是项目在服务器上的目录名, 项目名叫venus,去掉.git。
-    需要对上述地址做一些修改,
-    1. 如果服务器ip部分是'locahost',当你用自已搭建的gitlab会遇到这种情况，把
-		localhost改成正确的服务器IP
-    2. 在IP前面加上用户名，和IP间用@分隔,变成这样
-    http://socrates@10.0.0.3/andromeda/venus.git
+4 
+	这里曾经有内容，因为编辑，这里的内容删了。
 5 上传一个文件
-	新建一个文件
-    $ touch readme 
+	在本地的库目录里，新建一个文件假设叫readme。
 
-    用git status命令查看工作树状态，显示刚建的文件readme状态是未跟踪。
+    用git status命令查看工作树状态，显示刚建的文件readme的是未跟踪。
     $ git status 
 
 	往暂存区添加文件readme
     $ git add readme 
-    注意git add对空目录无效。
+    注意如果readme不是一个文件，是一个目录，git add对空目录无效。
 
     再次用git status命令显示文件readme状态是新建
     $ git status 
@@ -100,6 +110,7 @@
 	上传
     $ git push origin master
     origin是远程主机名,master是远程分支名,命令意思是把当前本地仓库所在分支上传到origin代指的远程仓库的master分支。
+
 6 编辑文件撤回
 6.1 假设修改了文件readme的内容，还没执行git add命令, 
     $ git checkout master readme 
@@ -189,6 +200,9 @@
     命令git clean默认不会清理被文件.gitignore忽略的文件，
 	如果要清它们要加参数-x
     $ git clean -dfx
+10.4 清理旧文件
+	$ git reflog expire --expire=now --all
+	$ git gc --aggressive --prune=now
 11 合并
 11.1 合并后手动编辑冲突文件
     执行git pull,或git merge后，如果是手动编辑了冲突文件，编辑完后执行
@@ -239,7 +253,7 @@
 12 自已建一个可以被git push的本地仓库
     服务器上的仓库是祼仓库，可以被push,一般仓库被push是没有效果的。 一般仓库下面是文件和一个.git目录，祼仓库直接是.git目录的内容。
     $ git init --bare
-13 git log参数
+13 git log技巧
 13.1
 	用diff显示具体文件变化
     $ git log -p 
@@ -247,7 +261,10 @@
 	只显示与文件client.py有关的提交
     $ git log -- client.py 
 
-	精简的显示，每个提交占一行
+	只显示某个提交者的提交
+    $ git log --committer=名字 
+
+	简化的显示，每个提交占一行
     $ git log --pretty=oneline 
 
 	显示最近地两次提交
@@ -258,6 +275,7 @@
 
     只显示增改行数总量，不显示具体单个文件
     $ git log --shortstat 
+
 13.2
 	以c语言的printf格式化风格输出
     $ git log --pretty=format:'%H' 
@@ -268,7 +286,7 @@
     也可以写--format
     $ git log --format='%H' 
     上例的%H是提交的完整散列值，完整的格式字符列表可以git-log man手册里搜%H跳到，
-13.6.1 常用格式字符
+13.2.2 常用格式字符
     %H 完整的提交的散列值
     %h 缩写的提交的散列值
     %cn 提交者名字
@@ -298,9 +316,7 @@
     %Cred 红色 %Cgreen 绿色 %Cblue 蓝色
         比如用红色显示提交者，用蓝色显示日期
         $ git log --format='%Cred%cn %Cblue%ci' 
-13.7 只显示某个提交者的提交
-    $ git log --committer=名字 
-13.8 显示指定时间之后，指定时间之前的提交
+13.3 显示指定时间之后，指定时间之前的提交
     $ git log --since='2017-09-06 20:16:29' --until='2017-09-06 20:16:29' 
     --since的算法是大于或等于，--until的算法是小于。
     --since和--after是同义词，--until和--before是同义词。
@@ -337,8 +353,5 @@
     --exclude参数可以有多个。
     用git命令归档的好处是能自动排除不该放进压缩文件的文件。
 
-16 清理空间
-	$ git reflog expire --expire=now --all
-	$ git gc --aggressive --prune=now
 17 Git学习指南这本书一些知识点的页码
 17.1 关于快进合并的讲解在第五十二面。
