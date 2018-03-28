@@ -2,6 +2,7 @@
 	2018年03月14日。
 	参考书unix环境高级编程。
 2 stat,fstat,lstat
+2.1
 	#include <sys/types.h>
 	#include <sys/stat.h>
 	#include <unistd.h>
@@ -75,3 +76,70 @@
 	S_TYPEISMQ()
 	S_TYPEISSEM()
 	S_TYPEISSHM()
+2.2 关于实际用户ID和有效用户ID
+	实际用户ID和实际组ID是登录的那个，有效用户ID和有效组ID决定了我们的文件访问
+	许可，执行一个程序文件时，进程的有效用户ID通常是实际用户ID，但是可以在
+	st_mode里设置一位，意思是"执行此文件时，将进程的有效用户ID设
+	置成文件的所有者ID",还可以设置一位，使执行此文件时，将进程的有效组ID设置成
+	文件的所有者组ID。
+	比如，如果文件所有者是超级用户，而且设置了设置用户ID位，当该程序由一个进程
+	执行时，则该进程有超级用户特权，不管该进程的实际用户ID是什么。
+	可以用S_ISUID和S_ISGID检查是否设置了设置用户ID位和设置组ID位。
+2.3 文件访问权限
+	st_mode包含了访问权限位。有这些宏可用：
+	S_IRUSR 检查所有者是否有读许可
+	S_IWUSR 检查所有者是否有写许可
+	S_IXUSR 检查所有者是否有执行许可
+	S_IRGRP 检查所属组是否有读许可
+	S_IWGRP 检查所属组是否有写许可
+	S_IXGRP 检查所属组是否有执行许可
+	S_IROTH 检查其它人是否有读许可
+	S_IWOTH 检查其它人是否有写许可
+	S_IXOTH 检查其它人是否有执行许可
+
+	要打开一个目录里的一个文件，需要对其路径上的每一层都有执行许可，比如要打开
+	/usr/include/stdio.h，你需要对/,/usr/,/usr/include都有执行许可，并对stdio.h
+	有适当许可。
+	目录的读许可允许你得到其下的文件列表。
+	要在一个目录下新建文件，需要对该目录有写许可和执行许可。
+	要删除一个文件，需要对其所在目录有写许可和执行许可。
+2.4 新文件和目录的所有者
+	新文件和用户ID是执行新建动作的进程的有效用户ID。
+
+	关于新文件的组ID，有两种选择：
+	1 是执行新建动作的进程的有效组ID
+	2 是所在目录的组ID
+	然后书上没说实际上是哪一种。
+3 access和faccessat函数
+	当用open函数打开一个文件，内核以进程的有效用户ID和有效组ID为基础执行访问许
+	可测试。有时，进程希望按其实际用户ID和实际组ID来测试其访问能力，access函数
+	是做这个的。
+
+	#include <unistd.h>
+	int access(const char * pathname, int mode);
+	int faccessat(int dirfd, const char * pathname, int mode, int flags);
+	第2个参数可以是F_OK，检查文件是否存在，或者下面三个中的一个或多个的或算：
+	R_OK 读
+	W_OK 写
+	X_OK 执行
+
+	例子，见p4.2.c。
+
+	当faccessat的fd参数是AT_FDCWD,pathname是相对路径，或pathname是绝对路径时，
+	faccessat和access一样，否则faccessat，把pathname作为fd所指的目录的相对路径。
+	flag参数可以调整faccessat的行为。如果AT_EACCESS位被设置，将使用有效用户和组
+	ID而不是实际用户和组ID来做检查。
+4 umask函数
+	umask函数设置一个进程的文件模式制作掩码，返回以前的值。
+
+	#include <sys/stat.h>
+	#include <sys/types.h>
+	mode_t umask(mode_t cmask);
+
+	cmask参数是2.3节的九种模式的或算。
+	文件模式制作掩码在进程制作新文件或目录时使用，掩码里被设置的位在文件里将被
+	关闭。
+
+	例子，制作两个文件，一个使用掩码0,一个禁用所有组和其它人的许可，见p4.9.c。
+
+

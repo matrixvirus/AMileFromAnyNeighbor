@@ -1,0 +1,33 @@
+1
+	2018年03月28日。
+
+	网卡显示为eht1，怎样改成eth0。
+2
+2.1
+	确定要改名的网卡的MAC地址。
+
+	可以这样做：
+	$ ip addr show dev eth0 | awk '{if (NR==2){print $2}}'
+
+	我的输出是这样：
+	f0:de:f1:78:0d:23
+
+2.1.2 关于上面的awk命令的解释：
+	awk '{if (NR==2){print $2}}'
+
+	它要处理的输入是这个样子
+	2: eth0: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN group default qlen 1000
+    link/ether f0:de:f1:78:0d:23 brd ff:ff:ff:ff:ff:ff
+
+	(NR==2) 意思是 遇到第2行时，就是"link/ether" 开头的第2行。
+	print $2 意思是输出第2列数据，输入的第2行中，"link/ether" 是第1列数据，
+		"f0:de:f1:78:0d:23" 是第2列数据。
+		
+		
+2.2 编辑/etc/udev/rules.d/70-persistent-net.rules
+	找到 f0:de:f1:78:0d:23 那一行，象这个样子
+	SUBSYSTEM=="net", ACTION=="add", DRIVERS=="?*", ATTR{address}=="f0:de:f1:78:0d:23", ATTR{dev_id}=="0x0", ATTR{type}=="1", KERNEL=="eth*", NAME="eth1"
+
+	把后面NAME="eth1" 改成eth0。
+
+	重启系统。
