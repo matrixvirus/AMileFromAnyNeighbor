@@ -21,7 +21,7 @@
 
     http格式中，yixin是组名，它是一个组名还是用户名取决于在github/gitlab中这个
 	库属于一个用户还是一个组，WorkFileCoop是库名。
-    实际使用http格式时需要对上述地址做一些修改, 在IP前面加上用户名，和IP间用@分
+    实际使用http格式时需要做一些修改, 在IP前面加上用户名，和IP间用@分
 	隔,变成这样
 	https://archimedes@192.168.3.136/yixin/WorkFileCoop.git	
 		    __________
@@ -79,9 +79,8 @@ archimedes_newton@163.com
 	上传公钥
     复制文件~/.ssh/id_rsa.pub的内容，登录github/gitlab, 找到用户设置->SSH keys, 有一个输入框，把刚复制的内容粘贴上，点按钮Add key。
      
-4 
-	这里曾经有内容，因为编辑，这里的内容删了。
 5 上传一个文件
+5.1
 	在本地的库目录里，新建一个文件假设叫readme。
 
     用git status命令查看工作树状态，显示刚建的文件readme的是未跟踪。
@@ -103,64 +102,86 @@ archimedes_newton@163.com
 
     用git log命令查看提交历史
     $ git log 
-
+5.2
+	建议删除，改名等操作都用git，不用系统命令。系统命令的操作都不被git跟踪。
 	删除
     $ git rm 文件名 
-    $ git commit 
+	改名
+	$ git mv 旧名 新名
 
+	用git的命令集对文件操作后，可以直接执行git commit,如果是用系统命令操作了文件
+	，执行git commit时会报错有示跟踪的修改。
+
+	但是不管用系统命令怎样操作了文件，最后都可以
+	$ git add -A
+	或
+	$ git add .
+	然后执行git commit。
+
+5.3
 	上传
     $ git push origin master
     origin是远程主机名,master是远程分支名,命令意思是把当前本地仓库所在分支上传到origin代指的远程仓库的master分支。
 
+	常用-u参数
+	$ git push -u|--set-upstream origin master
+	意思是下次执行git push 不带其它参数时，自动把master推到origin。
 9 拉取
+9.1
 	用远程仓库的master分支更新本地当前分支。
     $ git pull origin master 
 
 	拉取同本地仓库另一个分支
     $ git pull . 另一分支名 
+9.2 
+	git pull 是git fetch 和git merge FETCH_HEAD的组合。
 11 合并
 11.1 合并后手动编辑冲突文件
-    执行git pull,或git merge后，如果是手动编辑了冲突文件，编辑完后执行
-    $ git add; $ git commit 
-11.2 情景一，强制用另一个库覆盖当前库
-    $ git fetch 远程主机 远程分支 
+	假如别人编辑了一个文件内容是123456，在你之前提交了，你编辑了一个名字一样的
+	文件，内容是111111，然后你不能提交，你必须先合并别人前面提交的。
+    执行git pull,你的那个文件变成了这样
+	<<<<<<< HEAD
+	111111
+	=======
+	123456
+	>>>>>>> ed43c9c767ad9f99cc7fb606aad7fe381c38c08b
+
+	<<<<<<< HEAD和=======之间的是你的内容，
+	=======下面的是别人的内容
+	ed43c9c767ad9f99cc7fb606aad7fe381c38c08b 是别人的提交码。
+
+	然后你可以编辑这个文件，决定取舍自已的或别人的内容，然后执行
+    $ git add 文件名; $ git commit 
+11.2 强制用另一个库覆盖当前库
+    $ git fetch origin master
     $ git reset --hard FETCH_HEAD 
-11.3 情景二，把本库另一分支合并到当前分支，有冲突时自动选择用自已的还是对方的版本
-    有冲突时直接选择对方的版本，放弃自已的
+11.3 自动选择用自已的还是对方的版本
+	先
+	$ git fetch origin master
+
+    选择对方的版本，放弃自已的
     $ git merge 分支名 -X theirs 
 
-    有冲突时直接选择自已的版本，丢弃对放的
+    选择自已的版本，丢弃对放的
     $ git merge 分支名 -X ours 
-11.4 情景三，把远程某分支合并到本地当前分支，有冲突时自动选择用自已的还是对方的版本
-    有冲突时直接选择对方的版本，放弃自已的
+11.4 自动选择，直接用git pull，不执行git fetch和git merge两步
+    选择对方的版本，放弃自已的
     $ git pull origin 远程分支名 -X theirs 
 
-    有冲突时直接选择自已的版本，丢弃对方的
+    选择自已的版本，丢弃对方的
     $ git pull origin 远程分支名 -X ours 
-11.5 情景四, 执行git pull 或git merge后，手动选择个别文件用自已的还是对方的
+11.5 执行git pull后，手动选择个别文件用自已的还是对方的
+	选择对方的
     $ git checkout --theirs 文件名 
-    $ git add; $ git commit 
+	选择自已的
+    $ git checkout --ours 文件名 
+
+    $ git add 文件名; $ git commit 
 
     在选择哪个版本前，查看自已版是什么样子，和对方版本，共同祖选版本是什么样子
     $ git show :1:文件名 # 显示共同祖先版本 
     $ git show :2:文件名 # 显示自已的版本 
     $ git show :3:文件名 # 显示对方的版本 
-11.2.5 如果遇到报错，“拒绝合并无关的历史",
-	加一个参数 --allow-unreleated-histories
-	$ git pull origin master --allow-unreleated-histories
-
-11.3 取消合并
-11.3.1 合并还没提交
-   $ git reset --hard HEAD 
-   或
-   $ git reset --merge 
-   或
-   $ git reset --hard ORIG_HEAD 
-11.3.2  如果没有冲突的合并了, 或者手动提交了，上述三条命令不会把文件退到合并前
-    $ git revert 提交的SHA -m 1
-
-11.3.3 取消合并再次合并
-    $ git revert 取消合并的那次提交
 
 13 git log技巧
 13.1
