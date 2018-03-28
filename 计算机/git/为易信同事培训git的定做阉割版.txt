@@ -103,14 +103,14 @@ archimedes_newton@163.com
     用git log命令查看提交历史
     $ git log 
 5.2
-	建议删除，改名等操作都用git，不用系统命令。系统命令的操作都不被git跟踪。
+	建议删除，改名都用git，不要用系统命令。系统命令对文件的修改不被git跟踪。
 	删除
     $ git rm 文件名 
 	改名
 	$ git mv 旧名 新名
 
 	用git的命令集对文件操作后，可以直接执行git commit,如果是用系统命令操作了文件
-	，执行git commit时会报错有示跟踪的修改。
+	，执行git commit时会报错有未跟踪的修改。
 
 	但是不管用系统命令怎样操作了文件，最后都可以
 	$ git add -A
@@ -152,7 +152,7 @@ archimedes_newton@163.com
 
 	然后你可以编辑这个文件，决定取舍自已的或别人的内容，然后执行
     $ git add 文件名; $ git commit 
-11.2 强制用另一个库覆盖当前库
+11.2 用另一个库覆盖当前库
     $ git fetch origin master
     $ git reset --hard FETCH_HEAD 
 11.3 自动选择用自已的还是对方的版本
@@ -164,7 +164,7 @@ archimedes_newton@163.com
 
     选择自已的版本，丢弃对放的
     $ git merge 分支名 -X ours 
-11.4 自动选择，直接用git pull，不执行git fetch和git merge两步
+11.4 自动选择，直接用git pull，不分成git fetch和git merge两步
     选择对方的版本，放弃自已的
     $ git pull origin 远程分支名 -X theirs 
 

@@ -81,6 +81,7 @@ archimedes_newton@163.com
 4 
 	这里曾经有内容，因为编辑，这里的内容删了。
 5 上传一个文件
+5.1
 	在本地的库目录里，新建一个文件假设叫readme。
 
     用git status命令查看工作树状态，显示刚建的文件readme的是未跟踪。
@@ -102,15 +103,29 @@ archimedes_newton@163.com
 
     用git log命令查看提交历史
     $ git log 
-
+5.2
+	建议删除，改名都用git，不要用系统命令。系统命令对文件的修改不被git跟踪。
 	删除
     $ git rm 文件名 
-    $ git commit 
+	改名
+	$ git mv 旧名 新名
 
+	用git的命令集操作文件后，可以直接执行git commit，如果是用系统命令操作了文件
+	，执行git commit时会报错有未跟踪的修改。
+
+	但是不管用系统命令怎么操作了文件，最后都可以
+	$ git add -A
+	或
+	$ git add .
+	然后执行git commit。
+5.3
 	上传
     $ git push origin master
     origin是远程主机名,master是远程分支名,命令意思是把当前本地仓库所在分支上传到origin代指的远程仓库的master分支。
 
+	常用-u参数
+	$ git push -u|--set-upstream origin master
+	意思是下次执行git push 不带其它参数时，自动把master推到origin。
 6 编辑文件撤回
 6.1 假设修改了文件readme的内容，还没执行git add命令, 
     $ git checkout master readme 
@@ -204,26 +219,41 @@ archimedes_newton@163.com
 	$ git reflog expire --expire=now --all
 	$ git gc --aggressive --prune=now
 11 合并
-11.1 合并后手动编辑冲突文件
-    执行git pull,或git merge后，如果是手动编辑了冲突文件，编辑完后执行
-    $ git add; $ git commit 
-11.2 情景一，强制用另一个库覆盖当前库
+11.1 假如别人编辑了一个文件内容是123456，在你之前提交了，你编辑了一个名字一样的
+	文件，内容是111111，然后你不能提交，你必须先合并别人前面提交的。
+    执行git pull,你的那个文件变成了这样
+	<<<<<<< HEAD
+	111111
+	=======
+	123456
+	>>>>>>> ed43c9c767ad9f99cc7fb606aad7fe381c38c08b
+
+	<<<<<<< HEAD和=======之间的是你的内容，
+	=======下面的是别人的内容
+	ed43c9c767ad9f99cc7fb606aad7fe381c38c08b 是别人的提交码。
+
+	然后你可以编辑这个文件，决定取舍自已的或别人的内容，然后执行
+    $ git add 文件名; $ git commit
+11.2 用另一个库覆盖当前库
     $ git fetch 远程主机 远程分支 
     $ git reset --hard FETCH_HEAD 
-11.3 情景二，把本库另一分支合并到当前分支，有冲突时自动选择用自已的还是对方的版本
+11.3 自动选择用自已的还是对方的版本
     有冲突时直接选择对方的版本，放弃自已的
     $ git merge 分支名 -X theirs 
 
     有冲突时直接选择自已的版本，丢弃对放的
     $ git merge 分支名 -X ours 
-11.4 情景三，把远程某分支合并到本地当前分支，有冲突时自动选择用自已的还是对方的版本
-    有冲突时直接选择对方的版本，放弃自已的
+11.4 自动选择，直接用git pull，不分成git fetch和git merge两步
+    选择对方的版本，放弃自已的
     $ git pull origin 远程分支名 -X theirs 
 
-    有冲突时直接选择自已的版本，丢弃对方的
+    选择自已的版本，丢弃对方的
     $ git pull origin 远程分支名 -X ours 
-11.5 情景四, 执行git pull 或git merge后，手动选择个别文件用自已的还是对方的
+11.5 执行git pull后，手动选择个别文件用自已的还是对方的
+	选择对方的
     $ git checkout --theirs 文件名 
+	选择自已的
+    $ git checkout --ours 文件名 
     $ git add; $ git commit 
 
     在选择哪个版本前，查看自已版是什么样子，和对方版本，共同祖选版本是什么样子
