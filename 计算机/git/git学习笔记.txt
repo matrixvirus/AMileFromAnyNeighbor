@@ -43,6 +43,9 @@
 
 	列出设置了哪些别名
 	$ git remote show
+
+	删除别名origin
+	$ git remote remove origin
 1.3 git 的man手册查看方法
     命令行上，git后面跟的是子命令，比如要查git config的手册
     $ man git-config
@@ -237,13 +240,13 @@ archimedes_newton@163.com
 11.2 用另一个库覆盖当前库
     $ git fetch 远程主机 远程分支 
     $ git reset --hard FETCH_HEAD 
-11.3 自动选择用自已的还是对方的版本
-    有冲突时直接选择对方的版本，放弃自已的
+11.3 和本地另一分支合并，自动选择用自已的还是对方的版本
+    选择对方的版本，放弃自已的
     $ git merge 分支名 -X theirs 
 
-    有冲突时直接选择自已的版本，丢弃对放的
+    选择自已的版本，丢弃对放的
     $ git merge 分支名 -X ours 
-11.4 自动选择，直接用git pull，不分成git fetch和git merge两步
+11.4 和远程库合并,自动选择
     选择对方的版本，放弃自已的
     $ git pull origin 远程分支名 -X theirs 
 
@@ -254,7 +257,7 @@ archimedes_newton@163.com
     $ git checkout --theirs 文件名 
 	选择自已的
     $ git checkout --ours 文件名 
-    $ git add; $ git commit 
+    $ git add 文件名; $ git commit 
 
     在选择哪个版本前，查看自已版是什么样子，和对方版本，共同祖选版本是什么样子
     $ git show :1:文件名 # 显示共同祖先版本 
