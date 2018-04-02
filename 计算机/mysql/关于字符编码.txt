@@ -1,0 +1,17 @@
+1 关于字符编码
+	检查与字符编码有关的变量
+	mysql> SHOW VARIABLEDS LIKE '%char%';
+	+--------------------------+----------------------------+
+	| Variable_name            | Value                      |
+	+--------------------------+----------------------------+
+	| character_set_client     | latin1                     |
+	| character_set_connection | latin1                     |
+	| character_set_database   | utf8                       |
+	| character_set_filesystem | binary                     |
+	| character_set_results    | latin1                     |
+	| character_set_server     | utf8                       |
+	| character_set_system     | utf8                       |
+	| character_sets_dir       | /usr/share/mysql/charsets/ |
+	+--------------------------+----------------------------+
+
+	建议把这些值是latin1的都改成utf8，并在/etc/my.cnf里保存设置。

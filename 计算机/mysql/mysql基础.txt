@@ -94,6 +94,10 @@
 3.2.5 改字符集
 	演示把表contact的字符集改成latin1
 	mysql> ALTER TABLE CONVERT TO CHARACTER SET latin1;
+3.2.6 给表加注释
+	mysql> ALTER TABLE t1 COMMENT='注释';
+3.2.7 给列加注释
+	mysql> ALTER TABLE t1 MODIFY 'Id' INT COMMENT '这是编号'
 4 使用剧本
 	写一个文件叫AtomBomb.sql，内容是
 	-- 这是注释
@@ -375,6 +379,9 @@
 
 	把用户zyc的密码改成940423
 	mysql> SET PASSWORD FOR zyc = password('940423');
+
+	检查正在用的哪个用户
+	mysql> SELECT current_user();
 13 导入导出数据
 	把表contact的数据导出到文件
 	mysql> SELECT * FROM contact INTO OUTFILE 'a.txt';
@@ -431,18 +438,17 @@
 
 	删除索引
 	mysql> DROP INDEX himalayan ON contact;
-		
 
 4
 	在系统命令行上检查有哪些库，上面是在mysql内
 	$ mysqlshow
 
 	在系统命令行上检查一个库有哪些表，上面是在mysql内
-	$ mysqlshow contact
+$ mysqlshow contact
 
-	检查有哪些马达可用
-	mysql> SHOW ENGINES;
+检查有哪些马达可用
+mysql> SHOW ENGINES;
 
-	检查有哪些支持交易的马达
-	mysql> SELECT ENGINE FROM INFORMATION_SCHEMA.ENGINES 
-		WHERE TRANSACTIONS='YES';
+检查有哪些支持交易的马达
+mysql> SELECT ENGINE FROM INFORMATION_SCHEMA.ENGINES 
+	WHERE TRANSACTIONS='YES';
