@@ -1,0 +1,6 @@
+1
+	2018年03月30日。
+2
+	把左Ctrl键映射为向下键
+	$ xmodmap -e 'keysym Control_R = Down'
+	-e 后面跟表达式，可以跟多个表达式
