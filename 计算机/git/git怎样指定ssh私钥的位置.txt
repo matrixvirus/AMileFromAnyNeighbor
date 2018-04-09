@@ -1,8 +1,24 @@
 0
 
 1
-		ssh-keygen命令制作的ssh公钥默认位置是~/.ssh/id_rsa.pub，私钥默认是
+	ssh-keygen命令制作的ssh公钥默认位置是~/.ssh/id_rsa.pub，私钥默认是
 	~/.ssh/id_rsa，git默认读~/.ssh/id_rsa的私钥，如果私钥不在这个位置，比如是
-	~/.ssh/id_rsa_20180409，则git不会自动找到它，可以这样为git指定私钥：
-		export GIT_SSH_COMMAND='ssh -i ~/.ssh/id_rsa_20180409'
-		然后执行git的各种命令比如push,pull则都用的是id_rsa_20180409这个私钥。
+	~/.ssh/id_rsa_20180409，则git不会自动找到它。
+
+	可以这样为git指定私钥位置：
+	export GIT_SSH_COMMAND='ssh -i ~/.ssh/id_rsa_20180409'
+
+	其中export是必须的。
+	然后执行git的各种命令比如push,pull则都用的是id_rsa_20180409这个私钥。
+
+	GIT_SSH_COMMAND用于在git连接远程库时替代单纯的'ssh'，可以为ssh加上额外
+	参数，ssh的-i参数是指定私钥位置的。
+
+2
+	可以修改ssh的配置文件，使其能识别除~/.ssh/id_rsa以外的私钥。可以改/etc/ssh
+	/ssh_config或者用户自已的~/.ssh/config。在配置文件里加上
+
+	IdentityFile ~/.ssh/id_rsa
+	IdentityFile ~/.ssh/id_rsa_20180409
+
+	则这两个私钥都能自动被ssh使用。
