@@ -1,0 +1,7 @@
+0
+
+1
+	查看gpg有哪些私钥
+	$ gpg --list-secret-keys
+
+	选择一个私钥
