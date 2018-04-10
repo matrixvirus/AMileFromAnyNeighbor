@@ -49,8 +49,8 @@
 	删除私钥
 	$ gpg --delete-secret-key 84A0D639
 	
-2.2 
-	列出公钥。--list-keys实际意思是--list-public-keys
+2.2 列出钥
+	 列出公钥
 	$ gpg --list-keys
 	pub   2048D/84A0D639 2018-03-01
 	uid       [ 绝对 ] 彭一航 (Address) <archimedes_newton@163.com>
@@ -61,13 +61,19 @@
 		84A0D639是这个钥对的标志，叫Key ID，以后的命令都要用这个作
 		为参数指定是哪个钥对。
 	第2行 uid是User ID 的意思，2048右边的g是Elgamal算法的意思。
-	第3行 sub 是subordinate的意思。
+	第3行 sub 是subordinate(附属的)的意思。
+
+	--list-keys和--list-public-keys一样
 
 	列出私钥
 	$ gpg --list-secret-keys
 
-	产生易于被编程处理的输也
+	产生易于被编程处理的输出
 	$ gpg --list-keys --with-colons
+
+	以长格式显示标志
+	$ gpg --list-keys --keyid-format long
+	--keyid-format 的默认值是shorta。
 2.3 制作撤回证明
 	制作钥对后应立即为主公钥制作一个撤回证明，如果你忘了密码或者私钥丢了，你需要
 	公布撤回证明以告知他人你的公钥不能再用了。一个被撤回的公钥仍可以用于确认你以
