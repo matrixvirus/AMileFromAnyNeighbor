@@ -1,0 +1,81 @@
+1
+
+2
+2.1 名词介绍
+	1 SMB
+	全称是Server Message Block，基于NetBIOS服务。微软发明这个协议所以其
+	它系统可能连接windows机器。
+	2 CIFS
+	全称是Common Internet File System,是另一种samba支持的协议，定义了
+	一种标准远程文件系统访问协议。
+	3 NetBIOS
+	是一种API,为通信的机器提供一种名字服务，允许连接的机器预约一个
+	名字，机器可以被用这个名字定位。每天机器可以有任意多个名字，只要不重复。
+	
+	NetBIOS定义的名字和/etc/hosts还有DNS的没有关系。
+	4 DC
+	Domain Controller,处理一个域中的帐户的服务器。
+
+	我只是照翻英文，摸不着头脑。
+2.2 samba的三个进程	
+	1 smbd
+	  提供共享服务，占用两个端口139,445。	
+	2 nmbd
+	  提供名字服务。
+	3 winbindd
+3 
+3.1 安装
+	$ zypper install samba
+	或
+	$ yum install samba
+3.2 启动
+	$ systemctl start smb.service
+	或
+	$ service start smb
+4 配置
+	配置文件是/etc/samba/smb.conf
+	这个文件有七大部分
+		global homes profiles users groups printers print$
+
+	这是一个例子
+	[public]
+    comment = Public Stuff
+    path = /home/samba
+    public = yes
+    read only = no
+    writable = yes
+    printable = no
+    write list = +staff
+
+4.1 
+	用testparm检查/etc/samba/smb.conf有没有错误
+	$ testparm
+4.2 为samba添加用户
+	新建一个系统用户
+	$ useradd samba
+	$ passwd samba
+
+	把用户samba添加进samba
+	$ smbpasswd -a samba
+	
+	重启服务。	
+5 客户端连接
+5.1 客户端是linux
+5.1.1 方法1
+	使用samba用户，把主机server_ip的名为public的共享挂载到abc目录。参数-t cifs
+	指示被挂的一个samba共享。
+	$ mount -t cifs -o username=samba //server_ip/public abc
+
+5.1.2 使用smbclient
+	$ smbclient -U samba //server_ip/public
+5.2 客户端是windows
+5.2.1 方法1
+	在cmd里，检查一个服务端提供了哪些共享
+	C:\> net view \\server_ip
+
+	把一个共享映射到一个盘符
+	C:\> net use j: \\server_ip\public
+5.2.2 方法2
+	按win键+R，或任务管理器的菜单 文件->新建任务，或文件夹的地址栏，输入
+	\\server_ip\public
+	然后输用户名和密码，就是前面设的samba/samba。
