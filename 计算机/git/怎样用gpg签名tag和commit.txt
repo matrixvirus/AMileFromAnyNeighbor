@@ -1,0 +1,49 @@
+0
+	2018年04月09日。
+1 设置git
+	查看gpg有哪些私钥
+	$ gpg --list-secret-keys
+
+	选择一个私钥，假设是C13D78D9，执行
+	$ gpg config --global user.signingkey C13D78D9
+2 签名一个tag
+	签名一个tag，加上-s参数，假设这个tag叫v0.1。你必须有用于签名的私钥。
+	$ gpg tag -s v0.1
+
+	确认一个被签名的tag，加-v参数。你必须有用来签名的私钥对应的公钥。
+	$ gpg tag -v v0.1
+
+	查看tag v0.1
+	$ gpg show v0.1
+	可以看到输出中有这段内容：
+	________________________________________________________________
+	签名的v0.1
+	-----BEGIN PGP SIGNATURE-----
+	Version: GnuPG v2
+
+	iQEcBAABAgAGBQJazCGpAAoJEGNuk4HBPXjZjl4H/A3Tc1HuqbaPc7rtLzTyaQxw
+	KgmMWl1Nwcy7LB3jX1qbQf7zF4aSbgb2H13C82Wjqg3b8ufV/oQKPDXaqAJAWnAq
+	ojbazNKoEhzbRvnAOlpMcEg09ajtM451BGCxxn4i92A/K+ClNc4aBDZttGY/MyyS
+	ud+fOSUCduojxhv4//R61nOyulT/JpqiigcxZ/GDhFkZEQjgeGrncM2Cyf0y8tSj
+	kWTvyJiJsWn/4w17T30oUC94ytxSjSgi2XaLE41myDg5607HI0fVLh9Y/CaP0YjL
+	QxzSEGaVbUga/mEmYI68AB5H14GgAH0ek2oNqGy66ec0dYMJtA/FxEE7UWL1y5M=
+	=6Ojs
+	-----END PGP SIGNATURE-----
+	________________________________________________________________
+	
+	那一长串乱字是签名。
+
+3 签名一个提交
+	给git commit 加-S参数
+	$ git commit -S -m "这是一个签名的提交"
+
+	在git log 查看提交的签名信息，加--show-signature
+	$ git log --show-signature
+	
+	执行git merge或git pull时检查并拒绝不信任的签名的提交，加--verify-signature
+	$ git merge --verify-signature ABranchName
+
+	合并时检查别人的签名，并对这次合并签名，加-S
+	$ git merge --verify-signature -S ABranchName
+
+	
