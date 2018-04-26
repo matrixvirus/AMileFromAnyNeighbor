@@ -1,7 +1,0 @@
-Slashdot
-Multitasking Harmful To Productivity 333
-Posted by timothy on Monday August 06, 2001 @03:59AM from the better-turn-off-the-television dept.
-Greyfox writes: "According to a CNN article, a person who is multitasking several things takes a hit on his productivity. Oddly enough, it reads almost exactly like a description of the problem with multitasking on computers; context switches cost, especially if you have to swap a lot of crap out in order to fit the new process into memory. So basically, an employee who can stay focussed on one thing for long periods of time is going to have higher productivity than one who has to handle constant interrupts. Now if I could get my manager to buy into that ..."
-一个人同时做几件事生产力会下降。很奇怪这似乎很象电脑的多进程问题，上下文切换的
-开销，尤其当你要为新来的进程从内存腾出一堆乱七八糟的东西。所以长时间专注一件
-事的雇员比被经常干扰的有更高的生产力.我的领导知道这一点就好了。

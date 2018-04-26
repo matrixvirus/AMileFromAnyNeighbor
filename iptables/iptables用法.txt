@@ -106,6 +106,9 @@
 
 	接收ESTABLISHED，RELATED两种状态的包
 	$ iptables -A FORWARD -m state --state ESTABLISHED,RELATED -j ACCEPT
+
+    怎么使你能平别人，别人不能平你
+    $ iptables -I INPUT 1 -p icmp -m state --state NEW -j REJECT
 4 规则管理
 4.6 清空一个表的所有规则
 	清空filter表
@@ -156,73 +159,3 @@
 	命令名从iptables变成ip6tables,命令中地址要写ipv6的
 	例如
 	$ ip6tables -A INPUT -i eth0 -p tcp -s 3ffe:ffff:100::1/128 --dport 22 -j ACCEPT
-
-8 ipset
-	ipset 是一个工具，管理IP sets,这里的set是集合的意思，IP sets是一个概念，指一
-	种保存IP地址，端口，IP和物理地址对，IP和端口对的机制。这里的'对'是pair的意
-	思。这种集合使用了索引使匹配能很快。
-	这种集合在内核里，我们不需要知道它到底是什么格式。
-8.1  入门例子
-	假如有3条iptables命令
-	$ iptables -A INPUT -s 10.0.0.8/8 -j DROP
-	$ iptables -A INPUT -s 172.16.0.0/12 -j DROP
-	$ iptables -A INPUT -s 192.168.0.0/16 -j DROP
-
-	可以通过使用ipset，改写成这样
-	$ ipset create my-block-set hash:net
-	$ ipset add my-block-set 10.0.0.0/8
-	$ ipset add my-block-set 172.16.0.0/12
-	$ ipset add my-block-set 192.168.0.0/16
-	然后iptables引用这个集合
-	$ iptables -A INPUT -m set --set my-block-set src -j DROP
-
-	上面命令的ipset右边的create和add是ipset的子命令，一共有这些子命令
-	create add del test destroy list save restore flush rename swap help version
-
-	那个hash:net,hash指的是保存方法，一共有3种方法
-	bitmap hash list
-	net指的是数据类型，一共有5种数据类型
-	ip net mac port iface
-
-	用ipset add命令往一个集合添加的条目如果有多个部分，用逗号隔开,象这样
-	ipset add set-name ipaddr,portnum,ipaddr
-8.2 
-例2
-	$ ipset create my-set hash:ip,port,ip
-	$ ipset add my-set 192.168.1.2,80,192.168.2.2
-	$ ipset add my-set 192.168.1.2,443,192.168.2.2
-	'hash:ip,port,ip'定义的格式是ip,端口，ip，后面的add命令要符合这个格式。
-例3 列出一个集合信息
-	$ ip list my-set
-例4 检查一个条目是否在一个集合里
-	$ ipset test my-set 192.168.1.2,80,192.168.2.2
-	192.168.1.2,tcp:80,192.168.2.2 is in set my-set.
-8.3 bitmap格式
-例5 建立一个集合，条目是IP,限制范围
-	$ ipset create my-range bitmap:ip range 192.168.33.0/28
-	往这个集合添加一个地址
-	$ ipset add my-range 192.168.33.1
-	检查这个集合有哪些条目
-	$ ipset list my-range
-	添加连续多个地址
-	$ ipset add my-range 192.168.33.2-192.168.33.4
-例6 跟例5差不多，换一种写法格式
-	$ ipset create my-big-range bitmap:ip range 192.168.124.0-192.168.126.0 netmask 24
-	添加一个网段
-	$ ipset add my-big-range 192.168.124.0
-	如果你添加了一个IP,实际添加的是这个IP所在的网段
-	$ ipset add my-bit-range 192.168.125.150
-	实际添加了网段192.168.125.0/24
-例7 创建一个集合包含IP和物理地址对
-	$ ipset create my-range bitmap:ip,mac range 192.168.1.0/24
-	$ ipset add my-range 192.168.1.1,12:34:56:78:9A:BC
-例8 添加一个集合包含一段端口
-	$ ipset create my-permitted-port-range bitmap:port range 1024-49151
-	$ ipset add my-permitted-port-range 5060-5061
-8.4 hash格式
-例9
-	$ ipset create my-busy-addresses hash:ip maxelem 24 netmask 28 timeout 100
-	maxelem是这个集合最多有24个条目
-	netmask 指集合里的ip的掩码
-	timeout 指集合里的一个条目只存在100秒。
-	

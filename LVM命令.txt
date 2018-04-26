@@ -33,10 +33,7 @@
 	化不频繁的话，快照的只需要被照方百分之三到五的空间。快照是一种伪复制，不能
 	代替备份。
 
-3 操作步聚
-3.1 我的伪机环境
-	一台伪机，系统CentOS-6.9,3盘伪盘子，用/dev/sdb,/dev/sdc做实验，5G。
-3.2 物理卷
+3 物理卷
 	检查可用于制作物理卷的大块设备
 	$ lvdiskscan
 
@@ -56,10 +53,11 @@
 	把物理卷/dev/sdb 变成它本身分区大小
 	$ pvresize /dev/sdb
 
-3.3 卷组	
-	制作卷组vg1
+4 卷组	
+4.1 制作
+	制作卷组vg1，参数vg1是新作卷组的名字，/dev/sdb,/dev/sdc是组成卷组的物理卷。
 	$ vgcreate vg1 /dev/sdb /dev/sdc
-
+4.2 移除物理卷
 	从卷组vg1里移除物理卷/dev/sdc
 	$ vgreduce vg1 /dev/sdc	
 	删除物理卷/dev/sdc
@@ -69,31 +67,35 @@
 
 	把物理卷/dev/sdc 添加到逻辑卷vg1
 	$ vgextend vg1 /dev/sdc
+4.3 删除
 	删除卷组vg1
 	$ vgremove vg1
 
 	再次制作卷组vg1,指定子牙大小是16M
 	$ vgcreate vg1 --physicalextentsize 16M /dev/sdb /dev/sdc
-	
+4.4	检查
 	检查卷组vg1
 	$ vgdisplay vg1
 	或者用vgscan
 	$ vgscan
 	我不知道为什么要同时存在这两个命令。
-
+4.5 起活灭活
 	起活一个卷组的所有逻辑卷，-a右边的y是yes的意思
 	$ vgchange -a y vg1
 	灭活一个卷组的所有逻辑卷，-a右边的n是no的意思
 	$ vgchange -a n vg1
 	书上说很多情况会需要灭活一个卷组，没说是哪些情况。
-
+4.6 改名
 	把卷组vg1 改名成 vgshit
 	$ vgrename vg1 vgshit
 	再改回叫vg1
 	$ vgrename vgshit vg1
-
-3.4 逻辑卷
-3.4.1 线性逻辑卷
+4.7 改变卷组大小
+	把卷组vg1改成100个子牙大小
+	$ vgchange -s 100 vg1
+	-s参数除了跟子牙数量，还能跟B,K,M,G。
+5 逻辑卷
+5.1 线性逻辑卷
 	在卷组vg1上制作一个逻辑卷叫lv1,630个子牙，卷组vg1本来有638个子牙
 	$ lvcreate -l 630 -n lv1 vg1
 	然后/dev/下面多了一个目录vg1,vg1下面有一个文件叫lv1。
@@ -117,15 +119,15 @@
 	$ lvdisplay /dev/vg1/lv1
 	删除
 	$ lvremove /dev/vg1/lv1
-3.4.2 条纹逻辑卷
+5.2 条纹逻辑卷
 	制作条纹卷，使用2个物理卷，10G,刘备大小64KB
 	$ lvcreate -L 10G -i 2 -I 64 -n lv1 vg1
-3.4.3 对称逻辑卷
+5.3 对称逻辑卷
 	制作对称卷，一次备份，-m后的数字指定备份数量
 	$ lvcreate -l 300 -m1 -n lv1 vg1
 	双重备份
 	$ lvcreate -l 300 -m2 -n lv1 vg1
-3.4.4 制作快照
+5.4 制作快照
 	在卷组vg1上制作逻辑卷lv1时，要留一点空间制作快照，书上没说具体留多少
 	为/dev/vg1/lv1制作快照，100M
 	$ lvcreate --size 100M --snapshot --name snap /dev/vg1/lv1
@@ -140,7 +142,7 @@
 	使用快照恢复
 	$ lvconvert --merge /dev/vg1/snap
 	恢复后，/dev/vg1/snap不见了
-3.4.5 改变逻辑卷大小
+5.5 改变逻辑卷大小
 	减3个子牙大小
 	$ lvreduce -l -3 /dev/vg1/lv1
 	或
@@ -153,7 +155,7 @@
 	
 	改成10个子牙大小
 	$ lvresize -l 10 /dev/vg1/lv1
-3.4.6 
+5.6 
 	把一个逻辑卷设成读只
 	$ lvchange -pr /dev/vg1/lv1
 	

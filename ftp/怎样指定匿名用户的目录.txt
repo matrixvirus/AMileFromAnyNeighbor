@@ -1,0 +1,5 @@
+
+1
+	centos6上，vsftpd匿名登录的目录默认是/var/ftp/pub，编辑/etc/vsftpd/
+	vsftpd.conf，加参数anon_root指定匿名用户目录
+	anon_root=/home/

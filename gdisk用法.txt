@@ -1,0 +1,103 @@
+0
+	2018年04月26日。
+	参考书是网站http://rodsbooks.com/gdisk。
+1
+	gdisk,cgdisk,sgdisk,fixparts是一组Linux,FreeBSD,Mac OS X,Windows使用的命令
+	行分区工具，gdisk,cgdisk,sgdisk工作在Globally Unique Identifier(GUID)
+	Partition Table(GPT)分区类型的盘子上，而不是旧的Master Boot Record(MBR)
+	分区表上。fixparts程序修复MBR分区类型盘子的错误，把主分区转成逻辑分区或反
+	过来。
+2 MBR的限制
+	从最早的x86电脑开始，盘子分区的方法已经换了几个名字，从ms-dos盘子标签，BIOS
+	分区，到MBR分区。不管叫什么名字，MBR分区方法有一些限制：
+	1. MBR系统本来只提供4个分区，称为4个主分区，一个主分区又可以分成任意数量的
+		逻辑分区以绕过这个数量限制。有的操作系统只能从主分区启动。
+	2. MBR用一个字节长度的代码使操作系统能识别分区类型，这里指的是MBR下面又划分
+		不同的类型，比如0xb(11)表示FAT32，0x8e(142）表示linux逻辑卷，0x83(131)
+		表示linux分区，fdisk命令内的l命令可以显示所有代码。1个字节长度有时会造
+		成误会，比如0x82(130)即表示linux交换分区，又表示solaris盘子标签。
+	3. MBR用柱面(cylinder),头(head),扇区(sector)，我们用CHS表示这3个概念，来定
+	   位分区的位置，但是有问题，不同的BIOS，操作系统可能对CHS有不同解释，而且
+	   CHS方法限制最大分区大小为8G，为了绕过这个限制，MBR又用32位的逻辑块定位
+		方法（logical block addressing,LBA)，但是混用CHS，LBA两种方法，有时导致
+		两种方法的数据不一致，现代操作系统经常忽略CHS的值，而且必须忽略超过8G			的分区的。
+	4. 为了配合业已成为标准的512字节扇区大小，32位的LBA指针限制盘子和分区最大
+		为2T，2^32 * 512 = 2 ^ 40 ^ 2 = 1T * 2,2的40次方是1T，这个限制不象原来
+		的CHS的8G限制那
+		么容易绕过。
+	5. MBR分区容易损坏。主分区表在盘了第1个扇区，这个扇区坏了，整个盘子的分区就
+		没了。逻辑分区存在于遍布一个扩展分区的链式数据结构里，一个链坏了，所有
+		逻辑分区都没了。
+3 GPT如何解决MBR的问题
+	1. GPT支持最多128个分区。
+	2. GPT用16字节表示分区类型代码，叫GUID。同时GPT支持给分区起一个名字，不是代
+		码。
+	3. GPT使用64位扇区指针，所以最大分区大小是2^64 * 512 = 2^70 * 8=8Z，2^50是
+		1P，2^60是1E,2^70是1Z。
+	4. GPT给它的数据结构添加CRC32（cyclic redundancy check)校验和，并保存两份，
+		盘子开头一份，结尾一份，可以抵御意外。
+
+	为了兼容旧的为MBR设计的分区程序，GPT在盘子第1个扇区仍然保留了一个MBR分区表，
+	它称整个盘子是一个分区，分区类型代码是0xee，标明这是一个GPT分区。
+4 fdisk程序怎样使用GPT
+	fdisk中，命令o制作一个MBR分区表，命令g制作一个GPT分区表，然后作分区，删分区
+	等操作是一样的。
+5 gdisk程序
+	gdisk和fdisk类型，但是是专为GPT设计的。
+
+	用法：	
+	$ gdisk /dev/sdc
+
+	然后输入help查看可用命令
+	b       back up GPT data to a file
+		备份GPT数据到一个文件
+	c       change a partition's name
+		改变分区名字
+	d       delete a partition
+		删除分区，后面跟数字的编号
+	i       show detailed information on a partition
+		显示分区的详细信息，后面跟数字的编号
+	l       list known partition types
+		列出所有分区类型
+	n       add a new partition
+		新作分区
+	o       create a new empty GUID partition table (GPT)
+		作一个新GPT分区表
+	p       print the partition table
+		显示所有分区
+	q       quit without saving changes
+		不保存修改并退出
+	r       recovery and transformation options (experts only)
+		恢复和转换选项（只给专家用）
+	s       sort partitions
+		排序分区。GPT分区的编号不一定和分区在盘子上的物理顺序一致，这个命令可以
+		使它们一致。比如排序后可能原来的/dev/sdc1变成了/dev/sdc2,原来的/dev/sdc
+		2变成了/dev/sdc1。注意排序后可能要修改/etc/fstab。
+	t       change a partition's type code
+		改变一个分区的类型代码
+	v       verify disk
+		检查盘子
+	w       write table to disk and exit
+		保存修改
+	x       extra functionality (experts only)
+		额外功能（只给专家用）
+	?       print this menu
+
+6 sgdisk程序
+	sgdisk和gdisk的区别是它不是交互式的，gdisk里的子命令在sgdisk里都是命令行参
+	数。
+
+	比如，备份分区表
+	$ sgdisk -b FileName /dev/sdc
+
+	显示所有分区
+	$ sgdisk -p /dev/sdc
+
+	显示第2个分区的详细信息
+	$ sgdisk -i 2 /dev/sdc
+
+7 cgdisk程序
+	cgdisk和gdisk的区别是编程上使用了curse库，使产品的界面傻瓜化。
+
+	用法：
+	$ cgdisk /dev/sdc

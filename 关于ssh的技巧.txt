@@ -1,0 +1,12 @@
+0
+    2018-04-20。
+1 怎样修改ssh私钥的密码
+    格式: ssh-keyge -p -P 旧密码 -f 私钥位置
+    其中-p是修改密码的意思。
+    例：
+    $ ssh-gen -p -P '940423' -f ~/.ssh/id_rsa
+
+2 怎样修改sshd的洞口
+	改/etc/ssh/sshd_config的Port。
+	或者启动sshd时加参数-p。
+
