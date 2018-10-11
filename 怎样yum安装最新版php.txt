@@ -1,0 +1,4 @@
+rpm -Uvh https://mirror.webtatic.com/yum/el7/webtatic-release.rpm
+
+然后用 yum 搜索php可以看到php71w,php72w等，
+yum search php
