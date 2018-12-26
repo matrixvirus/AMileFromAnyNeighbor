@@ -1,0 +1,11 @@
+0
+    firewall setup for keepalived.
+    test in centos 7.
+    
+1.1 iptables
+    run
+    $ iptables -t filter -I INPUT 1 -p vrrp -j ACCEPT
+1.2 firewalld
+    run
+    $ firewall-cmd --direct --add-rule ipv4 filter INPUT 0 --protocol vrrp -j ACCEPT
+    

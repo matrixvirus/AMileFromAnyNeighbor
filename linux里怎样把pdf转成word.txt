@@ -1,0 +1,15 @@
+0
+
+1 pdf转word
+	$ libreoffice --headless --convert-to doc a.pdf
+
+	--headless 意思是不显示libreoffice的启动画面，不使用用户交互，使这个命令适
+		合在命令行使用。
+
+	--convert-to 指目标格式，可以是doc,txt,pdf。
+
+	如果要把word转成pdf
+	$ libreoffice --headless --convert-to pdf a.doc
+
+2
+

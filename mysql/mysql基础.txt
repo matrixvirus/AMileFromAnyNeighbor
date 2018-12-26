@@ -409,6 +409,7 @@
 	mysql> SET GLOBAL read_only = OFF;
 
 15 外键
+15.1
 	建表BodyInfo后设置Name列和表contact的Name列是外键关系，
 	mysql> ALTER TABLE BodyInfo ADD FOREIGN KEY (`Name`) REFERENCES 
 		contact(Name) [ON UPDATE CASCADE];
@@ -420,11 +421,11 @@
 	ON DELETE CASCADE 妈表删除，儿表也删除
 	ON DELETE SET NULL 妈表删除后，儿表置空
 	UPDATE的和DELETE的一样。
-
+15.2
 	建表时设置外键
 	mysql> CREATE TABLE t1(Name VARCHAR(64), FOREIGN KEY (Name) REFERENCES 
 		contact(Name));
-15 索引
+16 索引
 	给表contact的列Name添加索引，索引名叫himalayan
 	mysql> ALTER TABLE contact ADD [UNIQUE] INDEX himalayan(Name);
 	或者

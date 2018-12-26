@@ -1,0 +1,6 @@
+0
+    本程序试验时的对象是openSUSE-Leap-42.3。
+    
+    下载 http://opensuse-community.org/codecs-kde.ymp
+    
+    在桌面环境点鼠标打开这个文件，
