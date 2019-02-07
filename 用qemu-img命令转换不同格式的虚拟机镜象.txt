@@ -1,0 +1,6 @@
+0
+    语法：
+    qemu-img convert -f 原格式 -O 目格式 原文件 目文件
+
+    例，把abc.raw转成abc.qcow2
+    qemu-img convert -f raw -O qcow2 abc.raw abc.qcow2

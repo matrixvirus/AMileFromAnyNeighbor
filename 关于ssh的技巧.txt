@@ -10,3 +10,14 @@
 	改/etc/ssh/sshd_config的Port。
 	或者启动sshd时加参数-p。
 
+
+3 关于ssh连接一个电脑时等一会才要你输密码
+    网上搜到了两点，一是在被连接的电脑上编辑/etc/ssh/sshd_config
+    GSSAPIAuthentication no
+    意思是是否用GSSAPI验证用户。
+    二是
+    UseDNS no
+    是否根据IP解析域名或反向根据IP解析域名。
+
+    然后重启服务。
+    我试验发现第一条没有用，第二条有用。

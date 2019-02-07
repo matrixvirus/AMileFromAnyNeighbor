@@ -1,0 +1,11 @@
+0
+    about the problem of when nginx is on a inside net,listen on 80,
+    and the firewall on the gateway map the port 8080 of pub ip to
+    80 on the nginx server,
+
+    but when open the site from outsite,using pubip:8080,
+    when you click some link,the url will becomes to pubip:80.
+
+    the solution to this is,add
+        port_in_redirect off;
+    to the server block in nginx.conf.

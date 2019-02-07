@@ -1,0 +1,5 @@
+0
+    what packages are pre required for compiling nginx on centos 7.
+
+1
+    pcre-devel zlib-devel
