@@ -1,0 +1,8 @@
+0
+    how to specify a different ssh port for rsync client
+    command
+    
+1
+    guess the new port is 15022, use 
+        -e 'ssh -p 15022'
+    rsync -e 'ssh -p 15022' -r ip:/dir/ /dir/

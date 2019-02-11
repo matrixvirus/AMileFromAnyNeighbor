@@ -1,0 +1,7 @@
+0
+	using wget for https.
+
+1
+	for working with https,argu --no-check-certificate is needed.
+	for example:
+	wget --no-check-certificate https://localhost/abc.jpg

@@ -92,8 +92,25 @@
 	规则，叫伪装，把局域网内发往外面的包用出口路由器的对外接口eth0的IP掩盖。
 	$ iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
 
-	把收到的到80端口的包转发给另一台机器172.31.0.23的80端口
-	$ iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to-destination 172.31.0.23:80
+	把收到的到80端口的包转发给另一台机器172.31.0.23的80端口.假设被设置iptables
+    的机器自己的ip是172.31.0.22.需要执行两条命令，
+	$ iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT \
+        --to-destination 172.31.0.23:80
+    $ iptables -t nat -A POSTROUTING -i eth0 -p  tcp -d 172.31.0.23 --dport 80 \
+        -j SNAT --to-source 172.31.0.22
+    注意，两条命令都是必须的。
+    两条命令的区别:
+        1. 第1条的-A后面是PREROUTING,第2条的-A后面是POSTROUTING,
+        2. 第1条的-j后面是DNAT，后面跟--to-destination,第2条的-j后面是SNAT,
+           后面跟--to-source。
+        3. 第1条的作用是把自已(172.31.0.22)接收的80口的流量转给23的80口，                  第2条的作用是把自已（172.31.0.22）发给23的80口的流量的源地址改成自
+           已，源端口不变。
+    第2条命令可以改成：
+    $ iptables -t nat -A POSTROUTING -i eth0 -p tcp -d 172.31.0.23 --dport 80 \
+        -j MASQUERADE
+    -j 后面的'SNAT --to-source 172.31.0.22' 改成MASQUERADE.
+        
+
 
 	把收到的到80到90端口的包的目标端口都改成100,目标地址不变
 	$ iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 80:90 -j DNAT --to-destination :100
@@ -134,14 +151,22 @@
 	然后删除它
 	$ iptables -D INPUT -j ACCEPT
 5 怎样启用linux转发包功能
-方法1
+5.1 方法1
 	$ sysctl -w net.ipv4.ip_forward=1
 	这种方法重启后失效。
-方法2
+5.2 方法2
 	编辑/etc/sysctl.conf,改一行
 	net.ipv4.ip_forward = 1
+
 	然后执行命令，使修改生效，
 	$ systcl -p /etc/sysctl.conf
+
+    -p 后面的/etc/sysctl.conf可以不写，因为/etc/sysctl.conf是默认的。
+5.3 方法3
+    $ echo 1 > /proc/sys/net/ipv4/ip_forward
+
+    /proc/sys/net/ipv4/ip_forward 的内容会在重启后变回0.
+
 6 怎样用iptables限制网速
 6.1 限制一段时间内的包数量
 	限制每分钟最多接受1个包

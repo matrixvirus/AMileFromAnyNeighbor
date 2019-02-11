@@ -1,0 +1,12 @@
+0
+    
+1
+    suppose you want to change /var/www/html to /home/local/iso,
+
+    <VirtualHost *:80>
+        DocumentRoot "/home/local/iso"
+        <Directory "/home/local/iso">
+            Require all granted
+        </Directory>
+    </VirtualHost>
+    

@@ -1,0 +1,23 @@
+0
+    How to change timezone on centos 6.
+1
+    At the dir /usr/share/zoneinfo,there are many countries,and many cities
+    under each country.
+
+    If you current timezone is Asia/Shanghai,then if you run
+    $ file /etc/localtime
+    you will see it is a symbolink to /usr/share/zoneinfo/Asia/Shanghai.
+
+    To change the timezone,
+    remove the current /etc/localtime
+    $ rm /etc/localtime
+
+    Create a new /etc/localtime links to another zoneinfo file,for exaple,
+    New York,
+    $ ln -s /usr/share/zoneinfo/America/New_York /etc/localtime
+
+    See whether the timezone has been changed:
+    $ date +%Z
+
+        
+    

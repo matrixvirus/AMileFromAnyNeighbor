@@ -1,0 +1,23 @@
+How to green light NFS
+This document is typed by myself based on a turorial on web, no guaranty
+for correct.
+Step 1 : Configure NFS Ports
+The NFS service uses the RPC Bind service to advertise the protocals/ports
+it's using. To make our iptables configure nice and clean, we will statically
+configure these ports rather than leave it up to the RPC God to decide.
+Edit the NFS port definitions file
+    vim /etc/sysconfig/nfs
+Uncomment the following lines and save the file
+    LOCKD_TCPPORT = 32803
+    LOCKD_UDPPORT = 32769
+    MOUNTD_PORT = 892
+Restart the NFS and RPC Bind services
+    /etc/init.d/rpcbind restart
+    /etc/init.d/nfs restart
+Step 2 : Configure iptables
+    iptables -I INPUT -m state --state NEW -p tcp -m multiport --dport \
+        111,892,2049,32803 -j ACCEPT
+    iptables -I INPUT -m state --state NEW -p udp -m multiport --dport \
+        111,892,2049,32803 -j ACCEPT
+Note, the port numbers after --dport have no space
+ 

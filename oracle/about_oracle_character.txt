@@ -1,0 +1,9 @@
+0
+    about oracle character.
+
+1
+    SELECT * FROM NLS_DATABASE_PARAMETERS WHERE parameter='NLS_CHARACTERSET';
+
+    SELECT * FROM V$NLS_PARAMETERS;
+
+    SELECT USERENV('language') FROM DUAL;

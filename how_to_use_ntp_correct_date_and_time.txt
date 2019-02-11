@@ -1,0 +1,55 @@
+0
+    How to use ntp to correct date and time.
+    Testing environment:centos 7,opensuse 15.0.
+
+1
+1.1 Install ntp and configure ntp.conf
+    Install ntp,using yum or zypper,
+    $ yum install ntp
+
+    Edit /etc/ntp.conf,add a line to the end,
+    # server http://time.nist.gov
+
+    time.nist.gov is not the only public ntp server you can use,but these below
+    are all available:
+        http://www.pool.ntp.org/zone/cn/
+        http://cn.pool.ntp.org/
+        http://time.windows.com/
+        http://time.nist.gov/
+        http://time.apple.com/
+        http://time.asia.apple.com/
+        http://cn.ntp.org.cn/
+        http://ntp.aliyun.com/
+1.2 Set the timezone to Asia/Shanghai,
+    See current time and date:
+    $ timedatectl
+    
+    See there are how many timezones can be choosed:
+    $ timedatectl list-timezones
+
+    Set the timezone to Asia/Shanghai
+    $ timedatectl set-timezone Asia/Shanghai
+
+1.3 Start the ntpd service
+    $ systemctl start ntpd
+
+    Check whether the time has been set to Beijing time:
+    $ timedatectl
+    or
+    $ date
+    
+
+2
+    On the output of timedatectl,if the 'NTP synchronized' is 'no',and the 
+    time is not synchronized to Beijing time,but ntpd is already running,
+    run this:
+    $ timedatectl set-ntp on
+
+    and then restart ntpd
+    $ systemctl restart ntpd
+    
+    check:
+    $ timedatectl
+    
+        
+    

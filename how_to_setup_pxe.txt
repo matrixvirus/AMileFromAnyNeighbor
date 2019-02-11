@@ -1,0 +1,53 @@
+dhcp服务器:
+#yum install dhc* -y
+# vim /etc/dhcp/dhcpd.conf
+ subnet 192.168.1.0 netmask 255.255.255.0 {
+     next-server 192.168.1.111;
+     filename "pxelinux.0";
+     range 192.168.1.2 192.168.1.5;
+     default-lease-time 600;
+     max-lease-time 7200;
+  }
+
+
+tftp服务器：
+#yum install tftp-server tftp -y
+# chkconfig tftp on
+# /etc/init.d/xinetd restart
+# yum install syslinux -y
+# cp /usr/share/syslinux/pxelinux.0 /var/lib/tftpboot/
+# pwd    //挂载光盘镜像的目录
+/mnt/iso
+
+# pwd
+/mnt/iso/isolinux
+
+# mkdir /var/lib/tftpboot/pxelinux.cfg
+
+# cp /mnt/iso/isolinux/isolinux.cfg /var/lib/tftpboot/pxelinux.cfg/defaults
+
+# vim /var/lib/tftpboot/pxelinux.cfg/defaults
+1    default my_default_install
+
+19   label my_default_install
+20   menu label ^Install or upgrade an existing system
+21   menu default
+22   kernel vmlinuz
+23   append initrd=initrd.img ks=ftp://192.168.1.111/ks.cfg
+
+# cp /mnt/iso/images/pxeboot/{initrd.img,vmlinuz}  /var/lib/tftpboot/
+
+
+# setenforce 0
+# /etc/init.d/iptables stop
+# chmod 777 /var/lib/tftpboot/ -R
+=================================
+ks.cfg配置文件的制作
+#yum install *kickstart* -y
+pykickstart
+system-config-kickstart
+
+#system-config-kickstart
+
+# mount /mars/rhel-server-6.4-x86_64-dvd.iso  /var/ftp/rhel6u4/ -o loop
+ 

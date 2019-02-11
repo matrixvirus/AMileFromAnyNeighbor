@@ -62,3 +62,22 @@
 	$ chmod a-x sshd
 	$ chmod g-x sshd
 	后，sshd启动成功，别的机器能用ssh连它。
+
+2.6
+    2018-12-31.
+    opensuse 15.0,my own laptop,
+    virt-manager->edit->connection detail->
+    network-interface,
+    add a new interface,use name br1,but after
+    operating,there is no br1 at the left ,
+    i try it again,still use name br1,have not select
+    a existing interface to bond with it,after click 
+    finish,no error,but the left of the windows is no
+    br1,
+    i try it again,still use name br1,select eth0
+    to bond with it,no error,but after clicking finish,
+    the left of the windows,formerly there is a eth0,
+    but not,no eth0,no br1.
+    
+    and i dont know why,/etc/sysconfig/network-scripts
+    disappeared!
