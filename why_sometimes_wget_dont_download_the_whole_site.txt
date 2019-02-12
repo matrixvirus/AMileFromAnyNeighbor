@@ -1,0 +1,12 @@
+0
+    why sometimes wget dont download the whole site.
+
+1
+    because wget will obey the robots.txt on the site,which tells wget what 
+    files should not be downloaded,
+    so if you use:
+    $ wget --mirror http://www.abc.com
+    it will not work,
+
+    you could add '-e robots=off',
+    $ wget --mirror -e robots=off http://www.abc.com

@@ -38,7 +38,7 @@
 	gpg: 深度：0 有效性：  4 已签名：  0 信任度：0-，0q，0n，0m，0f，4u
 	pub   2048D/84A0D639 2018-03-01
 	密钥指纹 = A46D 469C 051B 9EA0 F5FE  C4CA 799D A3DC 84A0 D639
-	uid       [ 绝对 ] 彭一航 (Address) <archimedes_newton@163.com>
+	uid       [ 绝对 ] abc (Address) <archimedes_newton@163.com>
 	sub   2048g/50A8A3AA 2018-03-01
 	___________________________________________________________________
 
@@ -52,7 +52,7 @@
 	 列出公钥
 	$ gpg --list-keys
 	pub   2048D/84A0D639 2018-03-01
-	uid       [ 绝对 ] 彭一航 (Address) <archimedes_newton@163.com>
+	uid       [ 绝对 ] abc (Address) <archimedes_newton@163.com>
 	sub   2048g/50A8A3AA 2018-03-01
 
 	输出第1行，文档没有解释每个字段什么意思，pub意思是public，2048是钥长，
@@ -169,7 +169,7 @@
 	pub  2048D/84A0D639  创建于：2018-03-01  有效至：永不过期  可用于：SC  
 						 信任度：绝对        有效性：绝对
 	sub  2048g/50A8A3AA  创建于：2018-03-01  有效至：永不过期  可用于：E   
-	[ 绝对 ] (1). 彭一航 (Address) <archimedes_newton@163.com>
+	[ 绝对 ] (1). abc (Address) <archimedes_newton@163.com>
 
 	gpg> 
 	_____________________________________________________________________
@@ -189,7 +189,7 @@
 	包含用户信息的公钥可以当作一个证书。
 	$ gpg --edit-key 0862D7C3
 	gpg> check
-	uid  彭一航 (只用于签名DSA) <archimedes_newton@163.com>
+	uid  abc (只用于签名DSA) <archimedes_newton@163.com>
 	sig!3        0862D7C3 2018-03-01  [自身签名]
 	
 	说明这个公钥是自签名的。
@@ -199,15 +199,15 @@
 	gpg> revkey
 
 	一个钥对里的制作者信息,长这样的
-	  彭一航 (Address) <archimedes_newton@163.com>
+	  abc (Address) <archimedes_newton@163.com>
 	是用这个钥对自已的私钥自签名的，你可以撤消这个签名
 	_________________________________________________________________
 	gpg> revsig
 	您已经为这些密钥 84A0D639 上的这些用户标识添加签名：
-		 彭一航 (Address) <archimedes_newton@163.com>
+		 abc (Address) <archimedes_newton@163.com>
 	   由您的密钥 84A0D639 于 2018-03-01 签名
 
-	用户标识：“彭一航 (Address) <archimedes_newton@163.com>”
+	用户标识：“Address) <archimedes_newton@163.com>”
 	由您的密钥 84A0D639 于 2018-03-01 签名
 	要为这份签名生成一份吊销证书吗？(y/N)
 	_________________________________________________________________
