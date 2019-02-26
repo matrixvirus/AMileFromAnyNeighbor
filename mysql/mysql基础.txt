@@ -383,11 +383,19 @@
 	检查正在用的哪个用户
 	mysql> SELECT current_user();
 13 导入导出数据
+13.1
 	把表contact的数据导出到文件
 	mysql> SELECT * FROM contact INTO OUTFILE 'a.txt';
 	文件a.txt在/var/lib/mysql/contact，和这个表一个目录里。
 	文件a用跳格分隔数据。
 
+	指定导出的数据的每一列用逗号分隔,
+	mysql> SELECT * FROM contact INTO OUTFILE 'a.txt' FILEDS TERMINATED BY ',';
+
+	
+	指定导出的数据的每一行用逗号分隔,
+	mysql> SELECT * FROM contact INTO OUTFILE 'a.txt' LINES TERMINATED BY ',';
+13.2
 	另一个表contact2,和表contact结构一样，没有内容。
 	表contact2从文件a.txt导入数据
 	mysql> LOAD DATA INFILE 'a.txt' INTO TABLE contact2
