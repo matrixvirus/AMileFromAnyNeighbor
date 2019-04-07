@@ -1,0 +1,36 @@
+0
+    how to configure nginx with https.
+    
+    
+1 add a argument when compiling nginx,--with-http_ssl_module
+    ./configure --prefix=/usr/local/nginx-1.14.2 --with-http_ssl_module
+
+    
+2 how to create self signed certificate by openssl
+    $ openssl req -x509 -newkey rsa:4096 -keyout cert.key -out cert.pem -nodes -days 365 -subj '/CN=localhost 
+
+    you will get two file,cert.key and cert.pem,
+ 
+    put these two files under the nginx conf dir.
+    
+3 edit nginx.conf
+    this is the server block for https,
+    
+    server {
+        listen       443 ssl;
+        server_name  localhost;
+
+        ssl_certificate      cert.pem;
+        ssl_certificate_key  cert.key;
+
+    #    ssl_session_cache    shared:SSL:1m;
+    #    ssl_session_timeout  5m;
+
+    #    ssl_ciphers  HIGH:!aNULL:!MD5;
+    #    ssl_prefer_server_ciphers  on;
+
+        location / {
+            root   html;
+            index  index.html index.htm;
+        }
+    }
