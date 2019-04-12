@@ -1,7 +1,7 @@
 # how to send mail using mailx command using external smtp server
 the external mail server being used for testing is 163.
 
-## a example
+## an example
 using 163 mailbox for example,my account is "matrixvirus@163.com",
 i send a mail to myself
 
@@ -26,7 +26,7 @@ i send a mail to myself
 
 
 
-## a example using ssl
+## an example using ssl
 
     mailx -v -r "matrixvirus@163.com" \
         -s "test 163 smtp 994 port" \
