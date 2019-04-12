@@ -81,3 +81,20 @@
     
     and i dont know why,/etc/sysconfig/network-scripts
     disappeared!
+
+
+2.2
+    我的希捷移动硬盘，分了两个区，一个是ext4系统，称为sdb2,
+    一个是ntfs系统，称为sdb1,
+    sdb1的label是microsoft storage space,
+    时隔多日，今天准备用这块硬盘，发现sdb2损坏了，将其重新格为ext4系统，可以往里复制文件，
+    但是复制进程意外终止了，并且sdb2变成了只读，不能在上面创建任何文件，umount sdb2,
+    尝试重新挂载，说找不到/dev/sdb2，但是/dev/sdb，/dev/sdb1/,/dev/sdb2都存在。
+    执行fdisk /dev/sdb也报错说找不到/dev/sdb：。
+    把移动硬盘拨下再插上，恢复了。 
+    但是我注意到了严重的性能下降，复制特别慢。 
+    
+    我重作了GPT分区表，重分了两个区，分区类型都是 'Linux filesystem',
+    sdb1是exfat系统，sdb2是ext4系统，然而移动硬盘的性能仍然很低。
+    
+    我重启了笔记本，复制速度变正常了。
