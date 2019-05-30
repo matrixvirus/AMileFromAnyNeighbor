@@ -35,6 +35,10 @@
 			<IfModule !mod_access_compat.c>
 				Require grant all
 			</IfModule>
+
+            # 这是为了列出目录时能正常显示中文
+            IndexOptions Charset=utf8
+
 		</Directory>
 	</VirtualHost>
 	
