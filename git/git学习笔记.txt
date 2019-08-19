@@ -177,7 +177,7 @@ archimedes_newton@163.com
 	新建标签
     $ git tag 标签名 
 
-	查看标签
+	查看有哪些标签
     $ git tag 
 
 	删除标签
@@ -193,6 +193,9 @@ archimedes_newton@163.com
 	根据标签新建分支
     $ git branch 新分支名 标签名 
     新分支是当初建标签时所在分支的状态。
+
+	检查你当前正在用哪个标签
+	$ git describe --tags
 
 9 拉取
 	用远程仓库的master分支更新本地当前分支。
