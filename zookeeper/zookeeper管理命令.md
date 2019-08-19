@@ -11,30 +11,44 @@
 
 # 连接后，下面是你可以执行的命令。
 
-*   conf
+## conf
+输出zookeeper服务端参数配置.    
 
-*   cons
+## cons
+列出所有连接到服务端的客户端的连接的详细信兮。
 
-*   crst
+## crst
+重置所有连接的连接统计。
 
-*   dump
+## dump
+列出所有外部session和短命node。    
 
-*   envi
+## envi
+列出服务端系统环境信兮。
 
-*   ruok
+## ruok
+检查服务端是否在 无报错的运行。如果是，该命令返回imok,否则不回应。
 
-*   srst
+## srst
+重置服务端统计信兮。    
 
-*   srvr
+## srvr
+list full details for the server.    
 
-*   stat
+## stat
+list brief details for the server and connected clients.
 
-*   wchs
+## wchs
+list brief information on watches for the server.
 
-*   wchc
+## wchc
+list detailed information on watches for the server，按session.
 
-*   dirs
+## dirs
+显示snapshot和log文件的总大小，单位字节。
 
-*   wchp
+## wchp
+list detailed information on watches for the server，按path。
 
-*   mntr
+## mntr
+显示一些变量，与群集健康相关。

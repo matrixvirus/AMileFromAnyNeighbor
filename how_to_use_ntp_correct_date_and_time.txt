@@ -1,4 +1,4 @@
-0
+﻿0
     How to use ntp to correct date and time.
     Testing environment:centos 7,opensuse 15.0.
 
