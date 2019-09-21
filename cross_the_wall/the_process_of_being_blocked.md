@@ -1,4 +1,4 @@
-2019-09-19
+# 2019-09-19
 today,i changed my ss server port to 8088,i can fan again,i tried in
 windows,then immediately tried in linux,using sslocal command,but failed,
 i tried in windows again,failed.
@@ -9,7 +9,7 @@ only be blocked when i use sslocal in linux.
 
 but as soon as i wrote the above words,i cant fan in windows.
 
-2019-09-18
+# 2019-09-18
 my Tencent cloud host,in HongKong,cant ping,
 i changed an ip.when i was changing,there was a notification in the 
 page,you have only one chance to change IP,
