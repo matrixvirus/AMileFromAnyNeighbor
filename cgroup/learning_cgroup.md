@@ -176,13 +176,21 @@ intelligent,for example,when using *cgclassify*,it will
 *	when the process exits,it automatically remove its pids from the group
 *	and so on
 
+### check whether a process has joined to a group
+if a process has joined to a group,for example cpu:pluto,two files can
+indicate its joining
+*	/sys/fs/cgroup/cpu/pluto/tasks
+	
+	its PID will be in it.
+
+*	/proc/PID/cgroup
+
+	there will be a line:
+
+		10:cpuacct,cpu:/pluto
 
 ### remove a process from a group
-*	method one
-delete the *pid* from the *tasks* file.
-
-*	method two
-i cant find a command to do this.
+i cant find a guide for this.
 
 ### delete a group
 *	method one
@@ -204,6 +212,9 @@ i have not found a document about this.
 
 
 # systemd with cgroups	
+this chapter is can be skipped.*systemd* is not a part of cgroups,redhat 
+combines *systemd* with *cgroups* in redhat 7.
+
 *systemd* moves the resource management settings from the process level to the
 application level by binding the system of cgroup hierarchies with the systemd
  unit tree. Therefore, you can manage system resources with systemctl 
@@ -213,16 +224,58 @@ From the systemd s perspective, a cgroup is bound to a system unit
 configurable with a unit file and manageable with systemd s command-line 
 utilities. your resource management settings can be transient or persistent.
 
+you can see redhat document *resource_management_guide.pdf*.
+
 ## create new group
 ### create transient group
+honestly,i dont know the meaning of this existing.
+skip.
 
 ### create persistent group
-
+skip.
 
 ## delete group
+skip.
 
 ## modify group
+### use command
+syntax:
 
-## check group
+	systemctl set-property name parameter=value
 
-## 
+example:
+
+	systemctl set-property httpd.service CPUShares=600 MemoryLimit=500M
+
+then,you will find you two file 50-CPUshares.conf,50-MemoryLimit.conf in
+/etc/systemd/system/httpd.service.d/ .
+
+
+The changes are applied instantly, and written into the unit file, so that they 
+are preserved after reboot.  You can change this behavior by passing the 
+--runtime option, that makes your settings transient:
+
+	systemctl set-property --runtime name property=value
+
+### edit unit files
+the files 50-CPUshares.conf,50-MemoryLimit.conf,you can also create them
+manually,the filename can be any, but you need to run two command mannualy,
+
+	systemctl daemon-reload
+	systemctl restart httpd.service
+
+## parameters
+### CPU
+*	CPUShares 	
+
+	example:CPUShares=1500
+
+*	CPUQuota	
+
+	example:CPUQuota=20%
+
+### memory
+*	MemoryLimit
+
+	example:MemoryLimit=1G
+
