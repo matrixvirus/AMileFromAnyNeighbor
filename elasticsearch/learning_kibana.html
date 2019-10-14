@@ -1,0 +1,49 @@
+<h1>Learning Kibana</h1>
+
+<h1>Getting Started</h1>
+
+<h2>Downloading</h2>
+
+<p><a href="https://artifacts.elastic.co/downloads/kibana/kibana-7.3.2-linux-x86_64.tar.gz">current version</a>.
+If this link does not work,go to <a href="https://www.elastic.co/start">here</a>.
+after downloading,extract it.</p>
+
+<p>make sure that:
+*   the owner of the files is not root
+*   the starter is not root</p>
+
+<p>then enter the extracted dir,</p>
+
+<ul>
+<li><p>edit config/kibana.yml,find where <em>server.host</em> is,its default value is
+<em>localhost</em>,which will refuse remote visit,you need to change it to</p>
+
+<pre><code>server.host: '0.0.0.0'
+</code></pre></li>
+<li><p>start Kibana</p>
+
+<pre><code>bin/kibana serve &amp;
+</code></pre></li>
+<li><p>open firewall</p>
+
+<p>Kibana uses port 5601.</p>
+
+<ul>
+<li><p>for firewalld</p>
+
+<pre><code>firwall-cmd --add-port=5601/tcp
+firwall-cmd --runtime-to-permanent
+</code></pre></li>
+<li><p>for iptables</p>
+
+<pre><code>iptables -t filter -I INPUT 1 -p tcp --dport 5601 -j ACCEPT
+</code></pre></li>
+</ul>
+</li>
+<li><p>from any host,use a browser to visit http://kibana-server:5601</p></li>
+</ul>
+
+
+<h2>Document</h2>
+
+<p><a href="https://www.elastic.co/guide/en/kibana/current/index.html">kibana</a></p>

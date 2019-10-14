@@ -1,0 +1,99 @@
+<h1>About Elasticsearch Search</h1>
+
+<blockquote><p>I consult the online document to write this,but I think I should abandon
+  it,because that online document is a little chaos,I decide to consult the
+  book <em>Elasticsearch The Definitve Guide</em> to write a new version.</p></blockquote>
+
+<p>Elasticsearch sorts search results by <em>relevance score</em>,it is a positive
+floating point number,returned in the <em>score</em> meta-field of the search api.</p>
+
+<h1>Boolean query</h1>
+
+<p>A query that matches documents matching boolean combinations of other queries
+.
+The clauses are:
+*   <em>must</em></p>
+
+<pre><code>The clause must appear in matching documents, and will contribute to the 
+score.
+</code></pre>
+
+<ul>
+<li><p><em>filter</em></p>
+
+<p>The clause must appear in matching documents,but the score is ignored.</p></li>
+<li><p><em>should</em></p>
+
+<p>The clause shoud appear in the matching document.</p>
+
+<p>I dont know what this mean,2019-10-05.</p></li>
+<li><p><em>must_not</em></p>
+
+<p>The clause must not appear in the matching documents.</p></li>
+</ul>
+
+
+<h2>Example</h2>
+
+<h2>Scoring with bool.filter</h2>
+
+<p>Queries specified under <em>filter</em> element have no effect on scoring,scores are
+returned as 0.
+For instance,all three of the following queries return all documents,where the
+<em>state</em> field contains the term <em>IL</em>.</p>
+
+<ul>
+<li><p>Assign score 0 to all documents,</p>
+
+<pre><code>curl -X GET -H 'Content-Type:application/json' \
+'http://localhost:9200/bank/_search?pretty' -d '
+{
+    "query":{
+        "bool":{
+            "filter":{
+                "term":{
+                    "state":"IL"
+                }
+            }
+        }
+    }
+}'
+</code></pre></li>
+<li><p>This <em>bool</em> query has a <em>match_all</em> query,which assigns score 1.0 to all
+documents.</p>
+
+<pre><code>curl -X GET -H 'Content-Type:application/json' \
+'http://localhost:9200/bank/_search?pretty' -d '
+{
+    "query":{
+        "bool":{
+            "must":{
+                "match_all":{}
+            },
+            "filter":{
+                "term":{
+                    "state":"IL"
+                }
+            }
+        }
+    }
+}'
+</code></pre></li>
+<li><p><em>constant_score</em> query behaves in the same way the second example above.</p>
+
+<pre><code>curl -X GET -H 'Content-Type:application/json' \
+'http://localhost:9200/bank/_search?pretty' -d '
+{
+    "query":{
+        "constant_score":{
+            "filter":{
+                "term":{
+                    "status":"active"
+                }
+            }
+        }
+    }
+}'
+</code></pre></li>
+</ul>
+

@@ -1,0 +1,341 @@
+<h1>About Elasticsearch Search</h1>
+
+<h1></h1>
+
+<h2>Here is a map of nouns of Elasticsearch and relational database,</h2>
+
+<table>
+<thead>
+<tr>
+<th> Elasticsearch </th>
+<th> relational database </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td> index(noun) </td>
+<td> database </td>
+</tr>
+<tr>
+<td> type  </td>
+<td> table    </td>
+</tr>
+<tr>
+<td> document </td>
+<td> row   </td>
+</tr>
+<tr>
+<td> field </td>
+<td> column </td>
+</tr>
+<tr>
+<td> index(verb) </td>
+<td> insert </td>
+</tr>
+</tbody>
+</table>
+
+
+<p>A <em>document</em> belongs to a <em>type</em>,a <em>type</em> belongs to an <em>index</em>.</p>
+
+<h2>RESTful syntax</h2>
+
+<p>One syntax form:</p>
+
+<pre><code>curl -X&lt;VERB&gt; -H 'Content-Type:application/json' \
+'&lt;PROTOCOL&gt;://&lt;HOST&gt;/&lt;PATH&gt;?&lt;QUERY_STRING&gt;' -d '&lt;BODY&gt;'
+</code></pre>
+
+<p>Example:</p>
+
+<pre><code>curl -X PUT -H 'Content-Type:application/json' \
+'http://localhost/abc/bcd?pretty' -d '
+{
+    "a":1
+}'
+</code></pre>
+
+<p>dont mind what this example mean.</p>
+
+<p>What they mean:
+*   VERB</p>
+
+<pre><code>HTTP method:GET,POST,PUT,HEAD,DELETE
+</code></pre>
+
+<ul>
+<li><p>PROTOCOL</p>
+
+<p>http OR https</p></li>
+<li><p>HOST</p>
+
+<p>you know.</p></li>
+<li><p>PORT</p>
+
+<p>default is 9200.</p></li>
+<li><p>QUERY_STRING</p>
+
+<p>Its form is</p>
+
+<pre><code>/index/type/id?argu
+</code></pre>
+
+<p>I dont know.</p></li>
+<li><p>BODY</p>
+
+<p>a JSON body.</p></li>
+</ul>
+
+
+<p>In fact,dont believe its syntax is only this,this is an example.</p>
+
+<h1>Index</h1>
+
+<p>Index some data.</p>
+
+<pre><code>curl -X POST -H 'Content-Type:application/json' \
+'http://localhost:9200/megacorp/employee?pretty' -d '
+{
+    "first_name":"John",
+    "last_name":"Smith",
+    "age":25,
+    "about":"I love to go rock climbing",
+    "interests":["sports","music"]
+}'
+curl -X POST -H 'Content-Type:application/json' \
+'http://localhost:9200/megacorp/employee?pretty' -d '
+{
+    "first_name":"What",
+    "last_name":"Are",
+    "age":26,
+    "about":"I love to go rock climbing after death",
+    "interests":["math","physic"]
+}'
+curl -X POST -H 'Content-Type:application/json' \
+'http://localhost:9200/megacorp/employee?pretty' -d '
+{
+    "first_name":"Go",
+    "last_name":"Home",
+    "age":27,
+    "about":"are you fucking kidding me",
+    "interests":["eat","drink"]
+}'
+</code></pre>
+
+<p>&lsquo;megacorp&rsquo; is the index,&lsquo;employee&rsquo; is the type.
+there is no <em>ID</em> in the tail,so Elasticsearch will assign it a random ID.</p>
+
+<h1>Search</h1>
+
+<h2>Search all</h2>
+
+<pre><code>curl -X GET -H 'Content-Type:application/json' \
+'http://localhost:9200/megacorp/_search?pretty' -d '
+{    
+    "query":
+        {"match_all":{}}
+}'
+</code></pre>
+
+<p>Because <em>megacorp</em> has only one type <em>employee</em>,this has same effect as above,</p>
+
+<pre><code>curl -X GET -H 'Content-Type:application/json' \
+'http://localhost:9200/megacorp/employee/_search?pretty' -d '
+{
+    "query":{
+        "match_all":{}
+    }
+}'
+</code></pre>
+
+<p>For checking all, you can  omit <em>-d</em>.</p>
+
+<pre><code>curl -X GET -H 'Content-Type:application/json' \
+'http://localhost:9200/megacorp/employee/_search?pretty'
+</code></pre>
+
+<p>You can omit <em>employee</em>,</p>
+
+<pre><code>curl -X GET -H 'Content-Type:application/json' \
+'http://localhost:9200/megacorp/_search?pretty' -d '
+{
+    "query":{
+        "match":{
+            "_id":"VWr8pG0BfuiFs1IjBhcI"
+        }
+    }
+}'
+</code></pre>
+
+<p>You can omit <em>megacorp</em> and <em>employee</em>,</p>
+
+<pre><code>curl -X GET -H 'Content-Type:application/json' \
+'http://localhost:9200/_search?pretty'
+</code></pre>
+
+<p>This is the rule,
+*   /<em>search
+    Search all types in all indices
+*   /gb/</em>search
+    Search all types in the gb index
+*   /gb,us/<em>search
+    Search all types in the gb and us indices
+*   /g<em>,u</em>/</em>search
+    Search all types in any indices beginning with g or beginning with u
+*   /gb/user/<em>search
+    Search type user in the gb index
+*   /gb,us/user,tweet/</em>search
+    Search types user and tweet in the gb and us indices
+*   /<em>all/user,tweet/</em>search
+    Search types user and tweet in all indices</p>
+
+<h2>Search specified document</h2>
+
+<p>Whose ID is &ldquo;VWr8pG0BfuiFs1IjBhcI&rdquo;,</p>
+
+<pre><code>curl -X GET -H 'Content-Type:application/json' \
+'http://localhost:9200/megacorp/employee/_search?pretty' -d '
+{
+    "query":{
+        "match":{
+            "_id":"VWr8pG0BfuiFs1IjBhcI"
+        }
+    }
+}'
+</code></pre>
+
+<p>Whose first name,a string, contains &lsquo;What&rsquo;,</p>
+
+<pre><code>curl -X GET -H 'Content-Type:application/json' \
+'http://localhost:9200/megacorp/employee/_search?pretty' -d '
+{
+    "query":{
+        "match":{"first_name":"What"}
+    }
+}'
+</code></pre>
+
+<p>Whose first name is &lsquo;What&rsquo;,</p>
+
+<pre><code>curl -X GET -H 'Content-Type:application/json' \
+'http://localhost:9200/megacorp/employee/_search?pretty' -d '
+{
+    "query":{
+        "match_phrase":{"first_name":"What"}
+    }
+}'
+</code></pre>
+
+<h2>Range</h2>
+
+<p>Whoes age is less then 27,use <em>range</em> to replace <em>match</em>,</p>
+
+<pre><code>curl -X GET -H 'Content-Type:application/json' \
+'http://localhost:9200/megacorp/employee/_search?pretty' -d '
+{
+    "query":{
+        "range":{"age":{"lt":27}}
+    }
+}'
+</code></pre>
+
+<h2>Combine</h2>
+
+<p>Whose age is 26,first name is &lsquo;What&rsquo;,</p>
+
+<pre><code>curl -X GET -H 'Content-Type:application/json' \
+'http://192.168.122.204:9200/megacorp/employee/_search?pretty' -d '
+{
+    "query":{
+        "bool":{
+            "must":[
+                {"match":{"age":26}},
+                {"match":{"first_name":"What"}}
+            ]
+        }
+    }
+}'
+</code></pre>
+
+<p>Whose age is not 27,first name is &lsquo;What&rsquo;,</p>
+
+<pre><code>curl -X GET -H 'Content-Type:application/json' \
+'http://192.168.122.204:9200/megacorp/employee/_search?pretty' -d '
+{
+    "query":{
+        "bool":{
+            "must":{"match":{"first_name":"What"}},
+            "must_not":{"match":{"age":27}}
+        }
+    }
+}'
+</code></pre>
+
+<p>Whose (age is 27) or (first name is &lsquo;What&rsquo; and last name is &lsquo;Are&rsquo;),</p>
+
+<pre><code>curl -X GET -H 'Content-Type:application/json' \
+'http://192.168.122.204:9200/megacorp/employee/_search?pretty' -d '
+{
+    "query":{
+        "bool":{
+            "should":[
+                {"match":{"age":27}},
+                {"bool":{
+                    "must":[
+                        {"match":{"first_name":"What"}},
+                        {"match":{"last_name":"Are"}}
+                    ]
+                    }
+                }
+            ]
+        }
+    }
+}'
+</code></pre>
+
+<p>Summary:
+<em>bool</em> syntax has three words:
+*   must</p>
+
+<pre><code>items in it must all be matched.
+</code></pre>
+
+<ul>
+<li><p>must_not</p>
+
+<p>items in it must all not be matched.</p></li>
+<li><p>should</p>
+
+<p>items in it must be matched at least once,like &lsquo;or&rsquo;.</p></li>
+</ul>
+
+
+<h2>Match multiple value</h2>
+
+<p>Whose age is 26 or 27</p>
+
+<pre><code>curl -X GET -H 'Content-Type:application/json' \
+'http://192.168.122.204:9200/megacorp/employee/_search?pretty' -d '
+{
+    "query":{
+        "terms":{"age":[26,27]}
+    }
+}'
+</code></pre>
+
+<p>Whose first name is &lsquo;Go&rsquo; or &lsquo;What&rsquo;,</p>
+
+<pre><code>curl -X GET -H 'Content-Type:application/json' \
+'http://192.168.122.204:9200/megacorp/employee/_search?pretty' -d '
+{
+    "query":{
+        "terms":{"first_name":["What","Go"]}
+    }
+}'
+</code></pre>
+
+<p>But,this does not work,because <em>terms</em> does not work with string type,to
+solve this,refer to book <em>Definitive Guide</em> -> Chapter 12 -> finding exact
+values -> term filter with text.</p>
+
+<h2>Sort</h2>

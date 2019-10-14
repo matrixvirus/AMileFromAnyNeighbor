@@ -1,0 +1,497 @@
+<h1>Learning Elasticsearch</h1>
+
+<h1>Getting Startted</h1>
+
+<h2>Download</h2>
+
+<p><a href="https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.3.2-linux-x86_64.tar.gz">current version download</a></p>
+
+<p>This link may vary with the growing version,if it does not work,go to <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/getting-started-install.html">latest installation guide</a>.</p>
+
+<h3>Start</h3>
+
+<p>You need to install java first.
+after downloading,extract it to use it.
+enter the extracted dir,run</p>
+
+<pre><code>bin/elasticsearch -d
+</code></pre>
+
+<p>There are some notice:
+*   the owner of the dir cant be root
+*   you cant start <em>elasticsearch</em> as root</p>
+
+<h3>Check</h3>
+
+<p>now elasticsearch is running,you can check it</p>
+
+<pre><code>curl -X GET "localhost:9200/_cat/health?v&amp;pretty"
+</code></pre>
+
+<p>You can add an argu <em>-i</em> to <em>curl</em> to see the http header returned</p>
+
+<pre><code>curl -i -X GET "localhost:9200/_cat/health?v&amp;pretty"
+</code></pre>
+
+<h3>Stop</h3>
+
+<pre><code>curl -X POST 'http://localhost:9200/_shutdown'
+</code></pre>
+
+<h2>Document</h2>
+
+<p><a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html">document</a>.
+This document has only html format,no pdf is provided.</p>
+
+<p>There is a book <em>elasticsearch the definitive guide</em>,an <em>oreilly</em> style
+name, i have its pdf format.</p>
+
+<p>I dont recommend you to read the online doc,it is a little chaos.</p>
+
+<h2>Remote access</h2>
+
+<h3>Config</h3>
+
+<p>By default,Elasticsearch bind to localhost,remote access is denied.
+You need to change <em>network.host</em> in <em>elasticsearch.yml</em>,to <em>0.0.0.0</em>.</p>
+
+<pre><code>network.host: 0.0.0.0
+cluster.initial_master_nodes: ["192.168.122.204"]
+</code></pre>
+
+<p>where &ldquo;192.168.122.204&rdquo; is the outside IP.Currently we are talking about
+single node,in fact it should be a list of IP.</p>
+
+<h3>System config</h3>
+
+<p>But that is not end,after you change this key,when you start Elasticsearch,
+you may get errors:
+*   If you meet</p>
+
+<pre><code>    max virtual memory areas vm.max_map_count [65530] is too low, increase to at least [262144]
+
+do
+*   add this to /etc/sysctl.conf
+
+        vm.max_map_count=262144
+
+    run this to load the new config
+
+        sysctl -p
+</code></pre>
+
+<ul>
+<li><p>If you meet</p>
+
+<pre><code>max file descriptors [4096] for elasticsearch process is too low, increase to at least [65535]
+</code></pre>
+
+do
+
+<ul>
+<li><p>add these to /etc/security/limits.conf</p>
+
+<pre><code>username hard nofile 65535
+</code></pre>
+
+<p>where <em>username</em> is which you use to start Elasticsearch.
+Then you need to relogin <em>username</em>,either desktop or terminal.
+You can see the new value</p>
+
+<pre><code>ulimit -Hn  
+</code></pre></li>
+</ul>
+</li>
+<li><p>If you meet</p>
+
+<pre><code>max number of threads [1854] for user [archimedes] is too low, increase to at least [4096]
+</code></pre>
+
+do
+
+<ul>
+<li><p>add this to /etc/security/limits.conf</p>
+
+<pre><code>username hard nproc 4096
+</code></pre>
+
+<p>then relogin to the user,either desktop or terminal.</p></li>
+</ul>
+</li>
+</ul>
+
+
+<h3>Firewall</h3>
+
+<p>Elasticsearch use port 9200,so you need to open this port,
+*   For <em>firewalld</em></p>
+
+<pre><code>    firewall-cmd --add-port=9200
+    firewall-cmd --runtime-to-permanent
+</code></pre>
+
+<ul>
+<li><p>For <em>iptables</em></p>
+
+<pre><code>iptables -t filter -I INPUT 1 -p tcp --dport 9200 -j ACCEPT
+</code></pre></li>
+</ul>
+
+
+<h1>Use Elasticsearch</h1>
+
+<p>Storing data in Elasticsearch is called <em>indexing</em>, here <em>index</em> is a verb;
+a document belongs to a <em>type</em>, and those types live inside an <em>index</em>,here
+<em>index</em> is a noun.
+<em>index</em>(verb) is like <em>insert</em>,<em>index</em>(noun) is like database,<em>type</em> is like
+table,<em>document</em> is like row in relational database.</p>
+
+<p>And,we call (result) <em>hit</em>,(query) <em>search</em>.</p>
+
+<h2>Index a document</h2>
+
+<ul>
+<li><p> Index a document</p>
+
+<pre><code>curl -X PUT "localhost:9200/customer/_doc/1?pretty" \
+-H 'Content-Type: application/json' -d'
+{
+  "name": "John Doe"
+}
+'
+</code></pre>
+
+<ul>
+<li>-X PUT means using PUT method.</li>
+<li>-H means http header.</li>
+<li>-d means http data.</li>
+<li><em>customer</em> is an index. if it does not exist,the command will create it
+automatically.</li>
+<li>_doc means the data type is <em>once</em>,one document one time.</li>
+<li>1 means document id,we will use it in the following query.</li>
+<li><em>pretty</em> means a well formatted output</li>
+</ul>
+
+
+<p>the output will be</p>
+
+<pre><code>{   
+  "_index" : "customer",
+  "_type" : "_doc",
+  "_id" : "1",
+  "_version" : 1,
+  "result" : "created",
+  "_shards" : {
+    "total" : 2,
+    "successful" : 1,
+    "failed" : 0
+  },
+  "_seq_no" : 0,
+  "_primary_term" : 1
+}
+</code></pre></li>
+<li><p>query the new document</p>
+
+<pre><code>curl -X GET "localhost:9200/customer/_doc/1?pretty"
+</code></pre>
+
+<p>output</p>
+
+<pre><code>{
+  "_index" : "customer",
+  "_type" : "_doc",
+  "_id" : "1",
+  "_version" : 1,
+  "_seq_no" : 0,
+  "_primary_term" : 1,
+  "found" : true,
+  "_source" : {
+    "name" : "John Doe"
+  }
+}
+</code></pre></li>
+</ul>
+
+
+<h2>Insert documents in bulk from file</h2>
+
+<ul>
+<li><p>write a file abc.json,its content is many different documents,
+for example,</p>
+
+<pre><code>{"index":{"_id":"1"}}
+{"name":"a"}
+{"index":{"_id":"1"}}
+{"name":"b"}
+</code></pre>
+
+<p>it contains two documents,each two lines represent a document,in</p>
+
+<pre><code>{"index":{"_id":"1"}}
+{"name":"a"}
+</code></pre>
+
+<p>the first line means,&hellip;
+the second line means,&hellip;</p>
+
+<p>Notice,there is only two lines,you cant add new line to make it
+readable.
+This will make error</p>
+
+<pre><code>{
+    "index":
+        {"_id":"1"}
+}
+{
+    "name":"a"
+}
+</code></pre>
+
+<p>The official provides a <a href="https://github.com/elastic/elasticsearch/blob/master/docs/src/test/resources/accounts.json?raw=true">template</a>,I recommend you to
+use it,because our following examples will base on it.</p></li>
+<li><p>insert from the file</p>
+
+<pre><code>curl -H "Content-Type: application/json" \
+    -X POST "localhost:9200/bank/_bulk?pretty&amp;refresh" \
+    --data-binary "@abc.json"
+</code></pre>
+
+notice,
+
+<ul>
+<li>refresh means overwriting existing data.</li>
+<li>there is a &lsquo;@&rsquo; before &lsquo;abc.json&rsquo;.</li>
+</ul>
+</li>
+<li><p>query</p>
+
+<pre><code>curl -X GET "localhost:9200/bank/_doc/1?pretty"
+curl -X GET "localhost:9200/bank/_doc/2?pretty"
+</code></pre></li>
+</ul>
+
+
+<h2>Search</h2>
+
+<h3>Example 1</h3>
+
+<p>This will retrieve all documents in <em>bank</em> index,sort by <em>account_number</em>,
+ascendant.</p>
+
+<pre><code>curl -X GET "localhost:9200/bank/_search?pretty" \
+-H 'Content-Type: application/json' -d'
+{
+  "query": { "match_all": {} },
+  "sort": [
+    { "account_number": "asc" }
+  ]
+}
+'
+</code></pre>
+
+<p>I dont paste its output here.
+Here is some explanation of the output</p>
+
+<ul>
+<li>took – how long it took Elasticsearch to run the query, in milliseconds</li>
+<li>timed_out – whether or not the search request timed out</li>
+<li>_shards – how many shards were searched and a breakdown of how many
+shards succeeded, failed, or were skipped.</li>
+<li>max_score – the score of the most relevant document found</li>
+<li>hits.total.value - how many matching documents were found</li>
+<li>hits.sort - the document’s sort position (when not sorting by relevance
+score)</li>
+<li>hits._score - the document’s relevance score (not applicable when using
+match_all)</li>
+</ul>
+
+
+<h3>Example 2</h3>
+
+<p>Gets hits 10 through 19,use <em>from</em> and <em>size</em>,</p>
+
+<pre><code>curl -X GET -H 'Content-Type:application/json' \
+'http://localhost:9200/bank/_search?pretty' -d '
+{
+    "query":{"match_all":{}},
+    "sort":[{"account_number":"asc"}],
+    "from":10,
+    "size":10
+}'
+</code></pre>
+
+<h3>Example 3</h3>
+
+<p>Search whose address contains &lsquo;mill&rsquo; OR &lsquo;lane&rsquo;,</p>
+
+<pre><code>curl -X GET -H 'Content-Type:application/json' \
+    'http://localhost:9200/bank/_search?pretty' -d '
+    {
+        "query":
+            {
+                "match":
+                    {
+                        "address":"mill lane"
+                    }
+            }
+    }'
+</code></pre>
+
+<h3>Example 4</h3>
+
+<p>Search whose address contains &lsquo;mill lane&rsquo;,use <em>match_phrase</em>,</p>
+
+<pre><code>curl -X GET -H 'Content-Type:application/json' \
+    'http://localhost:9200/bank/_search?pretty' -d '
+    {
+        "query":
+        {
+            "match_phrase":
+            {
+                "address":"mill lane"
+            }
+        }
+    }'
+</code></pre>
+
+<h3>Example 5</h3>
+
+<p>Search whose age is 40,and lives in Idaho,use <em>bool</em>,<em>must</em>,<em>must_not</em>,</p>
+
+<pre><code>curl -X GET -H 'Content-Type:application/json' \
+'http://localhost:9200/bank/_search?pretty' -d '
+{
+    "query":
+    {
+        "bool":
+        {
+            "must":
+            [
+                {
+                    "match":
+                    {
+                        "age":"40"
+                    }
+                }
+            ],
+            "must_not":
+            [
+                {
+                    "match":
+                    {
+                        "state":"ID"
+                    }
+                }
+            ]
+        }
+    }
+}'
+</code></pre>
+
+<h3>Example 6</h3>
+
+<p>Search whose balance is greater or equal than 20000,less or equal than 30000,</p>
+
+<pre><code>curl -X GET -H 'Content-Type:application/json' \
+'http://localhost:9200/bank/_search' -d '
+{
+    "query":
+    {
+        "bool":
+        {
+            "must":{"match_all":{}},
+            "filter":
+            {
+                "range":
+                {
+                    "balance":
+                    {
+                        "gte":20000,
+                        "lte":30000
+                    }
+                }
+            }
+        }
+    }
+}'
+</code></pre>
+
+<p><em>gte</em> is &lsquo;greater or equal&rsquo;,
+<em>lte</em> is &lsquo;less or equal&rsquo;,
+<em>gt</em> is &lsquo;greater than&rsquo;,
+<em>lt</em> is &lsquo;less than&rsquo;,</p>
+
+<h3>Example 7</h3>
+
+<p>Group all of the accounts in the bank index by state,</p>
+
+<pre><code>curl -X GET -H 'Content-Type:application/json' \
+'http://localhost:9200/bank/_search?pretty' -d '
+{
+    "size":0,
+    "aggs":{
+        "group_by_state":{
+            "terms":{
+                "field":"state.keyword"
+            }
+        }
+    }
+}'
+</code></pre>
+
+<h3>Example 8</h3>
+
+<p>Nest an avg aggregation within the group_by_state aggregation to
+calculate the average account balances for each state,</p>
+
+<pre><code>curl -X GET -H 'Content-Type:application/json' \
+'http://localhost:9200/bank/_search?pretty' -d '
+{
+    "size":0,
+    "aggs":{
+        "group_by_state":{
+            "terms":{
+                "field":"state.keyword"
+            },
+            "aggs":{
+                "average_balance":{
+                    "avg":{
+                        "field":"balance"
+                    }
+                }
+            }
+        }
+    }
+}'
+</code></pre>
+
+<h3>Example 9</h3>
+
+<p>Sort using the result of the nested aggregation by specifying the order within
+the terms aggregation,</p>
+
+<pre><code>curl -X GET -H 'Content-Type:application/json' \
+'http://localhost:9200/bank/_search?pretty' -d '
+{
+    "size":0,
+    "aggs":{
+        "group_by_state":{
+            "terms":{
+                "field":"state.keyword",
+                "order":{
+                    "average_balance":"desc"
+                }
+            },
+            "aggs":{
+                "average_balance":{
+                    "avg":{
+                        "field":"balance"
+                    }
+                }
+            }
+        }
+    }
+}'
+</code></pre>
+
+<h3>See search.md for more</h3>
