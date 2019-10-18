@@ -14,6 +14,7 @@
 		# 如果DocumentRoot所指目录下面没有index.html，则列出这个目录的文件
 		<Directory /www/docs/pythagoras.aristotle>
 			Options indexes
+			Require all granted
 		</Directory>
 		DocumentRoot /www/docs/pythagoras.aristotle
 		ServerName pythagoras.aristotle
@@ -72,6 +73,7 @@
 	<VirtualHost *:80>
 		<Directory /home/opensuse/Packages/iso/>
 			Options Indexes
+			Require all granted
 		</Directory>
 		DocumentRoot /home/opensuse/Packages/iso/
 		ServerName cavalry.horseman

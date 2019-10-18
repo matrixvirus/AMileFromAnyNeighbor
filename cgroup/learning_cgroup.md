@@ -212,7 +212,7 @@ i have not found a document about this.
 
 
 # systemd with cgroups	
-this chapter is can be skipped.*systemd* is not a part of cgroups,redhat 
+this chapter can be skipped.*systemd* is not a part of cgroups,redhat 
 combines *systemd* with *cgroups* in redhat 7.
 
 *systemd* moves the resource management settings from the process level to the

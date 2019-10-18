@@ -1,341 +1,625 @@
-<h1>About Elasticsearch Search</h1>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+	<title></title>
+	<meta name="generator" content="LibreOffice 5.3.6.1 (Linux)"/>
+	<meta name="created" content="00:00:00"/>
+	<meta name="changed" content="2019-10-16T22:27:20.264104469"/>
+	<meta name="created" content="00:00:00">
+	<meta name="changed" content="2019-10-16T19:32:14.731959714">
+	<meta name="created" content="00:00:00">
+	<meta name="changed" content="2019-10-15T15:11:25.133866855">
+	<meta name="created" content="00:00:00">
+	<meta name="changed" content="2019-10-14T18:27:57.479273962">
+	<meta name="created" content="00:00:00">
+	<meta name="changed" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="changed" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<meta name="changed" content="2019-10-14T15:25:34.359822452">
+	<style type="text/css">
+		@page { margin-left: 2cm; margin-right: 2.2cm }
+		h1.cjk { font-family: "Liberation Serif", serif }
+		h2.ctl { font-family: "Lohit Devanagari" }
+		pre.ctl { font-family: "Liberation Mono", monospace }
+		code.ctl { font-family: "Liberation Mono", monospace }
+	</style>
+</head>
+<body lang="ja-JP" dir="ltr">
+<h1 class="cjk" align="left" style="margin-top: 0cm; margin-bottom: 0cm">
+<font face="Liberation Serif, serif"><font size="6" style="font-size: 24pt"><span lang="en-US">About
+Elasticsearch Search</span></font></font></h1>
+<p style="margin-bottom: 0cm"><font face="Liberation Serif, serif"><span lang="en-US">Here
+is a map of nouns between Elasticsearch and relational database,</span></font></p>
+<dl>
+	<dd>
+	<table width="364" cellpadding="2" cellspacing="0">
+		<col width="171">
+		<col width="183">
+		<thead>
+			<tr>
+				<th width="171" style="border-top: 1.00pt solid #000000; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: none; padding-top: 0.05cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0cm">
+					<p align="center"><font face="Liberation Serif, serif"><span lang="en-US">Elasticsearch
+					</span></font>
+					</p>
+				</th>
+				<th width="183" style="border: 1.00pt solid #000000; padding: 0.05cm">
+					<p align="center"><font face="Liberation Serif, serif"><span lang="en-US">relational
+					database </span></font>
+					</p>
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td width="171" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0cm">
+					<p align="center"><font face="Liberation Serif, serif"><span lang="en-US">index(noun)
+					</span></font>
+					</p>
+				</td>
+				<td width="183" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+					<p align="center"><font face="Liberation Serif, serif"><span lang="en-US">database
+					</span></font>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="171" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0cm">
+					<p align="center"><font face="Liberation Serif, serif"><span lang="en-US">type
+					</span></font>
+					</p>
+				</td>
+				<td width="183" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+					<p align="center"><font face="Liberation Serif, serif"><span lang="en-US">table
+					</span></font>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="171" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0cm">
+					<p align="center"><font face="Liberation Serif, serif"><span lang="en-US">document
+					</span></font>
+					</p>
+				</td>
+				<td width="183" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+					<p align="center"><font face="Liberation Serif, serif"><span lang="en-US">row
+					</span></font>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="171" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0cm">
+					<p align="center"><font face="Liberation Serif, serif"><span lang="en-US">field
+					</span></font>
+					</p>
+				</td>
+				<td width="183" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+					<p align="center"><font face="Liberation Serif, serif"><span lang="en-US">column
+					</span></font>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="171" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0cm">
+					<p align="center"><font face="Liberation Serif, serif"><span lang="en-US">index(verb)
+					</span></font>
+					</p>
+				</td>
+				<td width="183" style="border-top: none; border-bottom: 1.00pt solid #000000; border-left: 1.00pt solid #000000; border-right: 1.00pt solid #000000; padding-top: 0cm; padding-bottom: 0.05cm; padding-left: 0.05cm; padding-right: 0.05cm">
+					<p align="center"><font face="Liberation Serif, serif"><span lang="en-US">insert
+					</span></font>
+					</p>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</dl>
+<p style="margin-bottom: 0cm"><br/>
 
-<h1></h1>
-
-<h2>Here is a map of nouns of Elasticsearch and relational database,</h2>
-
-<table>
-<thead>
-<tr>
-<th> Elasticsearch </th>
-<th> relational database </th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td> index(noun) </td>
-<td> database </td>
-</tr>
-<tr>
-<td> type  </td>
-<td> table    </td>
-</tr>
-<tr>
-<td> document </td>
-<td> row   </td>
-</tr>
-<tr>
-<td> field </td>
-<td> column </td>
-</tr>
-<tr>
-<td> index(verb) </td>
-<td> insert </td>
-</tr>
-</tbody>
-</table>
-
-
-<p>A <em>document</em> belongs to a <em>type</em>,a <em>type</em> belongs to an <em>index</em>.</p>
-
-<h2>RESTful syntax</h2>
-
-<p>One syntax form:</p>
-
-<pre><code>curl -X&lt;VERB&gt; -H 'Content-Type:application/json' \
-'&lt;PROTOCOL&gt;://&lt;HOST&gt;/&lt;PATH&gt;?&lt;QUERY_STRING&gt;' -d '&lt;BODY&gt;'
-</code></pre>
-
-<p>Example:</p>
-
-<pre><code>curl -X PUT -H 'Content-Type:application/json' \
-'http://localhost/abc/bcd?pretty' -d '
-{
-    "a":1
-}'
-</code></pre>
-
-<p>dont mind what this example mean.</p>
-
-<p>What they mean:
-*   VERB</p>
-
-<pre><code>HTTP method:GET,POST,PUT,HEAD,DELETE
-</code></pre>
-
+</p>
+<p style="margin-bottom: 0cm"><font face="Liberation Serif, serif"><span lang="en-US"><font face="Liberation Serif, serif"><span lang="en-US">A
+</span></font><em><font face="Liberation Serif, serif"><span lang="en-US">document</span></font></em><font face="Liberation Serif, serif"><span lang="en-US">
+belongs to a </span></font><em><font face="Liberation Serif, serif"><span lang="en-US">type</span></font></em><font face="Liberation Serif, serif"><span lang="en-US">,a
+</span></font><em><font face="Liberation Serif, serif"><span lang="en-US">type</span></font></em><font face="Liberation Serif, serif"><span lang="en-US">
+belongs to an </span></font><em><font face="Liberation Serif, serif"><span lang="en-US">index</span></font></em><font face="Liberation Serif, serif"><span lang="en-US">.</span></font></span></font></p>
+<h2 class="cjk" style="margin-top: 0cm; margin-bottom: 0cm"><font face="Liberation Serif, serif"><span lang="en-US">RESTful
+syntax</span></font></h2>
+<p style="margin-bottom: 0cm"><font face="Liberation Serif, serif"><span lang="en-US">One
+syntax form:</span></font></p>
+<pre class="cjk" style="margin-left: 1cm; background: transparent; page-break-before: auto; page-break-after: auto"><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">curl -X&lt;VERB&gt; -H 'Content-Type:application/json' \</span></font></code></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">'&lt;PROTOCOL&gt;://&lt;HOST&gt;/&lt;PATH&gt;?&lt;QUERY_STRING&gt;' -d '&lt;BODY&gt;'</span></font></code></span></font></pre><p style="margin-bottom: 0cm">
+<font face="Liberation Serif, serif"><span lang="en-US">Example:</span></font></p>
+<pre class="cjk" style="margin-left: 1cm; background: transparent; page-break-before: auto; page-break-after: auto"><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">curl -X PUT -H 'Content-Type:application/json' \</span></font></code></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">'http://localhost/abc/bcd?pretty' -d '</span></font></code></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">{</span></font></code></span></font>
+<code class="cjk">    </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">&quot;a&quot;:1</span></font></code></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">}'</span></font></code></span></font></pre><p style="margin-bottom: 0cm">
+<font face="Liberation Serif, serif"><span lang="en-US">dont mind
+what this example mean.</span></font></p>
+<p style="margin-bottom: 0cm"><font face="Liberation Serif, serif"><span lang="en-US">What
+they mean: </span></font>
+</p>
 <ul>
-<li><p>PROTOCOL</p>
-
-<p>http OR https</p></li>
-<li><p>HOST</p>
-
-<p>you know.</p></li>
-<li><p>PORT</p>
-
-<p>default is 9200.</p></li>
-<li><p>QUERY_STRING</p>
-
-<p>Its form is</p>
-
-<pre><code>/index/type/id?argu
-</code></pre>
-
-<p>I dont know.</p></li>
-<li><p>BODY</p>
-
-<p>a JSON body.</p></li>
+	<li/>
+<p style="margin-bottom: 0cm"><font face="Liberation Serif, serif"><span lang="en-US"><font face="Liberation Serif, serif"><span lang="en-US">VERB<br/>
+</span></font><code class="western"><font face="Liberation Serif, serif"><span lang="en-US">HTTP
+	method:GET,POST,PUT,HEAD,DELETE</span></font></code></span></font></p>
 </ul>
-
-
-<p>In fact,dont believe its syntax is only this,this is an example.</p>
-
-<h1>Index</h1>
-
-<p>Index some data.</p>
-
-<pre><code>curl -X POST -H 'Content-Type:application/json' \
-'http://localhost:9200/megacorp/employee?pretty' -d '
-{
-    "first_name":"John",
-    "last_name":"Smith",
-    "age":25,
-    "about":"I love to go rock climbing",
-    "interests":["sports","music"]
-}'
-curl -X POST -H 'Content-Type:application/json' \
-'http://localhost:9200/megacorp/employee?pretty' -d '
-{
-    "first_name":"What",
-    "last_name":"Are",
-    "age":26,
-    "about":"I love to go rock climbing after death",
-    "interests":["math","physic"]
-}'
-curl -X POST -H 'Content-Type:application/json' \
-'http://localhost:9200/megacorp/employee?pretty' -d '
-{
-    "first_name":"Go",
-    "last_name":"Home",
-    "age":27,
-    "about":"are you fucking kidding me",
-    "interests":["eat","drink"]
-}'
-</code></pre>
-
-<p>&lsquo;megacorp&rsquo; is the index,&lsquo;employee&rsquo; is the type.
-there is no <em>ID</em> in the tail,so Elasticsearch will assign it a random ID.</p>
-
-<h1>Search</h1>
-
-<h2>Search all</h2>
-
-<pre><code>curl -X GET -H 'Content-Type:application/json' \
-'http://localhost:9200/megacorp/_search?pretty' -d '
-{    
-    "query":
-        {"match_all":{}}
-}'
-</code></pre>
-
-<p>Because <em>megacorp</em> has only one type <em>employee</em>,this has same effect as above,</p>
-
-<pre><code>curl -X GET -H 'Content-Type:application/json' \
-'http://localhost:9200/megacorp/employee/_search?pretty' -d '
-{
-    "query":{
-        "match_all":{}
-    }
-}'
-</code></pre>
-
-<p>For checking all, you can  omit <em>-d</em>.</p>
-
-<pre><code>curl -X GET -H 'Content-Type:application/json' \
-'http://localhost:9200/megacorp/employee/_search?pretty'
-</code></pre>
-
-<p>You can omit <em>employee</em>,</p>
-
-<pre><code>curl -X GET -H 'Content-Type:application/json' \
-'http://localhost:9200/megacorp/_search?pretty' -d '
-{
-    "query":{
-        "match":{
-            "_id":"VWr8pG0BfuiFs1IjBhcI"
-        }
-    }
-}'
-</code></pre>
-
-<p>You can omit <em>megacorp</em> and <em>employee</em>,</p>
-
-<pre><code>curl -X GET -H 'Content-Type:application/json' \
-'http://localhost:9200/_search?pretty'
-</code></pre>
-
-<p>This is the rule,
-*   /<em>search
-    Search all types in all indices
-*   /gb/</em>search
-    Search all types in the gb index
-*   /gb,us/<em>search
-    Search all types in the gb and us indices
-*   /g<em>,u</em>/</em>search
-    Search all types in any indices beginning with g or beginning with u
-*   /gb/user/<em>search
-    Search type user in the gb index
-*   /gb,us/user,tweet/</em>search
-    Search types user and tweet in the gb and us indices
-*   /<em>all/user,tweet/</em>search
-    Search types user and tweet in all indices</p>
-
-<h2>Search specified document</h2>
-
-<p>Whose ID is &ldquo;VWr8pG0BfuiFs1IjBhcI&rdquo;,</p>
-
-<pre><code>curl -X GET -H 'Content-Type:application/json' \
-'http://localhost:9200/megacorp/employee/_search?pretty' -d '
-{
-    "query":{
-        "match":{
-            "_id":"VWr8pG0BfuiFs1IjBhcI"
-        }
-    }
-}'
-</code></pre>
-
-<p>Whose first name,a string, contains &lsquo;What&rsquo;,</p>
-
-<pre><code>curl -X GET -H 'Content-Type:application/json' \
-'http://localhost:9200/megacorp/employee/_search?pretty' -d '
-{
-    "query":{
-        "match":{"first_name":"What"}
-    }
-}'
-</code></pre>
-
-<p>Whose first name is &lsquo;What&rsquo;,</p>
-
-<pre><code>curl -X GET -H 'Content-Type:application/json' \
-'http://localhost:9200/megacorp/employee/_search?pretty' -d '
-{
-    "query":{
-        "match_phrase":{"first_name":"What"}
-    }
-}'
-</code></pre>
-
-<h2>Range</h2>
-
-<p>Whoes age is less then 27,use <em>range</em> to replace <em>match</em>,</p>
-
-<pre><code>curl -X GET -H 'Content-Type:application/json' \
-'http://localhost:9200/megacorp/employee/_search?pretty' -d '
-{
-    "query":{
-        "range":{"age":{"lt":27}}
-    }
-}'
-</code></pre>
-
-<h2>Combine</h2>
-
-<p>Whose age is 26,first name is &lsquo;What&rsquo;,</p>
-
-<pre><code>curl -X GET -H 'Content-Type:application/json' \
-'http://192.168.122.204:9200/megacorp/employee/_search?pretty' -d '
-{
-    "query":{
-        "bool":{
-            "must":[
-                {"match":{"age":26}},
-                {"match":{"first_name":"What"}}
-            ]
-        }
-    }
-}'
-</code></pre>
-
-<p>Whose age is not 27,first name is &lsquo;What&rsquo;,</p>
-
-<pre><code>curl -X GET -H 'Content-Type:application/json' \
-'http://192.168.122.204:9200/megacorp/employee/_search?pretty' -d '
-{
-    "query":{
-        "bool":{
-            "must":{"match":{"first_name":"What"}},
-            "must_not":{"match":{"age":27}}
-        }
-    }
-}'
-</code></pre>
-
-<p>Whose (age is 27) or (first name is &lsquo;What&rsquo; and last name is &lsquo;Are&rsquo;),</p>
-
-<pre><code>curl -X GET -H 'Content-Type:application/json' \
-'http://192.168.122.204:9200/megacorp/employee/_search?pretty' -d '
-{
-    "query":{
-        "bool":{
-            "should":[
-                {"match":{"age":27}},
-                {"bool":{
-                    "must":[
-                        {"match":{"first_name":"What"}},
-                        {"match":{"last_name":"Are"}}
-                    ]
-                    }
-                }
-            ]
-        }
-    }
-}'
-</code></pre>
-
-<p>Summary:
-<em>bool</em> syntax has three words:
-*   must</p>
-
-<pre><code>items in it must all be matched.
-</code></pre>
-
 <ul>
-<li><p>must_not</p>
-
-<p>items in it must all not be matched.</p></li>
-<li><p>should</p>
-
-<p>items in it must be matched at least once,like &lsquo;or&rsquo;.</p></li>
+	<li/>
+<p style="margin-bottom: 0cm"><font face="Liberation Serif, serif"><span lang="en-US">PROTOCOL</span></font></p>
+	<p style="margin-bottom: 0cm"><font face="Liberation Serif, serif"><span lang="en-US">http
+	OR https</span></font></p>
+	<li/>
+<p style="margin-bottom: 0cm"><font face="Liberation Serif, serif"><span lang="en-US">HOST</span></font></p>
+	<p style="margin-bottom: 0cm"><font face="Liberation Serif, serif"><span lang="en-US">you
+	know.</span></font></p>
+	<li/>
+<p style="margin-bottom: 0cm"><font face="Liberation Serif, serif"><span lang="en-US">PORT</span></font></p>
+	<p style="margin-bottom: 0cm"><font face="Liberation Serif, serif"><span lang="en-US">default
+	is 9200.</span></font></p>
+	<li/>
+<p style="margin-bottom: 0cm"><font face="Liberation Serif, serif"><span lang="en-US">QUERY_STRING</span></font></p>
+	<p style="margin-bottom: 0cm"><font face="Liberation Serif, serif"><span lang="en-US">Its
+	form is</span></font></p>
+	<ul>
+		<p style="margin-bottom: 0cm"><font face="Liberation Serif, serif"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">/index/type/id?argu</span></font></code></span></font></p>
+	</ul>
+	<p><font face="Liberation Serif, serif"><span lang="en-US">I dont
+	know.</span></font></p>
+	<li/>
+<p style="margin-bottom: 0cm"><font face="Liberation Serif, serif"><span lang="en-US">BODY</span></font></p>
+	<p style="margin-bottom: 0cm"><font face="Liberation Serif, serif"><span lang="en-US">a
+	JSON body.</span></font></p>
 </ul>
+<p style="margin-bottom: 0cm"><font face="Liberation Serif, serif"><span lang="en-US">In
+fact,dont believe its syntax is only this,this is an example.</span></font></p>
+<h1 class="cjk" style="margin-top: 0cm; margin-bottom: 0cm"><font face="Liberation Serif, serif"><font size="6" style="font-size: 24pt"><span lang="en-US">Index</span></font></font></h1>
+<p style="margin-bottom: 0cm"><font face="Liberation Serif, serif"><span lang="en-US">Index
+some data.</span></font></p>
+<pre class="cjk" style="margin-left: 1cm; background: transparent; page-break-before: auto; page-break-after: auto"><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">curl -X POST -H 'Content-Type:application/json' \</span></font></code></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">'http://localhost:9200/megacorp/employee?pretty' -d '</span></font></code></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">{</span></font></code></span></font>
+<code class="cjk">    </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">&quot;first_name&quot;:&quot;John&quot;,</span></font></code></span></font>
+<code class="cjk">    </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">&quot;last_name&quot;:&quot;Smith&quot;,</span></font></code></span></font>
+<code class="cjk">    </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">&quot;age&quot;:25,</span></font></code></span></font>
+<code class="cjk">    </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">&quot;about&quot;:&quot;I love to go rock climbing&quot;,</span></font></code></span></font>
+<code class="cjk">    </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">&quot;interests&quot;:[&quot;sports&quot;,&quot;music&quot;]</span></font></code></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">}'</span></font></code></span></font>
 
+<font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">curl -X POST -H 'Content-Type:application/json' \</span></font></code></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">'http://localhost:9200/megacorp/employee?pretty' -d '</span></font></code></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">{</span></font></code></span></font>
+<code class="cjk">    </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">&quot;first_name&quot;:&quot;What&quot;,</span></font></code></span></font>
+<code class="cjk">    </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">&quot;last_name&quot;:&quot;Are&quot;,</span></font></code></span></font>
+<code class="cjk">    </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">&quot;age&quot;:26,</span></font></code></span></font>
+<code class="cjk">    </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">&quot;about&quot;:&quot;I love to go rock climbing after death&quot;,</span></font></code></span></font>
+<code class="cjk">    </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">&quot;interests&quot;:[&quot;math&quot;,&quot;physic&quot;]</span></font></code></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">}'</span></font></code></span></font>
 
-<h2>Match multiple value</h2>
+<font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">curl -X POST -H 'Content-Type:application/json' \</span></font></code></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">'http://localhost:9200/megacorp/employee?pretty' -d '</span></font></code></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">{</span></font></code></span></font>
+<code class="cjk">    </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">&quot;first_name&quot;:&quot;Go&quot;,</span></font></code></span></font>
+<code class="cjk">    </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">&quot;last_name&quot;:&quot;Home&quot;,</span></font></code></span></font>
+<code class="cjk">    </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">&quot;age&quot;:27,</span></font></code></span></font>
+<code class="cjk">    </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">&quot;about&quot;:&quot;are you fucking kidding me&quot;,</span></font></code></span></font>
+<code class="cjk">    </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">&quot;interests&quot;:[&quot;eat&quot;,&quot;drink&quot;]</span></font></code></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">}'</span></font></code></span></font></pre><p style="margin-bottom: 0cm">
+‘<font face="Liberation Serif, serif"><span lang="en-US"><font face="Liberation Serif, serif"><span lang="en-US">megacorp’
+is the index,‘employee’ is the type. there is no </span></font><em><font face="Liberation Serif, serif"><span lang="en-US">ID</span></font></em><font face="Liberation Serif, serif"><span lang="en-US">
+in the tail,so Elasticsearch will assign it a random ID.</span></font></span></font></p>
+<h1 class="cjk" align="left" style="margin-top: 0cm; margin-bottom: 0cm">
+<font face="Liberation Serif, serif"><font size="6" style="font-size: 24pt"><span lang="en-US">Search</span></font></font></h1>
+<h2 class="cjk" style="margin-top: 0cm; margin-bottom: 0cm"><font face="Liberation Serif, serif"><span lang="en-US">Search
+all</span></font></h2>
+<pre class="cjk" style="margin-left: 1cm; background: transparent; page-break-before: auto; page-break-after: auto"><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">curl -X GET -H 'Content-Type:application/json' \</span></font></code></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">'http://localhost:9200/megacorp/_search?pretty' -d '</span></font></code></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">{    </span></font></code></span></font>
+<code class="cjk">    </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">&quot;query&quot;:</span></font></code></span></font>
+<code class="cjk">        </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">{&quot;match_all&quot;:{}}</span></font></code></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">}'</span></font></code></span></font></pre><p style="margin-bottom: 0cm">
+<font face="Liberation Serif, serif"><span lang="en-US"><font face="Liberation Serif, serif"><span lang="en-US">Because
+</span></font><em><font face="Liberation Serif, serif"><span lang="en-US">megacorp</span></font></em><font face="Liberation Serif, serif"><span lang="en-US">
+has only one type </span></font><em><font face="Liberation Serif, serif"><span lang="en-US">employee</span></font></em><font face="Liberation Serif, serif"><span lang="en-US">,this
+has same effect as above,</span></font></span></font></p>
+<pre class="cjk" style="margin-left: 1cm; background: transparent; page-break-before: auto; page-break-after: auto"><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">curl -X GET -H 'Content-Type:application/json' \</span></font></code></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">'http://localhost:9200/megacorp/employee/_search?pretty' -d '</span></font></code></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">{</span></font></code></span></font>
+<code class="cjk">    </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">&quot;query&quot;:{</span></font></code></span></font>
+<code class="cjk">        </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">&quot;match_all&quot;:{}</span></font></code></span></font>
+<code class="cjk">    </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">}</span></font></code></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">}'</span></font></code></span></font></pre><p style="margin-bottom: 0cm">
+<font face="Liberation Serif, serif"><span lang="en-US"><font face="Liberation Serif, serif"><span lang="en-US">For
+checking all, you can omit </span></font><em><font face="VL ゴシック"><span lang="en-US">-d</span></font></em><font face="VL ゴシック"><span lang="en-US">.</span></font></span></font></p>
+<pre class="cjk" style="margin-left: 2cm"><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">curl -X GET -H 'Content-Type:application/json' \</span></font></code></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">'http://localhost:9200/megacorp/employee/_search?pretty'</span></font></code></span></font></pre><p style="margin-bottom: 0cm">
+<font face="Liberation Serif, serif"><span lang="en-US"><font face="Liberation Serif, serif"><span lang="en-US">You
+can omit </span></font><em><font face="Liberation Serif, serif"><span lang="en-US">employee</span></font></em><font face="Liberation Serif, serif"><span lang="en-US">,</span></font></span></font></p>
+<pre class="cjk" style="margin-left: 2cm"><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">curl -X GET -H 'Content-Type:application/json' \</span></font></code></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">'http://localhost:9200/megacorp/_search?pretty' -d '</span></font></code></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">{</span></font></code></span></font>
+<code class="cjk">    </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">&quot;query&quot;:{</span></font></code></span></font>
+<code class="cjk">        </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">&quot;match&quot;:{</span></font></code></span></font>
+<code class="cjk">            </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">&quot;_id&quot;:&quot;VWr8pG0BfuiFs1IjBhcI&quot;</span></font></code></span></font>
+<code class="cjk">        </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">}</span></font></code></span></font>
+<code class="cjk">    </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">}</span></font></code></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">}'</span></font></code></span></font></pre><p style="margin-bottom: 0cm">
+<font face="Liberation Serif, serif"><span lang="en-US"><font face="Liberation Serif, serif"><span lang="en-US">You
+can omit </span></font><em><font face="Liberation Serif, serif"><span lang="en-US">megacorp</span></font></em><font face="Liberation Serif, serif"><span lang="en-US">
+and </span></font><em><font face="Liberation Serif, serif"><span lang="en-US">employee</span></font></em><font face="Liberation Serif, serif"><span lang="en-US">,</span></font></span></font></p>
+<pre class="cjk" style="margin-left: 2cm"><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">curl -X GET -H 'Content-Type:application/json' \</span></font></code></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">'http://localhost:9200/_search?pretty'</span></font></code></span></font></pre><p style="margin-bottom: 0cm">
+<font face="Liberation Serif, serif"><span lang="en-US">This is the
+rule, </span></font>
+</p>
+<ul>
+	<li/>
+<p style="margin-bottom: 0cm"><font face="Liberation Serif, serif"><span lang="en-US">/search
+	<br/>
+Search all types in all indices</span></font></p>
+	<li/>
+<p style="margin-bottom: 0cm"><font face="Liberation Serif, serif"><span lang="en-US">/gb/search
+	<br/>
+Search all types in index <i>gb</i></span></font></p>
+	<li/>
+<p style="margin-bottom: 0cm"><font face="Liberation Serif, serif"><span lang="en-US"><span style="font-variant: normal"><span style="font-style: normal">/gb,us/search
+	<br/>
+Search all types in indices </span></span><i>gb</i><span style="font-variant: normal">
+	</span><span style="font-variant: normal"><span style="font-style: normal">and
+	</span></span><i>us</i></span></font></p>
+	<li/>
+<p style="margin-bottom: 0cm"><font face="Liberation Serif, serif"><span lang="en-US"><span style="font-variant: normal"><span style="font-style: normal">/g*,u*/search
+	<br/>
+Search all types in indices begins with </span></span><i>g</i><span style="font-variant: normal">
+	</span><span style="font-variant: normal"><span style="font-style: normal">and
+	</span></span><i>u</i></span></font></p>
+	<li/>
+<p style="margin-bottom: 0cm; font-variant: normal"><font face="Liberation Serif, serif"><span lang="en-US">/gb/user/search
+	<br/>
+Search in index <i>gb</i>,type <i>user</i></span></font></p>
+	<li/>
+<p style="margin-bottom: 0cm; font-variant: normal"><font face="Liberation Serif, serif"><span lang="en-US">/gb,us/user,tweet/search
+	<br/>
+Search in index <i>gb</i>,<i>us</i>,type <i>user </i>and <i>tweet</i></span></font></p>
+	<li/>
+<p style="margin-bottom: 0cm; font-variant: normal"><font face="Liberation Serif, serif"><span lang="en-US">/all/user,tweet/search
+	<br/>
+Search in all indices,type <i>user,tweet</i></span></font></p>
+</ul>
+<p align="left" style="margin-bottom: 0cm"><br/>
 
-<p>Whose age is 26 or 27</p>
+</p>
+<p style="margin-bottom: 0cm"><br/>
 
-<pre><code>curl -X GET -H 'Content-Type:application/json' \
-'http://192.168.122.204:9200/megacorp/employee/_search?pretty' -d '
-{
-    "query":{
-        "terms":{"age":[26,27]}
-    }
-}'
-</code></pre>
+</p>
+<h2 class="cjk"><font face="Liberation Serif, serif"><span lang="en-US">Check
+whether a document exists</span></font></h2>
+<pre class="cjk" style="margin-left: 2cm; margin-bottom: 0.5cm"><font face="Liberation Mono, monospace"><span lang="en-US"><font face="Liberation Mono, monospace"><span lang="en-US">curl -i -X HEAD http://localhost:9200/megacorp/employee/</span></font><code class="western"><font face="VL ゴシック"><span lang="en-US">VWr8pG0BfuiFs1IjBhcI</span></font></code></span></font></pre><p>
+<font face="Liberation Serif, serif"><span lang="en-US">you will get
+<i>200 ok</i><span style="font-variant: normal"><span style="font-style: normal">.</span></span></span></font></p>
+<h2 class="cjk" style="margin-top: 0cm; margin-bottom: 0cm"><font face="Liberation Serif, serif"><span lang="en-US">Search
+specified document</span></font></h2>
+<p style="margin-bottom: 0cm"><font face="Liberation Serif, serif"><span lang="en-US">Whose
+ID is “VWr8pG0BfuiFs1IjBhcI”,</span></font></p>
+<pre class="cjk" style="margin-left: 2cm"><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">curl -X GET -H 'Content-Type:application/json' \</span></font></code></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">'http://localhost:9200/megacorp/employee/_search?pretty' -d '</span></font></code></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">{</span></font></code></span></font>
+<code class="cjk">    </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">&quot;query&quot;:{</span></font></code></span></font>
+<code class="cjk">        </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">&quot;match&quot;:{</span></font></code></span></font>
+<code class="cjk">            </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">&quot;_id&quot;:&quot;VWr8pG0BfuiFs1IjBhcI&quot;</span></font></code></span></font>
+<code class="cjk">        </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">}</span></font></code></span></font>
+<code class="cjk">    </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">}</span></font></code></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">}'</span></font></code></span></font></pre><p style="margin-bottom: 0cm">
+<font face="Liberation Serif, serif"><span lang="en-US">Whose first
+name,a string, contains ‘What’,</span></font></p>
+<pre class="cjk" style="margin-left: 2cm"><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">curl -X GET -H 'Content-Type:application/json' \</span></font></code></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">'http://localhost:9200/megacorp/employee/_search?pretty' -d '</span></font></code></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">{</span></font></code></span></font>
+<code class="cjk">    </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">&quot;query&quot;:{</span></font></code></span></font>
+<code class="cjk">        </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">&quot;match&quot;:{&quot;first_name&quot;:&quot;What&quot;}</span></font></code></span></font>
+<code class="cjk">    </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">}</span></font></code></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">}'</span></font></code></span></font></pre><p style="margin-bottom: 0cm">
+<font face="Liberation Serif, serif"><span lang="en-US">Whose first
+name is ‘What’,</span></font></p>
+<pre class="cjk" style="margin-left: 2cm"><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">curl -X GET -H 'Content-Type:application/json' \</span></font></code></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">'http://localhost:9200/megacorp/employee/_search?pretty' -d '</span></font></code></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">{</span></font></code></span></font>
+<code class="cjk">    </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">&quot;query&quot;:{</span></font></code></span></font>
+<code class="cjk">        </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">&quot;match_phrase&quot;:{&quot;first_name&quot;:&quot;What&quot;}</span></font></code></span></font>
+<code class="cjk">    </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">}</span></font></code></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">}'</span></font></code></span></font></pre><h2 class="cjk" style="margin-top: 0cm; margin-bottom: 0cm">
+<font face="Liberation Serif, serif"><span lang="en-US">Range</span></font></h2>
+<p style="margin-bottom: 0cm"><font face="Liberation Serif, serif"><span lang="en-US"><font face="Liberation Serif, serif"><span lang="en-US">Whoes
+age is less then 27,use </span></font><em><font face="Liberation Serif, serif"><span lang="en-US">range</span></font></em><font face="Liberation Serif, serif"><span lang="en-US">
+to replace </span></font><em><font face="Liberation Serif, serif"><span lang="en-US">match</span></font></em><font face="Liberation Serif, serif"><span lang="en-US">,</span></font></span></font></p>
+<pre class="cjk" style="margin-left: 2cm"><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">curl -X GET -H 'Content-Type:application/json' \</span></font></code></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">'http://localhost:9200/megacorp/employee/_search?pretty' -d '</span></font></code></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">{</span></font></code></span></font>
+<code class="cjk">    </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">&quot;query&quot;:{</span></font></code></span></font>
+<code class="cjk">        </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">&quot;range&quot;:{&quot;age&quot;:{&quot;lt&quot;:27}}</span></font></code></span></font>
+<code class="cjk">    </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">}</span></font></code></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">}'</span></font></code></span></font></pre><h2 class="cjk" style="margin-top: 0cm; margin-bottom: 0cm">
+<font face="Liberation Serif, serif"><span lang="en-US">Combine</span></font></h2>
+<p style="margin-bottom: 0cm"><font face="Liberation Serif, serif"><span lang="en-US">Whose
+age is 26,first name is ‘What’,</span></font></p>
+<pre class="cjk" style="margin-left: 2cm"><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">curl -X GET -H 'Content-Type:application/json' \</span></font></code></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">'http://192.168.122.204:9200/megacorp/employee/_search?pretty' -d '</span></font></code></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">{</span></font></code></span></font>
+<code class="cjk">    </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">&quot;query&quot;:{</span></font></code></span></font>
+<code class="cjk">        </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">&quot;bool&quot;:{</span></font></code></span></font>
+<code class="cjk">            </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">&quot;must&quot;:[</span></font></code></span></font>
+<code class="cjk">                </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">{&quot;match&quot;:{&quot;age&quot;:26}},</span></font></code></span></font>
+<code class="cjk">                </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">{&quot;match&quot;:{&quot;first_name&quot;:&quot;What&quot;}}</span></font></code></span></font>
+<code class="cjk">            </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">]</span></font></code></span></font>
+<code class="cjk">        </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">}</span></font></code></span></font>
+<code class="cjk">    </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">}</span></font></code></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">}'</span></font></code></span></font></pre><p style="margin-bottom: 0cm">
+<font face="Liberation Serif, serif"><span lang="en-US">Whose age is
+not 27,first name is ‘What’,</span></font></p>
+<pre class="cjk" style="margin-left: 2cm"><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">curl -X GET -H 'Content-Type:application/json' \</span></font></code></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">'http://192.168.122.204:9200/megacorp/employee/_search?pretty' -d '</span></font></code></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">{</span></font></code></span></font>
+<code class="cjk">    </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">&quot;query&quot;:{</span></font></code></span></font>
+<code class="cjk">        </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">&quot;bool&quot;:{</span></font></code></span></font>
+<code class="cjk">            </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">&quot;must&quot;:{&quot;match&quot;:{&quot;first_name&quot;:&quot;What&quot;}},</span></font></code></span></font>
+<code class="cjk">            </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">&quot;must_not&quot;:{&quot;match&quot;:{&quot;age&quot;:27}}</span></font></code></span></font>
+<code class="cjk">        </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">}</span></font></code></span></font>
+<code class="cjk">    </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">}</span></font></code></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">}'</span></font></code></span></font></pre><p style="margin-bottom: 0cm">
+<font face="Liberation Serif, serif"><span lang="en-US">Whose (age is
+27) or (first name is ‘What’ and last name is ‘Are’),</span></font></p>
+<pre class="cjk" style="margin-left: 2cm"><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">curl -X GET -H 'Content-Type:application/json' \</span></font></code></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">'http://192.168.122.204:9200/megacorp/employee/_search?pretty' -d '</span></font></code></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">{</span></font></code></span></font>
+<code class="cjk">    </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">&quot;query&quot;:{</span></font></code></span></font>
+<code class="cjk">        </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">&quot;bool&quot;:{</span></font></code></span></font>
+<code class="cjk">            </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">&quot;should&quot;:[</span></font></code></span></font>
+<code class="cjk">                </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">{&quot;match&quot;:{&quot;age&quot;:27}},</span></font></code></span></font>
+<code class="cjk">                </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">{&quot;bool&quot;:{</span></font></code></span></font>
+<code class="cjk">                    </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">&quot;must&quot;:[</span></font></code></span></font>
+<code class="cjk">                        </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">{&quot;match&quot;:{&quot;first_name&quot;:&quot;What&quot;}},</span></font></code></span></font>
+<code class="cjk">                        </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">{&quot;match&quot;:{&quot;last_name&quot;:&quot;Are&quot;}}</span></font></code></span></font>
+<code class="cjk">                    </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">]</span></font></code></span></font>
+<code class="cjk">                    </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">}</span></font></code></span></font>
+<code class="cjk">                </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">}</span></font></code></span></font>
+<code class="cjk">            </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">]</span></font></code></span></font>
+<code class="cjk">        </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">}</span></font></code></span></font>
+<code class="cjk">    </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">}</span></font></code></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">}'</span></font></code></span></font></pre><p style="margin-bottom: 0cm">
+<font face="Liberation Serif, serif"><span lang="en-US"><font face="Liberation Serif, serif"><span lang="en-US">Summary:
+</span></font><em><font face="Liberation Serif, serif"><span lang="en-US">bool</span></font></em><font face="Liberation Serif, serif"><span lang="en-US">
+syntax has three words: </span></font></span></font>
+</p>
+<ul>
+	<li/>
+<p style="margin-bottom: 0cm"><font face="Liberation Serif, serif"><span lang="en-US"><font face="Liberation Serif, serif"><span lang="en-US">must<br/>
+</span></font><code class="western"><font face="Liberation Serif, serif"><span lang="en-US">items
+	in it must all be matched.</span></font></code></span></font></p>
+</ul>
+<ul>
+	<li/>
+<p style="margin-bottom: 0cm"><font face="Liberation Serif, serif"><span lang="en-US">must_not</span></font></p>
+	<p style="margin-bottom: 0cm"><font face="Liberation Serif, serif"><span lang="en-US">items
+	in it must all not be matched.</span></font></p>
+	<li/>
+<p style="margin-bottom: 0cm"><font face="Liberation Serif, serif"><span lang="en-US">should</span></font></p>
+	<p style="margin-bottom: 0cm"><font face="Liberation Serif, serif"><span lang="en-US">items
+	in it must be matched at least once,like ‘or’.</span></font></p>
+</ul>
+<h2 class="cjk" style="margin-top: 0cm; margin-bottom: 0cm"><font face="Liberation Serif, serif"><span lang="en-US">Match
+multiple value</span></font></h2>
+<p style="margin-bottom: 0cm"><font face="Liberation Serif, serif"><span lang="en-US">Whose
+age is 26 or 27</span></font></p>
+<pre class="cjk" style="margin-left: 2cm"><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">curl -X GET -H 'Content-Type:application/json' \</span></font></code></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">'http://192.168.122.204:9200/megacorp/employee/_search?pretty' -d '</span></font></code></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">{</span></font></code></span></font>
+<code class="cjk">    </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">&quot;query&quot;:{</span></font></code></span></font>
+<code class="cjk">        </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">&quot;terms&quot;:{&quot;age&quot;:[26,27]}</span></font></code></span></font>
+<code class="cjk">    </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">}</span></font></code></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">}'</span></font></code></span></font></pre><p style="margin-bottom: 0cm; font-variant: normal">
+<font face="Liberation Serif, serif"><span lang="en-US">Whose first
+name is ‘Go’ or ‘What’,</span></font></p>
+<p style="margin-bottom: 0cm"><br/>
 
-<p>Whose first name is &lsquo;Go&rsquo; or &lsquo;What&rsquo;,</p>
+</p>
+<pre class="cjk" style="margin-left: 1cm; background: transparent; page-break-before: auto; page-break-after: auto"><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">curl -X GET -H 'Content-Type:application/json' \</span></font></code></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">'http://192.168.122.204:9200/megacorp/employee/_search?pretty' -d '</span></font></code></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">{</span></font></code></span></font>
+<code class="cjk">    </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">&quot;query&quot;:{</span></font></code></span></font>
+<code class="cjk">        </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">&quot;terms&quot;:{&quot;first_name&quot;:[&quot;What&quot;,&quot;Go&quot;]}</span></font></code></span></font>
+<code class="cjk">    </code><font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">}</span></font></code></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US"><code class="western"><font face="VL ゴシック"><span lang="en-US">}'</span></font></code></span></font></pre><p style="margin-bottom: 0cm">
+<font face="Liberation Serif, serif"><span lang="en-US"><font face="Liberation Serif, serif"><span lang="en-US">But,this
+does not work,because </span></font><em><font face="Liberation Serif, serif"><span lang="en-US">terms</span></font></em><font face="Liberation Serif, serif"><span lang="en-US">
+does not work with string type,to solve this,refer to book </span></font><em><font face="Liberation Serif, serif"><span lang="en-US">Definitive
+Guide</span></font></em><font face="Liberation Serif, serif"><span lang="en-US">
+-&gt; Chapter 12 -&gt; finding exact values -&gt; term filter with
+text.</span></font></span></font></p>
+<h2 class="cjk" style="margin-top: 0cm; margin-bottom: 0cm"><font face="Liberation Serif, serif"><span lang="en-US">Sort</span></font></h2>
+<p style="margin-bottom: 0cm"><font face="Liberation Serif, serif"><span lang="en-US">Sort
+by age,descent</span></font></p>
+<pre class="cjk" style="margin-left: 2cm"><font face="Liberation Mono, monospace"><span lang="en-US">curl -X GET -H ‘Content-Type:application/json’ \</span></font>
+‘<font face="Liberation Mono, monospace"><span lang="en-US"><font face="Liberation Mono, monospace"><span lang="en-US"><a href="http://localhost:9200/megacorp/employee/_search?pretty">http://localhost:9200/megacorp/employee/_search?pretty</a>’ -d ‘</span></font></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US">{</span></font>
+    “<font face="Liberation Mono, monospace"><span lang="en-US"><font face="Liberation Mono, monospace"><span lang="en-US">sort”:{“age”:{“order”:”desc”}}</span></font></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US">}’</span></font></pre><p>
+<font face="Liberation Serif, serif"><span lang="en-US">Sort by
+age,ascent</span></font></p>
+<pre class="cjk" style="margin-left: 2cm"><font face="Liberation Mono, monospace"><span lang="en-US">curl -X GET -H ‘Content-Type:application/json’ \</span></font>
+‘<font face="Liberation Mono, monospace"><span lang="en-US"><font face="Liberation Mono, monospace"><span lang="en-US"><a href="http://localhost:9200/megacorp/employee/_search?pretty">http://localhost:9200/megacorp/employee/_search?pretty</a>’ -d ‘</span></font></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US">{</span></font>
+    “<font face="Liberation Mono, monospace"><span lang="en-US"><font face="Liberation Mono, monospace"><span lang="en-US">sort”:{“age”:{“order”:”asc”}}</span></font></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US">}’</span></font></pre><p>
+<font face="Liberation Serif, serif"><span lang="en-US">Sort by age
+and first name</span></font></p>
+<pre class="cjk" style="margin-left: 2cm"><font face="Liberation Mono, monospace"><span lang="en-US">curl -X GET -H ‘Content-Type:application/json’ \</span></font>
+‘<font face="Liberation Mono, monospace"><span lang="en-US"><font face="Liberation Mono, monospace"><span lang="en-US"><a href="http://localhost:9200/megacorp/employee/_search?pretty">http://localhost:9200/megacorp/employee/_search?pretty</a>’ -d ‘</span></font></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US">{</span></font>
+    “<font face="Liberation Mono, monospace"><span lang="en-US"><font face="Liberation Mono, monospace"><span lang="en-US">sort”:[</span></font></span></font>
+        <font face="Liberation Mono, monospace"><span lang="en-US"><font face="Liberation Mono, monospace"><span lang="en-US">{“age”:{“order”:”asc”}},</span></font></span></font>
+        <font face="Liberation Mono, monospace"><span lang="en-US"><font face="Liberation Mono, monospace"><span lang="en-US">{“first_name”:{“order”:”asc”}}</span></font></span></font>
+    <font face="Liberation Mono, monospace"><span lang="en-US"><font face="Liberation Mono, monospace"><span lang="en-US">]</span></font></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US">}’</span></font></pre>
+<dl>
+	<dt>
+	<font face="Liberation Serif, serif"><span lang="en-US">By
+	default,Elasticsearch auto sort by <i>_score</i><span style="font-variant: normal"><span style="font-style: normal">.</span></span></span></font></dt><dd style="margin-left: 0cm; margin-bottom: 0.5cm">
+	<br/>
+<br/>
 
-<pre><code>curl -X GET -H 'Content-Type:application/json' \
-'http://192.168.122.204:9200/megacorp/employee/_search?pretty' -d '
-{
-    "query":{
-        "terms":{"first_name":["What","Go"]}
-    }
-}'
-</code></pre>
+	</dd></dl>
+<p style="margin-top: 0.42cm; page-break-after: avoid">
+<font face="Albany, sans-serif"><font size="4" style="font-size: 14pt"><span lang="en-US">If
+the reference is a list</span></font></font></p>
+<p><font face="Liberation Serif, serif"><span lang="en-US">When
+sorting on fields with more than one value,the values do not have an
+intrinsic order,it is just a value bags,</span></font></p>
+<p style="margin-bottom: 0cm"><font face="Liberation Serif, serif"><span lang="en-US">For
+number and date,you can reduce a multivalue field to a single value
+by using <i>min</i><span style="font-variant: normal"><span style="font-style: normal">,</span></span><i>avg
+</i><span style="font-variant: normal"><span style="font-style: normal">or
+</span></span><i>sum</i><span style="font-variant: normal"><span style="font-style: normal">,</span></span></span></font></p>
+<pre class="cjk" style="margin-left: 2cm"><font face="Liberation Mono, monospace"><span lang="en-US">curl -X GET -H ‘Content-Type:application/json’ \</span></font>
+‘<font face="Liberation Mono, monospace"><span lang="en-US"><font face="Liberation Mono, monospace"><span lang="en-US"><a href="http://localhost:9200/megacorp/employee/_search?pretty">http://localhost:9200/megacorp/employee/_search?pretty</a>’ -d ‘</span></font></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US">{</span></font>
+    “<font face="Liberation Mono, monospace"><span lang="en-US"><font face="Liberation Mono, monospace"><span lang="en-US">sort”:{</span></font></span></font>
+        “<font face="Liberation Mono, monospace"><span lang="en-US"><font face="Liberation Mono, monospace"><span lang="en-US">age”:{</span></font></span></font>
+            “<font face="Liberation Mono, monospace"><span lang="en-US"><font face="Liberation Mono, monospace"><span lang="en-US">order”:”asc”,</span></font></span></font>
+            “<font face="Liberation Mono, monospace"><span lang="en-US"><font face="Liberation Mono, monospace"><span lang="en-US">mode”:”min”</span></font></span></font>
+        <font face="Liberation Mono, monospace"><span lang="en-US"><font face="Liberation Mono, monospace"><span lang="en-US">}</span></font></span></font>
+    <font face="Liberation Mono, monospace"><span lang="en-US"><font face="Liberation Mono, monospace"><span lang="en-US">}</span></font></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US">}’</span></font></pre><p>
+<br/>
+<br/>
 
-<p>But,this does not work,because <em>terms</em> does not work with string type,to
-solve this,refer to book <em>Definitive Guide</em> -> Chapter 12 -> finding exact
-values -> term filter with text.</p>
+</p>
+<h2 class="cjk"><font face="Liberation Serif, serif"><span lang="en-US">Pagination</span></font></h2>
+<p><font face="Liberation Serif, serif"><span lang="en-US">Use
+<i>size</i><span style="font-variant: normal"><span style="font-style: normal">,</span></span><i>from</i></span></font></p>
+<pre class="cjk"><font face="Liberation Mono, monospace"><span lang="en-US">curl -X GET -H ‘Content-Type:application/json’ \</span></font>
+‘<font face="Liberation Mono, monospace"><span lang="en-US"><font face="Liberation Mono, monospace"><span lang="en-US"><a href="http://localhost:9200/_search?pretty&amp;from=2&amp;size=5">http://localhost:9200/_search?pretty&amp;from=2&amp;size=5</a>’</span></font></span></font>
+</pre><h2 class="cjk">
+<font face="Liberation Serif, serif"><span lang="en-US">Explain</span></font></h2>
+<p><font face="Liberation Serif, serif"><span lang="en-US">The
+<i>explain </i><span style="font-style: normal">parameter adds an
+explanation of how the _score is calculated</span></span></font></p>
+<pre class="cjk"><font face="Liberation Mono, monospace"><span lang="en-US">curl -X GET -H ‘Content-Type:application/json’ \</span></font>
+‘<font face="Liberation Mono, monospace"><span lang="en-US"><a href="http://localhost:9200/_search?pretty&amp;explain">http://localhost:9200/_search?pretty&amp;explain</a>’</span></font>
+</pre><h1 class="cjk" align="left">
+<font face="Thorndale, serif"><font size="6" style="font-size: 24pt"><span lang="en-US">Update</span></font></font></h1>
+<h2 class="cjk"><font face="Liberation Serif, serif"><span lang="en-US">Simple
+update</span></font></h2>
+<p align="left"><font face="Liberation Serif, serif"><span lang="en-US">Documents
+are immutable,we can only reindex it.you need to specify the ID of
+the document to be changed.</span></font></p>
+<pre class="cjk" style="margin-left: 2cm"><font face="Liberation Mono, monospace"><span lang="en-US">curl -X PUT -H ‘Content-Type:application/json’ \</span></font>
+‘<font face="Liberation Mono, monospace"><span lang="en-US"><font face="Liberation Mono, monospace"><span lang="en-US"><a href="http://localhost:9200/megacorp/employee/37">http://localhost:9200/megacorp/employee/</a>Vmr9pG0BfuiFs1IjYReV’ -d ‘</span></font></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US">{</span></font>
+    <font face="Liberation Mono, monospace"><span lang="en-US"><font face="Liberation Mono, monospace"><span lang="en-US">&quot;first_name&quot; : &quot;Go&quot;,</span></font></span></font>
+    <font face="Liberation Mono, monospace"><span lang="en-US"><font face="Liberation Mono, monospace"><span lang="en-US">&quot;last_name&quot; : &quot;Home&quot;,</span></font></span></font>
+    <font face="Liberation Mono, monospace"><span lang="en-US"><font face="Liberation Mono, monospace"><span lang="en-US">&quot;age&quot; : 27,</span></font></span></font>
+    <font face="Liberation Mono, monospace"><span lang="en-US"><font face="Liberation Mono, monospace"><span lang="en-US">&quot;about&quot; : &quot;are you fucking kidding me&quot;,</span></font></span></font>
+    <font face="Liberation Mono, monospace"><span lang="en-US"><font face="Liberation Mono, monospace"><span lang="en-US">&quot;interests&quot; : [</span></font></span></font>
+       <font face="Liberation Mono, monospace"><span lang="en-US"><font face="Liberation Mono, monospace"><span lang="en-US">&quot;eat&quot;,</span></font></span></font>
+       <font face="Liberation Mono, monospace"><span lang="en-US"><font face="Liberation Mono, monospace"><span lang="en-US">&quot;drink&quot;</span></font></span></font>
+     <font face="Liberation Mono, monospace"><span lang="en-US"><font face="Liberation Mono, monospace"><span lang="en-US">]</span></font></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US">}</span></font></pre><p>
+<font face="Liberation Serif, serif"><span lang="en-US">In the
+response,notice the <i>_version</i><span style="font-variant: normal"><span style="font-style: normal">,it
+is 2,</span></span></span></font></p>
+<pre class="cjk" style="margin-left: 2cm; font-variant: normal"><font face="Liberation Mono, monospace"><span lang="en-US">{</span></font>
+  <font face="Liberation Mono, monospace"><span lang="en-US"><font face="Liberation Mono, monospace"><span lang="en-US"><span style="font-style: normal">&quot;_index&quot; : &quot;megacorp&quot;,</span></span></font></span></font>
+  <font face="Liberation Mono, monospace"><span lang="en-US"><font face="Liberation Mono, monospace"><span lang="en-US"><span style="font-style: normal">&quot;_type&quot; : &quot;employee&quot;,</span></span></font></span></font>
+  <font face="Liberation Mono, monospace"><span lang="en-US"><font face="Liberation Mono, monospace"><span lang="en-US"><span style="font-style: normal">&quot;_id&quot; : &quot;Vmr9pG0BfuiFs1IjYReV&quot;,</span></span></font></span></font>
+  <font face="Liberation Mono, monospace"><span lang="en-US"><font color="#ff0000"><font face="Liberation Mono, monospace"><span lang="en-US"><span style="font-style: normal">&quot;_version&quot; : 2,</span></span></font></font></span></font>
+  <font face="Liberation Mono, monospace"><span lang="en-US"><font face="Liberation Mono, monospace"><span lang="en-US"><span style="font-style: normal">&quot;result&quot; : &quot;updated&quot;,</span></span></font></span></font>
+  <font face="Liberation Mono, monospace"><span lang="en-US"><font face="Liberation Mono, monospace"><span lang="en-US"><span style="font-style: normal">&quot;_shards&quot; : {</span></span></font></span></font>
+    <font face="Liberation Mono, monospace"><span lang="en-US"><font face="Liberation Mono, monospace"><span lang="en-US"><span style="font-style: normal">&quot;total&quot; : 2,</span></span></font></span></font>
+    <font face="Liberation Mono, monospace"><span lang="en-US"><font face="Liberation Mono, monospace"><span lang="en-US"><span style="font-style: normal">&quot;successful&quot; : 1,</span></span></font></span></font>
+    <font face="Liberation Mono, monospace"><span lang="en-US"><font face="Liberation Mono, monospace"><span lang="en-US"><span style="font-style: normal">&quot;failed&quot; : 0</span></span></font></span></font>
+  <font face="Liberation Mono, monospace"><span lang="en-US"><font face="Liberation Mono, monospace"><span lang="en-US"><span style="font-style: normal">},</span></span></font></span></font>
+  <font face="Liberation Mono, monospace"><span lang="en-US"><font face="Liberation Mono, monospace"><span lang="en-US"><span style="font-style: normal">&quot;_seq_no&quot; : 4,</span></span></font></span></font>
+  <font face="Liberation Mono, monospace"><span lang="en-US"><font face="Liberation Mono, monospace"><span lang="en-US"><span style="font-style: normal">&quot;_primary_term&quot; : 3</span></span></font></span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US">}</span></font></pre><p>
+<font face="Liberation Serif, serif"><span lang="en-US">If you
+repeat,you will see <i>_version</i><span style="font-variant: normal">
+</span><span style="font-variant: normal"><span style="font-style: normal">becomes
+3,also the </span></span><span style="text-decoration: none"><i>_seq_no.</i></span><span style="font-variant: normal"><span style="text-decoration: none"><span style="font-style: normal">Its
+</span></span></span><span style="text-decoration: none"><i>_id </i></span><span style="font-variant: normal"><span style="text-decoration: none"><span style="font-style: normal">will
+not change.</span></span></span></span></font></p>
+<dl>
+	<dt style="margin-bottom: 0.5cm"><br/>
+<br/>
 
-<h2>Sort</h2>
+	</dt></dl>
+<h2 class="cjk">
+<font face="Liberation Serif, serif"><span lang="en-US">Partial
+update</span></font></h2>
+<p style="margin-top: 0.42cm; page-break-after: avoid"><font face="Albany, sans-serif"><font size="4" style="font-size: 14pt"><span lang="en-US">Use
+<i>doc</i></span></font></font></p>
+<p><font face="Liberation Serif, serif"><span lang="en-US">The only
+way to update a document is to retrieve,modify,reindex it,but there
+is an API makes you feel like you can partial updating,but the
+background process does not change.</span></font></p>
+<p><font face="Liberation Serif, serif"><span lang="en-US">The
+document,whose id is ‘<span style="font-variant: normal"><span style="font-style: normal">Vmr9pG0BfuiFs1IjYReV’,change
+its </span></span><i>interest</i><span style="font-variant: normal">
+</span><span style="font-variant: normal"><span style="font-style: normal">and
+</span></span><i>age</i><span style="font-variant: normal"><span style="font-style: normal">.</span></span></span></font></p>
+<pre class="cjk" style="margin-left: 2cm"><font color="#000000"><font face="Liberation Mono, monospace"><span lang="en-US">curl -X POST -H ‘Content-Type:application/json’ \</span></font></font>
+<font color="#000000">‘</font><font face="Liberation Mono, monospace"><span lang="en-US"><a href="https://localhost:9200/megacorp/employee/Vmr9pG0BfuiFs1IjYReV/_update"><font color="#000000"><span style="text-decoration: none"><font face="Liberation Mono, monospace"><span lang="en-US"><span style="background: transparent">http://localhost:9200/megacorp/employee/Vmr9pG0BfuiFs1IjYReV/_update</span></span></font></span></font></a><font color="#000000"><font face="Liberation Mono, monospace"><span lang="en-US"><span style="background: transparent">?pretty</span></span></font></font><font color="#000000"><font face="Liberation Mono, monospace"><span lang="en-US">’ -d ‘</span></font></font></span></font>
+<font color="#000000"><font face="Liberation Mono, monospace"><span lang="en-US">{</span></font></font>
+<font color="#000000">    “<font face="Liberation Mono, monospace"><span lang="en-US"><font face="Liberation Mono, monospace"><span lang="en-US">doc”:{</span></font></span></font></font>
+<font color="#000000">        “<font face="Liberation Mono, monospace"><span lang="en-US"><font face="Liberation Mono, monospace"><span lang="en-US">interests”:[“read”],</span></font></span></font></font>
+<font color="#000000">         “<font face="Liberation Mono, monospace"><span lang="en-US"><font face="Liberation Mono, monospace"><span lang="en-US">age”:37”</span></font></span></font></font>
+<font color="#000000">    <font face="Liberation Mono, monospace"><span lang="en-US"><font face="Liberation Mono, monospace"><span lang="en-US">}</span></font></span></font></font>
+<font color="#000000"><font face="Liberation Mono, monospace"><span lang="en-US">}</span></font></font></pre><p>
+“<font face="Liberation Serif, serif"><span lang="en-US"><font face="Liberation Serif, serif"><span lang="en-US">doc”
+is a keyword.</span></font></span></font></p>
+<p style="margin-top: 0.42cm; page-break-after: avoid"><font face="Albany, sans-serif"><font size="4" style="font-size: 14pt"><span lang="en-US">Use
+<i>script</i></span></font></font></p>
+<p style="font-variant: normal"><font face="Liberation Serif, serif"><span lang="en-US">Here
+we only show some examples.This topic has many content to say,we will
+use a seperate chapter to discuss this in detail.</span></font></p>
+<p><font face="Liberation Serif, serif"><span lang="en-US"><span style="font-variant: normal"><span style="font-style: normal">Increace
+the </span></span><i>age</i></span></font></p>
+<pre class="cjk" style="margin-left: 2cm"><font face="Liberation Mono, monospace"><span lang="en-US">curl -X POST -H ‘Content-Type:application/json’ \</span></font>
+‘<font face="Liberation Mono, monospace"><span lang="en-US"><a href="http://localhost:9200/megacorp/employee/Vmr9pG0BfuiFs1IjYReV/_update?pretty"><font color="#000000"><span style="text-decoration: none"><font face="Liberation Mono, monospace"><span lang="en-US">http://localhost:9200/megacorp/employee/</span></font></span></font><font color="#000000"><span style="text-decoration: none"><font face="Liberation Mono, monospace"><span lang="en-US"><span style="text-decoration: none"><span style="text-decoration: none"><span style="background: transparent">Vmr9pG0BfuiFs1IjYReV/_update?pretty</font></span></font></span></span></span></span></a><font color="#000000"><span style="text-decoration: none"><font face="Liberation Mono, monospace"><span lang="en-US"><span style="text-decoration: none"><span style="text-decoration: none"><span style="background: transparent">’ -d ‘</span></span></span></span></font></span></font></span></font>
+<font color="#000000"><font face="Liberation Mono, monospace"><span lang="en-US"><span style="background: transparent">{</span></span></font></font>
+<font color="#000000"><span style="background: transparent">    “<font face="Liberation Mono, monospace"><span lang="en-US"><font face="Liberation Mono, monospace"><span lang="en-US">script”:”ctx._source.age+=1”</span></font></span></span></font></font>
+<font color="#000000"><font face="Liberation Mono, monospace"><span lang="en-US"><span style="background: transparent">}’</span></span></font></font></pre><p>
+<font face="Liberation Serif, serif"><span lang="en-US">Add an
+element to a list element</span></font></p>
+<pre class="cjk" style="margin-left: 2cm"><font face="Liberation Mono, monospace"><span lang="en-US">curl -X POST -H ‘Content-Type:application/json’\</span></font>
+<u>‘</u><font face="Liberation Mono, monospace"><span lang="en-US"><a href="http://localhost:9200/megacorp/employee/Vmr9pG0BfuiFs1IjYReV/_update?pretty"><font color="#000000"><span style="text-decoration: none"><font face="Liberation Mono, monospace"><span lang="en-US">http://localhost:9200/megacorp/employee/</span></font></span></font><font color="#000000"><span style="text-decoration: none"><font face="Liberation Mono, monospace"><span lang="en-US"><span style="text-decoration: none"><span style="text-decoration: none"><span style="background: transparent">Vmr9pG0BfuiFs1IjYReV/_update?pretty</font></span></font></span></span></span></span></a><font color="#000000"><span style="text-decoration: none"><font face="Liberation Mono, monospace"><span lang="en-US"><span style="text-decoration: none"><span style="text-decoration: none"><span style="background: transparent">’ -d ‘</span></span></span></span></font></span></font></span></font>
+<font color="#000000"><font face="Liberation Mono, monospace"><span lang="en-US"><span style="background: transparent">{</span></span></font></font>
+<font color="#000000"><span style="background: transparent">    “<font face="Liberation Mono, monospace"><span lang="en-US"><font face="Liberation Mono, monospace"><span lang="en-US">script”:{ctx._source.interest+=”new_interest”,</span></font></span></span></font></font>
+<font color="#000000"><span style="background: transparent">    “<font face="Liberation Mono, monospace"><span lang="en-US"><font face="Liberation Mono, monospace"><span lang="en-US">param”:{</span></font></span></span></font></font>
+<font color="#000000"><span style="background: transparent">        “<font face="Liberation Mono, monospace"><span lang="en-US"><font face="Liberation Mono, monospace"><span lang="en-US">new_interest”:”see”</span></font></span></span></font></font>
+<font color="#000000"><span style="background: transparent">    <font face="Liberation Mono, monospace"><span lang="en-US"><font face="Liberation Mono, monospace"><span lang="en-US">}</span></font></span></span></font></font>
+<font color="#000000"><font face="Liberation Mono, monospace"><span lang="en-US"><span style="background: transparent">}’</span></span></font></font></pre><p>
+<font face="Liberation Serif, serif"><span lang="en-US">But this
+example is from the book,when I checked it,I got an error,</span></font></p>
+<pre class="cjk" style="margin-left: 2cm; margin-bottom: 0.5cm"><font face="Liberation Mono, monospace"><span lang="en-US">unknown field [params]</span></font></pre><p>
+<font face="Liberation Serif, serif"><span lang="en-US">Maybe it is
+deprecated content.</span></font></p>
+<p><font face="Liberation Serif, serif"><span lang="en-US">...</span></font></p>
+<h1 class="cjk" align="left"><font face="Thorndale, serif"><font size="6" style="font-size: 24pt"><span lang="en-US">delete</span></font></font></h1>
+<p><font face="Liberation Serif, serif"><span lang="en-US">For
+example,delete whoes <i>_id</i><span style="font-variant: normal"> </span><span style="font-variant: normal"><span style="font-style: normal">is
+‘Vmr9pG0BfuiFs1IjYReV’,just replace </span></span><i>-x GET </i><span style="font-variant: normal"><span style="font-style: normal">with
+-</span></span><i>x DELETE</i></span></font></p>
+<pre class="cjk" style="margin-left: 2cm"><font face="Liberation Mono, monospace"><span lang="en-US">curl -X DELETE -H ‘Content-Type:application/json’\</span></font>
+‘<font face="Liberation Mono, monospace"><span lang="en-US"><font face="Liberation Mono, monospace"><span lang="en-US">http://localhost:9200/megacorp/employee/Vmr9pG0BfuiFs1IjYReV’</span></font></span></font></pre><p>
+<br/>
+<br/>
+
+</p>
+<p><font face="Liberation Serif, serif"><span lang="en-US">Delete
+index <i>megacorp</i></span></font></p>
+<pre class="cjk" style="margin-left: 2cm"><font face="Liberation Mono, monospace"><span lang="en-US">curl -X DELETE -H ‘Content-Type:application/json’\</span></font>
+‘<font face="Liberation Mono, monospace"><span lang="en-US"><font face="Liberation Mono, monospace"><span lang="en-US">http://localhost:9200/megacorp/’</span></font></span></font></pre>
+</body>
+</html>

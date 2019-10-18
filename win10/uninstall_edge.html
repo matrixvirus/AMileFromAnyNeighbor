@@ -1,0 +1,73 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+	<title></title>
+	<meta name="generator" content="LibreOffice 5.3.6.1 (Linux)"/>
+	<meta name="created" content="00:00:00"/>
+	<meta name="changed" content="2019-10-12T18:18:57.868035961"/>
+	<meta name="created" content="00:00:00">
+	<meta name="changed" content="2019-10-12T18:15:53.125307925">
+	<style type="text/css">
+		@page { margin: 2cm }
+		p { margin-bottom: 0.25cm; line-height: 120% }
+		pre.ctl { font-family: "Liberation Mono", monospace }
+	</style>
+</head>
+<body lang="ja-JP" dir="ltr">
+<p align="center" style="margin-top: 0.42cm; margin-bottom: 0.5cm; line-height: 100%; page-break-after: avoid">
+<font face="VL ゴシック"><font size="6" style="font-size: 28pt"><span lang="en-US"><b>How
+to uninstall Win10 Edge browser</b></span></font></font></p>
+<pre class="cjk" style="margin-bottom: 0.5cm"><font face="Liberation Mono, monospace"><span lang="en-US">C:\Windows\SystemApps\Microsoft.ECApp_8wekyb3d8bbwe is Edge s location.</span></font></pre><p>
+<font face="VL ゴシック"><span lang="en-US">First,you need to own
+this folder,</span></font></p>
+<ol>
+	<li/>
+<p><font face="VL ゴシック"><span lang="en-US">Click the
+	second icon from left on task bar</span></font></p>
+	<li/>
+<p><img src="uninstall_edge_html_2d1bc2f6accc4a83.png" name="イメージ1" align="left" width="145" height="61">
+  <br clear="left"/>
+</img>
+<font face="VL ゴシック"><span lang="en-US">In
+	the search box type ‘cmd’</span></font></p>
+	<li/>
+<p><img src="uninstall_edge_html_37435eb08850cbe7.jpg" name="イメージ2" align="left" width="368" height="276">
+  <br clear="left"/>
+</img>
+<font face="VL ゴシック"><span lang="en-US">Right
+	click,select ‘run as administrator’,</span></font></p>
+	<li/>
+<p><img src="uninstall_edge_html_c4b4ea682e585f4f.jpg" name="イメージ3" align="left" width="395" height="296">
+  <br clear="left"/>
+</img>
+<font face="VL ゴシック"><span lang="en-US">In
+	the command window,</span></font></p>
+	<p><img src="uninstall_edge_html_b7bfa2790b45efb.jpg" name="イメージ4" align="left" width="396" height="297">
+  <br clear="left"/>
+</img>
+<font face="VL ゴシック"><span lang="en-US">Run</span></font></p>
+	<ol>
+		<li/>
+<pre class="cjk" style="margin-bottom: 0.5cm"><font face="Liberation Mono, monospace"><span lang="en-US">takeown /f C:\Windows\SystemApps\Microsoft.MicrosoftEdge_8wekyb3d8bbwe</span></font></pre>
+		<li/>
+<pre class="cjk" style="margin-bottom: 0.5cm"><font face="Liberation Mono, monospace"><span lang="en-US">icacls C:\Windows\SystemApps\Microsoft.MicrosoftEdge_8wekyb3d8bbwe /grant administrators:f</span></font></pre>
+	</ol>
+</ol>
+<ol>
+	<pre class="cjk">
+<font face="Liberation Mono, monospace"><span lang="en-US">Meaning</span></font></pre>
+</ol>
+<ol>
+	<ol>
+		<li value="1"/>
+<pre class="cjk" style="margin-bottom: 0.5cm"><font face="Liberation Mono, monospace"><span lang="en-US">Change the owner of the directory to you.</span></font></pre>
+		<li/>
+<pre class="cjk" style="margin-bottom: 0.5cm"><font face="Liberation Mono, monospace"><span lang="en-US">Grant user <i>administrator </i><span style="font-variant: normal"><span style="font-style: normal">access to the directory.</span></span></span></font></pre>
+	</ol>
+</ol>
+<pre class="cjk" style="font-variant: normal"><font face="Liberation Mono, monospace"><span lang="en-US">Now you can delete or rename the directory,then when you click Edge icon in start menu,</span></font>
+<font face="Liberation Mono, monospace"><span lang="en-US">it will not response,but I dont know how to delete the icon in start menu.</span></font>
+</pre>
+</body>
+</html>
