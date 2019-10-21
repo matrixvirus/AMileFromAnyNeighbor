@@ -1,0 +1,73 @@
+The person in this position will be responsible for data entry and extrapolation from the Student Database (ISAMS) and Moodle Learning Environment systems. We are looking for someone to primarily maintain and modify the Moodle software system and the ISAMS database according to the needs of the school. Applicants for this position must understand and be able to customize, build and support data and information systems and software and be competent in handling administrative tasks, including but not limited to:
+
+    User management for VLE
+    and Database systems
+    Support and train both
+    teaching and non-teaching staff as required
+    Design and enhance the
+    assessment data collection system
+    Develop reports and
+    understand desired outcomes as requested including for communication to
+    parents
+    Perform required user
+    updates and end of year admin duties in preparation for the new academic
+    year
+    Review system usage and
+    suggest possible improvements to systems in school
+    Support the Moodle
+    upgrade cycle, including acting on security notifications issued by the
+    Moodle lead developer
+    Identify database
+    issues and provide timely solutions
+    Data collection and
+    analysis using various types of application software e.g. Excel/Access.
+    Assist in the
+    formulation and communication of standards, procedures, and conventions
+    for database use
+    Determine file
+    organization, indexing methods and security procedures for specific user
+    applications.
+    Provide database
+    support for priority projects and initiatives
+
+13. Monitoring and maintaining software performance. Talking users through a series of actions, either face to face, over the telephone or via remote desktop support as appropriate. Providing support, including procedural, documentation and training of new users as and when required in conjunction with local staff
+
+14. Consulting clients/colleagues concerning the maintenance and performance of the software system and asking questions to obtain information clarify details and implement information. Constantly updating technical knowledge and skills by attending in-house and/or external courses, reading manuals and accessing other web based research materials (ISAMS blogs, forums and other publicly available information appropriate to the product development (issues and concerns)). Problem-solving and thinking laterally as part of a team, or individually, to meet the needs of the project
+
+
+Person Specification
+
+
+Applicant should have 5+ years of IT/Administration experience including understanding of an SQL database and web server operation. Applicant should be familiar with administering all operational functions of a Moodle (or similar) VLE, and MIS such as ISAMS, including initial system set up and system upgrades, adding 3rd party vetted contributions, user authentication issues, adding course shells and working with instructional designers, teachers or trainers. An understanding of file storage systems and data analysis techniques is required.
+
+
+Required Qualifications
+
+o Bachelor's degree in a computer science related field and one year of related experience or equivalent related education and experience.
+
+o SQL Experience is a must
+
+o System configuration, XML coding and SQL scripting
+
+o CET 6 or above
+
+
+Preferred Qualifications
+
+o Specialized experience which demonstrates knowledge of Oracle, SQL, PL/SQL, UNIX OS, UNIX shell scripting, and Windows OS.
+
+o Experience managing Moodle (or other LMS) systems
+
+o Experience using (as administrator, teacher, learner) Learning Management Systems (esp. Moodle)
+
+o .NET programming experience
+
+o Experience must demonstrate skills with MySQL and using PHP software to access databases.
+
+o Experience must demonstrate knowledge in creating and modifying HTML
+
+o Experience with the LAMP (Linux, Apache, MySql, PHP) environment (3-4 years)
+
+o Knowledge and experience writing and modifying javascript.
+
+o Experience of working in an IT support environment. ITIL qualified would be an advantage. Previous experience of working in an educational environment would be beneficial
