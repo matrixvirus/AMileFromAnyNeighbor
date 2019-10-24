@@ -55,7 +55,7 @@ after --type is a number,0~42,means different hardware component,for 17,it is
 
 you can also use keyword instead of number,a keyword is a combine of numbers,
 here is their mapping
-*
+
 	Keyword     Types
     ──────────────────────────────
     bios        0, 13
