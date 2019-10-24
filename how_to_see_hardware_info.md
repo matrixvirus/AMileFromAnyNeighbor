@@ -7,7 +7,7 @@ there is a command *dmidecode*,his syntax is
 after --type is a number,0~42,means different hardware component,for 17,it is
 *memory*,here is a full list
 
-*	Type   Information
+	Type   Information
 	────────────────────────────────────────────
 	  0   BIOS
 	  1   System
